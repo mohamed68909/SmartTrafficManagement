@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SmartTrafficManagement.API/SmartTrafficManagement.API.csproj" />
+    <Project Path="src/SmartTrafficManagement.Application/SmartTrafficManagement.Application.csproj" />
+    <Project Path="src/SmartTrafficManagement.Core/SmartTrafficManagement.Core.csproj" />
+    <Project Path="src/SmartTrafficManagement.Infrastructure/SmartTrafficManagement.Infrastructure.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,6 @@
+@SmartTrafficManagement.API_HostAddress = http://localhost:5164
+
+GET {{SmartTrafficManagement.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

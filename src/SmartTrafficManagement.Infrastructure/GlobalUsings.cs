@@ -1,0 +1,9 @@
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Options;
+global using SmartTrafficManagement.Core.Entities;
+global using SmartTrafficManagement.Core.Enums;
+global using SmartTrafficManagement.Core.Interfaces;
+global using SmartTrafficManagement.Infrastructure.Persistence;
