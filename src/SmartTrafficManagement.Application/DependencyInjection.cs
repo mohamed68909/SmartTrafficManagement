@@ -18,6 +18,8 @@ using SmartTrafficManagement.Application.Features.Sos.RequestSos;
 using SmartTrafficManagement.Application.Features.Support.CloseTicket;
 using SmartTrafficManagement.Application.Features.Support.OpenTicket;
 using SmartTrafficManagement.Application.Features.Chat.GetHistory;
+using SmartTrafficManagement.Application.Features.Cs;
+using SmartTrafficManagement.Application.Features.Store;
 using SmartTrafficManagement.Application.Features.Store.AddToCart;
 using SmartTrafficManagement.Application.Features.Store.Checkout;
 using SmartTrafficManagement.Application.Features.Store.GetCart;
@@ -68,12 +70,44 @@ public static class DependencyInjection
         services.AddScoped<UpdateJobStatusCommandHandler>();
         services.AddScoped<UpdateProviderLocationCommandHandler>();
 
+        // New provider handlers
+        services.AddScoped<GetProviderEarningsQueryHandler>();
+        services.AddScoped<GetProviderEarningsWeeklyQueryHandler>();
+        services.AddScoped<GetProviderActiveMissionQueryHandler>();
+        services.AddScoped<UpdateJobStatusPostCommandHandler>();
+        services.AddScoped<GetProviderScheduleQueryHandler>();
+        services.AddScoped<UpdateProviderScheduleCommandHandler>();
+        services.AddScoped<ToggleProviderOnlineCommandHandler>();
+        services.AddScoped<GetProviderProfileQueryHandler>();
+
         services.AddScoped<GetAdminDashboardSummaryQueryHandler>();
         services.AddScoped<GetMonthlyOrderAnalyticsQueryHandler>();
         services.AddScoped<GetAdminUsersQueryHandler>();
         services.AddScoped<GetRecentSupportTicketsQueryHandler>();
         services.AddScoped<GetRecentSosRequestsQueryHandler>();
         services.AddScoped<GetAdminProvidersQueryHandler>();
+
+        // New admin handlers
+        services.AddScoped<GetAdminCsAgentsQueryHandler>();
+        services.AddScoped<CreateCsAgentCommandHandler>();
+        services.AddScoped<ToggleCsAgentActiveCommandHandler>();
+        services.AddScoped<GetAdminTicketStatsQueryHandler>();
+        services.AddScoped<GetAdminTicketDetailQueryHandler>();
+        services.AddScoped<GetAdminUserDetailQueryHandler>();
+        services.AddScoped<UpdateAdminUserCommandHandler>();
+        services.AddScoped<GetAdminRatingsQueryHandler>();
+        services.AddScoped<GetAdminSystemStatusQueryHandler>();
+        services.AddScoped<GetAdminActivityQueryHandler>();
+
+        // Urgent SOS + Provider Approval handlers
+        services.AddScoped<GetAdminUrgentQueryHandler>();
+        services.AddScoped<AssignSosCommandHandler>();
+        services.AddScoped<TrackSosQueryHandler>();
+        services.AddScoped<GetAdminApprovalsQueryHandler>();
+        services.AddScoped<GetAdminApprovalStatsQueryHandler>();
+        services.AddScoped<GetProviderDocsQueryHandler>();
+        services.AddScoped<ApproveProviderCommandHandler>();
+        services.AddScoped<RejectProviderCommandHandler>();
 
         services.AddScoped<GetMyOrdersQueryHandler>();
         services.AddScoped<GetOrderDetailsQueryHandler>();
@@ -84,10 +118,31 @@ public static class DependencyInjection
         services.AddScoped<DeleteMyProductCommandHandler>();
         services.AddScoped<GetMyOrdersAsSellerQueryHandler>();
 
+        // New seller handlers
+        services.AddScoped<GetSellerDashboardQueryHandler>();
+        services.AddScoped<GetSellerOrderStatsQueryHandler>();
+        services.AddScoped<GetSellerAnalyticsQueryHandler>();
+        services.AddScoped<GetSellerStoreProfileQueryHandler>();
+        services.AddScoped<UpdateSellerStoreCommandHandler>();
+        services.AddScoped<GetSellerReviewsQueryHandler>();
+        services.AddScoped<GetSellerSettingsQueryHandler>();
+        services.AddScoped<UpdateSellerSettingsCommandHandler>();
+        services.AddScoped<PrepareOrderCommandHandler>();
+        services.AddScoped<RestockProductCommandHandler>();
+
         services.AddScoped<OpenTicketCommandHandler>();
         services.AddScoped<CloseTicketCommandHandler>();
         services.AddScoped<GetMyTicketsQueryHandler>();
         services.AddScoped<GetChatHistoryQueryHandler>();
+
+        // New CS / Support handlers
+        services.AddScoped<GetCsTicketStatsQueryHandler>();
+        services.AddScoped<GetCsTicketDetailQueryHandler>();
+        services.AddScoped<EscalateTicketCommandHandler>();
+        services.AddScoped<SearchDriversQueryHandler>();
+        services.AddScoped<GetDriverContextQueryHandler>();
+        services.AddScoped<BlockDriverCommandHandler>();
+        services.AddScoped<ToggleCsAgentOnlineCommandHandler>();
 
         services.AddScoped<UpdateCartQuantityCommandHandler>();
         services.AddScoped<RemoveCartItemCommandHandler>();

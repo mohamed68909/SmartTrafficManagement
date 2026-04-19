@@ -64,11 +64,14 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-await using (var scope = app.Services.CreateAsyncScope())
+// Run database seeding in background so Swagger loads immediately
+_ = Task.Run(async () =>
 {
+    await Task.Delay(500); // wait for app to fully start
+    await using var scope = app.Services.CreateAsyncScope();
     var databaseSeeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
     await databaseSeeder.SeedAsync(app.Lifetime.ApplicationStopping);
-}
+});
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>

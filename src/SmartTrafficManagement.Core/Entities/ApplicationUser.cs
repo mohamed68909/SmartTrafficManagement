@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using SmartTrafficManagement.Core.Enums;
 
 namespace SmartTrafficManagement.Core.Entities;
 
@@ -28,6 +29,12 @@ public sealed class ApplicationUser : IdentityUser
 
     public string? PasswordResetToken { get; set; }
     public DateTime? PasswordResetTokenExpiryUtc { get; set; }
+
+    /// <summary>Approval status for Provider-role users. Null for other roles.</summary>
+    public ProviderStatus? ProviderStatus { get; set; }
+
+    /// <summary>Pipe-delimited list of document URLs uploaded by the provider for approval.</summary>
+    public string? ProviderDocuments { get; set; }
 
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 

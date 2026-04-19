@@ -241,6 +241,12 @@ namespace SmartTrafficManagement.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("ProviderDocuments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProviderStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 

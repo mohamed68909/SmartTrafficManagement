@@ -178,6 +178,41 @@ public sealed class StoreRepository : IStoreRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<Order?> GetOrderByIdForSellerAsync(Guid orderId, string sellerId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Orders
+            .Include(x => x.OrderItems)
+            .ThenInclude(x => x.Product)
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(
+                x => x.Id == orderId && x.OrderItems.Any(oi => oi.Product.SellerId == sellerId),
+                cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Rating>> GetRatingsBySellerAsync(string sellerId, CancellationToken cancellationToken = default)
+    {
+        // ratings linked to orders that contain at least one product from this seller
+        return await _dbContext.Ratings
+            .AsNoTracking()
+            .Include(r => r.User)
+            .Include(r => r.Order)
+                .ThenInclude(o => o!.OrderItems)
+                .ThenInclude(oi => oi.Product)
+            .Where(r => r.OrderId != null &&
+                        r.Order!.OrderItems.Any(oi => oi.Product.SellerId == sellerId))
+            .OrderByDescending(r => r.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Rating>> GetAllRatingsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Ratings
+            .AsNoTracking()
+            .Include(r => r.User)
+            .OrderByDescending(r => r.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _dbContext.SaveChangesAsync(cancellationToken);

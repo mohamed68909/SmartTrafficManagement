@@ -83,6 +83,27 @@ public sealed class ServiceRequestRepository : IServiceRequestRepository
                           && r.Status == RequestStatus.Completed,
                         cancellationToken);
 
+    public async Task<IReadOnlyList<ServiceRequest>> GetUrgentAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.ServiceRequests
+            .AsNoTracking()
+            .Include(x => x.Client)
+            .Include(x => x.Provider)
+            .Include(x => x.Vehicle)
+            .Where(x => x.Status == RequestStatus.Pending || x.Status == RequestStatus.Accepted)
+            .OrderByDescending(x => x.RequestedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<ServiceRequest?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.ServiceRequests
+            .Include(x => x.Client)
+            .Include(x => x.Provider)
+            .Include(x => x.Vehicle)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _dbContext.SaveChangesAsync(cancellationToken);

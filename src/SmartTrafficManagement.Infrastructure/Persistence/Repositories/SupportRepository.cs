@@ -56,6 +56,24 @@ public sealed class SupportRepository : ISupportRepository
         await _dbContext.ChatMessages.AddAsync(message, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<SupportTicket>> GetAllTicketsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.SupportTickets
+            .AsNoTracking()
+            .Include(x => x.User)
+            .OrderByDescending(x => x.CreatedOnUtc)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<SupportTicket?> GetTicketByIdForAdminAsync(Guid ticketId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.SupportTickets
+            .Include(x => x.User)
+            .Include(x => x.ChatMessages)
+            .ThenInclude(x => x.Sender)
+            .FirstOrDefaultAsync(x => x.Id == ticketId, cancellationToken);
+    }
+
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _dbContext.SaveChangesAsync(cancellationToken);

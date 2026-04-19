@@ -18,5 +18,11 @@ public interface ISupportRepository
 
     Task AddChatMessageAsync(ChatMessage message, CancellationToken cancellationToken = default);
 
+    /// <summary>Returns all tickets (no limit) for aggregate stats.</summary>
+    Task<IReadOnlyList<SupportTicket>> GetAllTicketsAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Full ticket with user + messages for admin detail view.</summary>
+    Task<SupportTicket?> GetTicketByIdForAdminAsync(Guid ticketId, CancellationToken cancellationToken = default);
+
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

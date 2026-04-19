@@ -51,5 +51,14 @@ public interface IStoreRepository
 
     Task<IReadOnlyList<Order>> GetOrdersBetweenAsync(DateTime fromUtc, DateTime toUtc, CancellationToken cancellationToken = default);
 
+    /// <summary>Fetch a single order by id, ensuring it contains at least one item belonging to this seller.</summary>
+    Task<Order?> GetOrderByIdForSellerAsync(Guid orderId, string sellerId, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns all ratings for orders that contain products belonging to the given seller.</summary>
+    Task<IReadOnlyList<Rating>> GetRatingsBySellerAsync(string sellerId, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns all ratings (with User) for admin overview.</summary>
+    Task<IReadOnlyList<Rating>> GetAllRatingsAsync(CancellationToken cancellationToken = default);
+
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

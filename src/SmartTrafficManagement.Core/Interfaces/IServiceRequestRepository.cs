@@ -24,5 +24,11 @@ public interface IServiceRequestRepository
 
     Task<int> CountCompletedByProviderAsync(string providerId, CancellationToken cancellationToken = default);
 
+    /// <summary>Returns all Pending and Accepted SOS requests (urgent queue).</summary>
+    Task<IReadOnlyList<ServiceRequest>> GetUrgentAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Returns a single request with Client, Provider, and Vehicle populated (for tracking).</summary>
+    Task<ServiceRequest?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
+
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
