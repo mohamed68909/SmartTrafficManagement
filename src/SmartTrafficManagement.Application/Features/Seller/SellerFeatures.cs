@@ -59,6 +59,12 @@ public sealed class AddMyProductCommandHandler
         if (string.IsNullOrWhiteSpace(request.SellerId))
             return Result<SellerProductDto>.Failure(DomainErrors.Common.Validation("Unauthorized: Seller ID is required."), 401);
 
+        // Validate CategoryId exists before saving (prevents FK violation / 500 error)
+        var category = await _repo.GetCategoryByIdAsync(request.Request.CategoryId, cancellationToken);
+        if (category is null)
+            return Result<SellerProductDto>.Failure(
+                DomainErrors.Common.Validation($"Category '{request.Request.CategoryId}' does not exist. Use GET /api/store/categories to get valid IDs."), 400);
+
         var product = new Product
         {
             Id            = Guid.NewGuid(),
@@ -88,12 +94,33 @@ public sealed class AddMyProductCommandHandler
 public sealed class UpdateMyProductCommandHandler
 {
     private readonly IStoreRepository _repo;
-    public UpdateMyProductCommandHandler(IStoreRepository repo) => _repo = repo;
+    private readonly IFileStorageService _storage;
+    public UpdateMyProductCommandHandler(IStoreRepository repo, IFileStorageService storage) 
+    { 
+        _repo = repo; 
+        _storage = storage; 
+    }
 
     public async Task<Result<bool>> Handle(UpdateMyProductCommand request, CancellationToken cancellationToken)
     {
         var product = await _repo.GetProductByIdForSellerAsync(request.ProductId, request.SellerId, cancellationToken);
         if (product is null) return Result<bool>.Failure(DomainErrors.Common.NotFound, 404);
+
+        // Validate CategoryId exists before saving (prevents FK violation / 500 error)
+        if (product.CategoryId != request.Request.CategoryId)
+        {
+            var category = await _repo.GetCategoryByIdAsync(request.Request.CategoryId, cancellationToken);
+            if (category is null)
+                return Result<bool>.Failure(
+                    DomainErrors.Common.Validation($"Category '{request.Request.CategoryId}' does not exist. Use GET /api/store/categories to get valid IDs."), 400);
+        }
+
+        string? oldImageUrl = null;
+        if (request.Request.ImageUrl != product.ImageUrl)
+        {
+            oldImageUrl = product.ImageUrl;
+        }
+
         product.CategoryId    = request.Request.CategoryId;
         product.Name          = request.Request.Name;
         product.Description   = request.Request.Description;
@@ -102,6 +129,12 @@ public sealed class UpdateMyProductCommandHandler
         product.ImageUrl      = request.Request.ImageUrl;
         product.UpdatedOnUtc  = DateTime.UtcNow;
         await _repo.SaveChangesAsync(cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(oldImageUrl))
+        {
+            await _storage.DeleteAsync(oldImageUrl, cancellationToken);
+        }
+
         return Result<bool>.Success(true, 200);
     }
 }
@@ -109,14 +142,28 @@ public sealed class UpdateMyProductCommandHandler
 public sealed class DeleteMyProductCommandHandler
 {
     private readonly IStoreRepository _repo;
-    public DeleteMyProductCommandHandler(IStoreRepository repo) => _repo = repo;
+    private readonly IFileStorageService _storage;
+    public DeleteMyProductCommandHandler(IStoreRepository repo, IFileStorageService storage) 
+    { 
+        _repo = repo; 
+        _storage = storage; 
+    }
 
     public async Task<Result<bool>> Handle(DeleteMyProductCommand request, CancellationToken cancellationToken)
     {
         var product = await _repo.GetProductByIdForSellerAsync(request.ProductId, request.SellerId, cancellationToken);
         if (product is null) return Result<bool>.Failure(DomainErrors.Common.NotFound, 404);
+        
+        string? oldImageUrl = product.ImageUrl;
+
         _repo.RemoveProduct(product);
         await _repo.SaveChangesAsync(cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(oldImageUrl))
+        {
+            await _storage.DeleteAsync(oldImageUrl, cancellationToken);
+        }
+
         return Result<bool>.Success(true, 200);
     }
 }

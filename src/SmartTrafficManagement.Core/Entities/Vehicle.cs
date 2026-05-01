@@ -25,7 +25,6 @@ public sealed class Vehicle : BaseEntity
 
     public bool IsDefault { get; set; }
 
-    public bool IsDeleted { get; set; }
 
     public ApplicationUser Owner { get; set; } = null!;
 
