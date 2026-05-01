@@ -217,4 +217,30 @@ public sealed class StoreRepository : IStoreRepository
     {
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    // ── Category methods ────────────────────────────────────────────────────
+
+    public async Task<IReadOnlyList<Category>> GetCategoriesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Categories
+            .AsNoTracking()
+            .OrderBy(c => c.Name)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Category?> GetCategoryByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Categories
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+
+    public async Task AddCategoryAsync(Category category, CancellationToken cancellationToken = default)
+    {
+        await _dbContext.Categories.AddAsync(category, cancellationToken);
+    }
+
+    public void RemoveCategory(Category category)
+    {
+        _dbContext.Categories.Remove(category);
+    }
 }

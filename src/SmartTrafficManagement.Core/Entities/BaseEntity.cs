@@ -7,4 +7,6 @@ public abstract class BaseEntity
     public DateTime CreatedOnUtc { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedOnUtc { get; set; }
+
+    public bool IsDeleted { get; set; } = false;
 }

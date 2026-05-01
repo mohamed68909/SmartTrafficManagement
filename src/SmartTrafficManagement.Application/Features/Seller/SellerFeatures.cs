@@ -40,8 +40,11 @@ public sealed class GetMyProductsQueryHandler
         {
             Id            = x.Id,
             Name          = x.Name,
+            Description   = x.Description,
             Price         = x.Price,
-            StockQuantity = x.StockQuantity
+            StockQuantity = x.StockQuantity,
+            ImageUrl      = x.ImageUrl,
+            CategoryId    = x.CategoryId
         }).ToList(), 200);
     }
 }
@@ -64,7 +67,8 @@ public sealed class AddMyProductCommandHandler
             Name          = request.Request.Name,
             Description   = request.Request.Description,
             Price         = request.Request.Price,
-            StockQuantity = request.Request.StockQuantity
+            StockQuantity = request.Request.StockQuantity,
+            ImageUrl      = request.Request.ImageUrl
         };
         await _repo.AddProductAsync(product, cancellationToken);
         await _repo.SaveChangesAsync(cancellationToken);
@@ -72,8 +76,11 @@ public sealed class AddMyProductCommandHandler
         {
             Id            = product.Id,
             Name          = product.Name,
+            Description   = product.Description,
             Price         = product.Price,
-            StockQuantity = product.StockQuantity
+            StockQuantity = product.StockQuantity,
+            ImageUrl      = product.ImageUrl,
+            CategoryId    = product.CategoryId
         }, 201);
     }
 }
@@ -92,6 +99,7 @@ public sealed class UpdateMyProductCommandHandler
         product.Description   = request.Request.Description;
         product.Price         = request.Request.Price;
         product.StockQuantity = request.Request.StockQuantity;
+        product.ImageUrl      = request.Request.ImageUrl;
         product.UpdatedOnUtc  = DateTime.UtcNow;
         await _repo.SaveChangesAsync(cancellationToken);
         return Result<bool>.Success(true, 200);

@@ -23,6 +23,7 @@ using SmartTrafficManagement.Application.Features.Store;
 using SmartTrafficManagement.Application.Features.Store.AddToCart;
 using SmartTrafficManagement.Application.Features.Store.Checkout;
 using SmartTrafficManagement.Application.Features.Store.GetCart;
+using SmartTrafficManagement.Application.Features.Store.GetCategories;
 using SmartTrafficManagement.Application.Features.Store.GetProducts;
 using SmartTrafficManagement.Application.Features.Store.Webhook;
 using SmartTrafficManagement.Application.Modules.Traffic.Application.Incidents.Queries.GetActiveTrafficIncidents;
@@ -101,6 +102,13 @@ public static class DependencyInjection
         services.AddScoped<GetAdminActivityQueryHandler>();
         services.AddScoped<CreateAdminUserCommandHandler>();
         services.AddScoped<GetAdminSensorsQueryHandler>();
+
+        // Category handlers (Admin + Store)
+        services.AddScoped<GetAdminCategoriesQueryHandler>();
+        services.AddScoped<CreateCategoryCommandHandler>();
+        services.AddScoped<UpdateCategoryCommandHandler>();
+        services.AddScoped<DeleteCategoryCommandHandler>();
+        services.AddScoped<GetCategoriesQueryHandler>();
 
         // Urgent SOS + Provider Approval handlers
         services.AddScoped<GetAdminUrgentQueryHandler>();

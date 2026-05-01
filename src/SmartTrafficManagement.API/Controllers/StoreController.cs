@@ -5,6 +5,7 @@ using SmartTrafficManagement.Application.DTOs;
 using SmartTrafficManagement.Application.Features.Store.AddToCart;
 using SmartTrafficManagement.Application.Features.Store.Checkout;
 using SmartTrafficManagement.Application.Features.Store.GetCart;
+using SmartTrafficManagement.Application.Features.Store.GetCategories;
 using SmartTrafficManagement.Application.Features.Store.GetProducts;
 using SmartTrafficManagement.Core.Common;
 
@@ -14,6 +15,16 @@ namespace SmartTrafficManagement.API.Controllers;
 [Authorize]
 public sealed class StoreController : BaseController
 {
+    [HttpGet("categories")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(Result<IReadOnlyList<CategoryDto>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetCategories(
+        [FromServices] GetCategoriesQueryHandler handler,
+        CancellationToken cancellationToken)
+    {
+        return ProcessResult(await handler.Handle(new GetCategoriesQuery(), cancellationToken));
+    }
+
     [HttpGet("products")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(Result<PagedResultDto<ProductDto>>), StatusCodes.Status200OK)]

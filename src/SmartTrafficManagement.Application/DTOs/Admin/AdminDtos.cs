@@ -191,3 +191,10 @@ public sealed record AdminSensorDto(
     string Id, string Name, double Lat, double Lng,
     string Status, double Value, string Unit, DateTime LastUpdated
 );
+
+// 13 – Category management
+public sealed class CreateCategoryRequestDto
+{
+    public string  Name        { get; set; } = string.Empty;
+    public string? Description { get; set; }
+}

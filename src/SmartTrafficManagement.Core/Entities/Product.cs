@@ -14,6 +14,8 @@ public sealed class Product : BaseEntity
 
     public int StockQuantity { get; set; }
 
+    public string? ImageUrl { get; set; }
+
     public Category Category { get; set; } = null!;
 
     public ApplicationUser Seller { get; set; } = null!;

@@ -60,5 +60,15 @@ public interface IStoreRepository
     /// <summary>Returns all ratings (with User) for admin overview.</summary>
     Task<IReadOnlyList<Rating>> GetAllRatingsAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>Returns all active (non-deleted) categories ordered by name.</summary>
+    Task<IReadOnlyList<Category>> GetCategoriesAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Returns a single category by id, or null if not found / soft-deleted.</summary>
+    Task<Category?> GetCategoryByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task AddCategoryAsync(Category category, CancellationToken cancellationToken = default);
+
+    void RemoveCategory(Category category);
+
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

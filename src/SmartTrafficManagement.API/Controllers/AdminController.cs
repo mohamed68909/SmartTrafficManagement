@@ -229,4 +229,38 @@ public sealed class AdminController : BaseController
         [FromServices] GetAdminSensorsQueryHandler handler,
         CancellationToken cancellationToken)
         => ProcessResult(await handler.Handle(new GetAdminSensorsQuery(), cancellationToken));
+
+    // ── Category Management ──────────────────────────────────────────────────
+
+    [HttpGet("categories")]
+    [ProducesResponseType(typeof(Result<IReadOnlyList<CategoryDto>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetCategories(
+        [FromServices] GetAdminCategoriesQueryHandler handler,
+        CancellationToken cancellationToken)
+        => ProcessResult(await handler.Handle(new GetAdminCategoriesQuery(), cancellationToken));
+
+    [HttpPost("categories")]
+    [ProducesResponseType(typeof(Result<CategoryDto>), StatusCodes.Status201Created)]
+    public async Task<ActionResult> CreateCategory(
+        [FromBody] CreateCategoryRequestDto request,
+        [FromServices] CreateCategoryCommandHandler handler,
+        CancellationToken cancellationToken)
+        => ProcessResult(await handler.Handle(new CreateCategoryCommand(request.Name, request.Description), cancellationToken));
+
+    [HttpPut("categories/{id:guid}")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> UpdateCategory(
+        Guid id,
+        [FromBody] CreateCategoryRequestDto request,
+        [FromServices] UpdateCategoryCommandHandler handler,
+        CancellationToken cancellationToken)
+        => ProcessResult(await handler.Handle(new UpdateCategoryCommand(id, request.Name, request.Description), cancellationToken));
+
+    [HttpDelete("categories/{id:guid}")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> DeleteCategory(
+        Guid id,
+        [FromServices] DeleteCategoryCommandHandler handler,
+        CancellationToken cancellationToken)
+        => ProcessResult(await handler.Handle(new DeleteCategoryCommand(id), cancellationToken));
 }
