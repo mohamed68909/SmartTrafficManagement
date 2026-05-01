@@ -10,7 +10,7 @@ using SmartTrafficManagement.Infrastructure.Persistence;
 namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("api/ratings")]
 public sealed class RatingsController : BaseController
 {

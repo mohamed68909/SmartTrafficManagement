@@ -7,7 +7,7 @@ using SmartTrafficManagement.Core.Interfaces;
 namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("api/weather")]
 public sealed class WeatherController : BaseController
 {

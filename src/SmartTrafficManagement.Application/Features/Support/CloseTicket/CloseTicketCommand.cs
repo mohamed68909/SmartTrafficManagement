@@ -59,7 +59,8 @@ public sealed class CloseTicketCommandHandler
             return Result<SupportTicketDto>.Failure(DomainErrors.Common.Forbidden, 403);
         }
 
-        ticket.Status = TicketStatus.Closed;
+        ticket.Status      = TicketStatus.Closed;
+        ticket.ClosedAt    = DateTime.UtcNow;
         ticket.UpdatedOnUtc = DateTime.UtcNow;
         await _supportRepository.SaveChangesAsync(cancellationToken);
 

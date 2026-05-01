@@ -1,4 +1,5 @@
 using SmartTrafficManagement.API.Middlewares;
+using Microsoft.EntityFrameworkCore;
 using SmartTrafficManagement.Application;
 using SmartTrafficManagement.Infrastructure;
 using SmartTrafficManagement.Infrastructure.Persistence.Seeding;
@@ -8,6 +9,10 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 30 * 1024 * 1024; // 30 MB max form body
+});
 builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
@@ -64,14 +69,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-// Run database seeding in background so Swagger loads immediately
-_ = Task.Run(async () =>
+using (var scope = app.Services.CreateScope())
 {
-    await Task.Delay(500); // wait for app to fully start
-    await using var scope = app.Services.CreateAsyncScope();
     var databaseSeeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
-    await databaseSeeder.SeedAsync(app.Lifetime.ApplicationStopping);
-});
+    await databaseSeeder.SeedAsync(CancellationToken.None);
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -84,6 +86,7 @@ app.UseSwaggerUI(options =>
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseStaticFiles();   // serves wwwroot (including /uploads/*)
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();

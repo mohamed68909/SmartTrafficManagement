@@ -100,3 +100,6 @@ public sealed class ProviderProfileDto
     public int     TotalJobs { get; set; }
     public bool    IsOnline  { get; set; }
 }
+
+// ── Online status (PATCH) ──
+public sealed record UpdateProviderStatusDto(bool IsOnline);

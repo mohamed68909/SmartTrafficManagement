@@ -28,6 +28,7 @@ public sealed class ServiceRequestConfiguration : IEntityTypeConfiguration<Servi
         builder.HasOne(x => x.Vehicle)
             .WithMany(x => x.ServiceRequests)
             .HasForeignKey(x => x.VehicleId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

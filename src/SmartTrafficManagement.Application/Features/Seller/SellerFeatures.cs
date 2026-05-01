@@ -53,6 +53,9 @@ public sealed class AddMyProductCommandHandler
 
     public async Task<Result<SellerProductDto>> Handle(AddMyProductCommand request, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(request.SellerId))
+            return Result<SellerProductDto>.Failure(DomainErrors.Common.Validation("Unauthorized: Seller ID is required."), 401);
+
         var product = new Product
         {
             Id            = Guid.NewGuid(),

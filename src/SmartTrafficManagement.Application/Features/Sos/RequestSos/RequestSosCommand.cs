@@ -13,14 +13,13 @@ public sealed class RequestSosCommand
     public ServiceType ServiceType { get; set; }
     public decimal Lat { get; set; }
     public decimal Lng { get; set; }
-    public Guid VehicleId { get; set; }
+    public Guid? VehicleId { get; set; }   // optional — mobile users may not have a registered vehicle
 }
 
 public sealed class RequestSosCommandValidator : AbstractValidator<RequestSosCommand>
 {
     public RequestSosCommandValidator()
     {
-        RuleFor(x => x.VehicleId).NotEmpty();
         RuleFor(x => x.Lat).InclusiveBetween(-90m, 90m);
         RuleFor(x => x.Lng).InclusiveBetween(-180m, 180m);
         RuleFor(x => x.ServiceType).IsInEnum();
@@ -68,12 +67,12 @@ public sealed class RequestSosCommandHandler
 
         var request = new ServiceRequest
         {
-            ClientId = clientId,
-            VehicleId = command.VehicleId,
+            ClientId    = clientId,
+            VehicleId   = command.VehicleId,   // nullable — safe even if null
             ServiceType = command.ServiceType,
-            Status = RequestStatus.Pending,
-            Latitude = command.Lat,
-            Longitude = command.Lng,
+            Status      = RequestStatus.Pending,
+            Latitude    = command.Lat,
+            Longitude   = command.Lng,
             Description = "SOS request"
         };
 

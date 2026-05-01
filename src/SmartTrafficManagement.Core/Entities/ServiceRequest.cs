@@ -8,7 +8,7 @@ public sealed class ServiceRequest : BaseEntity
 
     public string? ProviderId { get; set; }
 
-    public Guid VehicleId { get; set; }
+    public Guid? VehicleId { get; set; }   // optional — users without registered vehicles can still request SOS
 
     public ServiceType ServiceType { get; set; }
 
@@ -30,7 +30,7 @@ public sealed class ServiceRequest : BaseEntity
 
     public ApplicationUser? Provider { get; set; }
 
-    public Vehicle Vehicle { get; set; } = null!;
+    public Vehicle? Vehicle { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

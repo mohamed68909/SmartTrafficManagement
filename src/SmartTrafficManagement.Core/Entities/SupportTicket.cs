@@ -14,6 +14,8 @@ public sealed class SupportTicket : BaseEntity
 
     public TicketPriority Priority { get; set; } = TicketPriority.Medium;
 
+    public DateTime? ClosedAt { get; set; }
+
     public ApplicationUser User { get; set; } = null!;
 
     public ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();

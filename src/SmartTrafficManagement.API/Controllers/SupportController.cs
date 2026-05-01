@@ -13,13 +13,13 @@ using SmartTrafficManagement.Core.Constants;
 namespace SmartTrafficManagement.API.Controllers;
 
 [Route("api/support")]
-//[Authorize]
+[Authorize]
 public sealed class SupportController : BaseController
 {
     // ── Existing endpoints ──────────────────────────────────────────────────
 
     [HttpGet("tickets/my")]
-    //[Authorize(Roles = $"{AppRoles.Client},{AppRoles.Admin}")]
+   [Authorize(Roles = $"{AppRoles.Client},{AppRoles.Admin}")]
     [ProducesResponseType(typeof(Result<IReadOnlyList<MyTicketDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetMyTickets(
         [FromServices] GetMyTicketsQueryHandler handler,
@@ -30,7 +30,7 @@ public sealed class SupportController : BaseController
     }
 
     [HttpPost("tickets/open")]
-    //[Authorize(Roles = AppRoles.Client)]
+    [Authorize(Roles = AppRoles.Client)]
     [ProducesResponseType(typeof(Result<SupportTicketDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Result<SupportTicketDto>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> OpenTicket(
@@ -43,7 +43,7 @@ public sealed class SupportController : BaseController
     }
 
     [HttpPatch("close/{id:guid}")]
-    //[Authorize(Roles = $"{AppRoles.Client},{AppRoles.Admin},{AppRoles.CSAgent}")]
+    [Authorize(Roles = $"{AppRoles.Client},{AppRoles.Admin},{AppRoles.CSAgent}")]
     [ProducesResponseType(typeof(Result<SupportTicketDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<SupportTicketDto>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(Result<SupportTicketDto>), StatusCodes.Status404NotFound)]
@@ -60,7 +60,7 @@ public sealed class SupportController : BaseController
     // ── New endpoints ───────────────────────────────────────────────────────
 
     [HttpGet("tickets/stats")]
-    //[Authorize(Roles = $"{AppRoles.CSAgent},{AppRoles.Admin}")]
+   [Authorize(Roles = $"{AppRoles.CSAgent},{AppRoles.Admin}")]
     [ProducesResponseType(typeof(Result<CsTicketStatsDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetTicketStats(
         [FromServices] GetCsTicketStatsQueryHandler handler,
@@ -68,7 +68,7 @@ public sealed class SupportController : BaseController
         => ProcessResult(await handler.Handle(new GetCsTicketStatsQuery(), cancellationToken));
 
     [HttpGet("tickets/{id:guid}")]
-    //[Authorize(Roles = $"{AppRoles.CSAgent},{AppRoles.Admin}")]
+   [Authorize(Roles = $"{AppRoles.CSAgent},{AppRoles.Admin}")]
     [ProducesResponseType(typeof(Result<CsTicketFullDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<CsTicketFullDto>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetTicketDetail(
@@ -78,7 +78,7 @@ public sealed class SupportController : BaseController
         => ProcessResult(await handler.Handle(new GetCsTicketDetailQuery(id), cancellationToken));
 
     [HttpPost("tickets/{id:guid}/escalate")]
-    //[Authorize(Roles = AppRoles.CSAgent)]
+   [Authorize(Roles = AppRoles.CSAgent)]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> EscalateTicket(

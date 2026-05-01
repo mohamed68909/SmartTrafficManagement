@@ -11,7 +11,7 @@ using SmartTrafficManagement.Core.Common;
 namespace SmartTrafficManagement.API.Controllers;
 
 [Route("api/store")]
-//[Authorize]
+[Authorize]
 public sealed class StoreController : BaseController
 {
     [HttpGet("products")]
@@ -39,7 +39,7 @@ public sealed class StoreController : BaseController
     }
 
     [HttpPost("checkout")]
-    //[Authorize]
+    [Authorize]
     [ProducesResponseType(typeof(Result<CheckoutDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<CheckoutDto>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Checkout(

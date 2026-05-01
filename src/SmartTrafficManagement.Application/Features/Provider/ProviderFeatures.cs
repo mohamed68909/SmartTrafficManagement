@@ -15,6 +15,7 @@ public sealed record GetAvailableJobsQuery();
 public sealed record GetProviderDashboardQuery(string ProviderId);
 public sealed record GetProviderHistoryQuery(string ProviderId);
 public sealed record AcceptJobCommand(string ProviderId, Guid RequestId);
+public sealed record RejectJobCommand(string ProviderId, Guid RequestId);
 public sealed record UpdateJobStatusCommand(string ProviderId, UpdateProviderRequestStatusDto Request);
 public sealed record UpdateProviderLocationCommand(string ProviderId, UpdateProviderLocationDto Request);
 
@@ -85,6 +86,31 @@ public sealed class AcceptJobCommandHandler
         return result.IsSuccess
             ? Result<bool>.Success(true, result.StatusCode)
             : Result<bool>.Failure(result.Error!, result.StatusCode);
+    }
+}
+
+public sealed class RejectJobCommandHandler
+{
+    private readonly IServiceRequestRepository _repo;
+
+    public RejectJobCommandHandler(IServiceRequestRepository repo)
+        => _repo = repo;
+
+    public async Task<Result<bool>> Handle(RejectJobCommand request, CancellationToken cancellationToken)
+    {
+        var job = await _repo.GetByIdAsync(request.RequestId, cancellationToken);
+        if (job is null)
+            return Result<bool>.Failure(DomainErrors.Sos.RequestNotFound, 404);
+
+        if (job.ProviderId != request.ProviderId && job.ProviderId != null)
+            return Result<bool>.Failure(DomainErrors.Common.Forbidden, 403);
+
+        job.ProviderId = null;
+        job.Status = RequestStatus.Pending;
+        job.UpdatedOnUtc = DateTime.UtcNow;
+        
+        await _repo.SaveChangesAsync(cancellationToken);
+        return Result<bool>.Success(true, 200);
     }
 }
 

@@ -9,7 +9,7 @@ using SmartTrafficManagement.Core.Common;
 namespace SmartTrafficManagement.API.Controllers;
 
 [Route("api/traffic")]
-//[Authorize(Roles = AppRoles.Client)]
+[Authorize(Roles = AppRoles.Client)]
 public sealed class TrafficController : BaseController
 {
     [HttpPost("report")]

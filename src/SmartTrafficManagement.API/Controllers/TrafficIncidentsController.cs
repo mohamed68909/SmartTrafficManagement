@@ -9,7 +9,7 @@ namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 public sealed class TrafficIncidentsController : BaseController
 {
     [HttpGet]

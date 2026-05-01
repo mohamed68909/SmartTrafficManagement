@@ -10,7 +10,7 @@ namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
 [Route("api/seller")]
-//[Authorize(Roles = AppRoles.Seller)]
+[Authorize(Roles = AppRoles.Seller)]
 public sealed class SellerController : BaseController
 {
     // ── Existing endpoints ──────────────────────────────────────────────────

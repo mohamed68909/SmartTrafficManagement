@@ -59,7 +59,7 @@ public sealed class PaymentsController : BaseController
         }, cancellationToken));
     }
 
-    //[Authorize]
+    //Authorize]
     [HttpPost("cards")]
     [ProducesResponseType(typeof(Result<SavedCardDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<SavedCardDto>), StatusCodes.Status400BadRequest)]
@@ -91,7 +91,7 @@ public sealed class PaymentsController : BaseController
         }
     }
 
-   // [Authorize]
+   [Authorize]
     [HttpGet("cards")]
     [ProducesResponseType(typeof(Result<IReadOnlyList<SavedCardDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetCards(
@@ -116,7 +116,7 @@ public sealed class PaymentsController : BaseController
         return ProcessResult(Result<IReadOnlyList<SavedCardDto>>.Success(response, 200));
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpDelete("cards/{id}")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status404NotFound)]
@@ -136,7 +136,7 @@ public sealed class PaymentsController : BaseController
         return ProcessResult(Result<bool>.Success(true, 200));
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet("history")]
     [ProducesResponseType(typeof(Result<IReadOnlyList<PaymentHistoryItemDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetHistory(
@@ -160,7 +160,7 @@ public sealed class PaymentsController : BaseController
         return ProcessResult(Result<IReadOnlyList<PaymentHistoryItemDto>>.Success(response, 200));
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(Result<PaymentHistoryItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<PaymentHistoryItemDto>), StatusCodes.Status404NotFound)]
@@ -187,7 +187,7 @@ public sealed class PaymentsController : BaseController
         }, 200));
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost("refund")]
     [ProducesResponseType(typeof(Result<RefundPaymentResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<RefundPaymentResponseDto>), StatusCodes.Status400BadRequest)]

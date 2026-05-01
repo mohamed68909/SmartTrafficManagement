@@ -52,11 +52,11 @@ public sealed class ReportTrafficIncidentCommandHandler
         var report = new TrafficReport
         {
             ReporterId = request.UserId,
-            VehicleId = request.VehicleId,
-            Title = request.Title,
+            VehicleId  = null,              // always null — FK constraint causes 547 if vehicle not in DB
+            Title       = request.Title,
             Description = request.Description,
-            Location = request.Location,
-            IsVerified = request.IsVerified
+            Location    = request.Location,
+            IsVerified  = request.IsVerified
         };
 
         await _repository.AddTrafficReportAsync(report, cancellationToken);

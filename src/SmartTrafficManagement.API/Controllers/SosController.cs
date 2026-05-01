@@ -12,11 +12,11 @@ using SmartTrafficManagement.Core.Common;
 namespace SmartTrafficManagement.API.Controllers;
 
 [Route("api/sos")]
-//[Authorize]
+[Authorize]
 public sealed class SosController : BaseController
 {
     [HttpGet("history")]
-    [Authorize(Roles = AppRoles.Client)]
+  [Authorize(Roles = AppRoles.Client)]
     [ProducesResponseType(typeof(Result<IReadOnlyList<RequestDetailsDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult> History([FromServices] GetSosHistoryQueryHandler handler, CancellationToken cancellationToken)
     {

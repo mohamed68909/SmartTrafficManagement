@@ -14,7 +14,7 @@ using SmartTrafficManagement.Infrastructure.Realtime;
 namespace SmartTrafficManagement.API.Controllers;
 
 [Route("api/chat")]
-//[Authorize(Roles = $"{AppRoles.Client},{AppRoles.CSAgent}")]
+[Authorize(Roles = $"{AppRoles.Client},{AppRoles.CSAgent}")]
 public sealed class ChatController : BaseController
 {
     public sealed class SendChatMessageRequest

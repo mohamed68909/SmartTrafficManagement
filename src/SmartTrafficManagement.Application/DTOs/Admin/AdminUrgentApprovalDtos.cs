@@ -41,12 +41,15 @@ public sealed class AdminSosTrackDto
 
 public sealed class AdminApprovalRowDto
 {
-    public string         ProviderId   { get; set; } = string.Empty;
-    public string         Name         { get; set; } = string.Empty;
-    public string         Email        { get; set; } = string.Empty;
-    public string         Phone        { get; set; } = string.Empty;
-    public ProviderStatus Status       { get; set; }
-    public DateTime       RegisteredAt { get; set; }
+    public string         ProviderId     { get; set; } = string.Empty;
+    public string         Name           { get; set; } = string.Empty;
+    public string         Email          { get; set; } = string.Empty;
+    public string         Phone          { get; set; } = string.Empty;
+    public string         Role           { get; set; } = string.Empty;  // "Provider" | "Seller"
+    public string         Specialty      { get; set; } = string.Empty;  // e.g. "Towing", "Fuel", "Mechanic"
+    public int            DocumentsCount { get; set; }
+    public ProviderStatus Status         { get; set; }
+    public DateTime       RegisteredAt   { get; set; }
 }
 
 public sealed class AdminApprovalStatsDto

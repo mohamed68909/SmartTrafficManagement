@@ -126,25 +126,64 @@ public sealed class GetAdminApprovalsQueryHandler
 
     public async Task<Result<IReadOnlyList<AdminApprovalRowDto>>> Handle(GetAdminApprovalsQuery request, CancellationToken cancellationToken)
     {
+        // Fetch both Providers and Sellers sequentially
         var providers = await _userManager.GetUsersInRoleAsync(AppRoles.Provider);
+        var sellers   = await _userManager.GetUsersInRoleAsync(AppRoles.Seller);
 
-        var pending = providers
-            .Where(u => u.ProviderStatus == null || u.ProviderStatus == ProviderStatus.Pending)
-            .OrderBy(u => u.FirstName)
-            .Select(u => new AdminApprovalRowDto
+        var rows = new List<AdminApprovalRowDto>();
+
+        // ── Providers (pending / all)
+        foreach (var u in providers.OrderByDescending(u => u.Id))
+        {
+            var docs = string.IsNullOrWhiteSpace(u.ProviderDocuments)
+                ? Array.Empty<string>()
+                : u.ProviderDocuments.Split('|', StringSplitOptions.RemoveEmptyEntries);
+
+            rows.Add(new AdminApprovalRowDto
             {
-                ProviderId   = u.Id,
-                Name         = $"{u.FirstName} {u.LastName}".Trim(),
-                Email        = u.Email ?? string.Empty,
-                Phone        = u.PhoneNumber ?? string.Empty,
-                Status       = u.ProviderStatus ?? ProviderStatus.Pending,
-                RegisteredAt = u.LockoutEnd?.UtcDateTime ?? DateTime.UtcNow
-            })
-            .ToList<AdminApprovalRowDto>();
+                ProviderId     = u.Id,
+                Name           = $"{u.FirstName} {u.LastName}".Trim(),
+                Email          = u.Email ?? string.Empty,
+                Phone          = u.PhoneNumber ?? string.Empty,
+                Role           = "Provider",
+                Specialty      = InferSpecialty(docs),
+                DocumentsCount = docs.Length,
+                Status         = u.ProviderStatus ?? ProviderStatus.Pending,
+                RegisteredAt   = u.LockoutEnd?.UtcDateTime ?? DateTime.UtcNow
+            });
+        }
 
-        return Result<IReadOnlyList<AdminApprovalRowDto>>.Success(pending, 200);
+        // ── Sellers (treat as pending approval if not yet active)
+        foreach (var u in sellers.Where(u => !u.IsActive).OrderByDescending(u => u.Id))
+        {
+            rows.Add(new AdminApprovalRowDto
+            {
+                ProviderId     = u.Id,
+                Name           = $"{u.FirstName} {u.LastName}".Trim(),
+                Email          = u.Email ?? string.Empty,
+                Phone          = u.PhoneNumber ?? string.Empty,
+                Role           = "Seller",
+                Specialty      = "Auto Parts",
+                DocumentsCount = 0,
+                Status         = ProviderStatus.Pending,
+                RegisteredAt   = u.LockoutEnd?.UtcDateTime ?? DateTime.UtcNow
+            });
+        }
+
+        return Result<IReadOnlyList<AdminApprovalRowDto>>.Success(rows, 200);
+    }
+
+    /// <summary>Infer a human-readable specialty from document URL keywords.</summary>
+    private static string InferSpecialty(string[] docs)
+    {
+        var hint = string.Join(" ", docs).ToLower();
+        if (hint.Contains("fuel"))  return "Fuel Delivery";
+        if (hint.Contains("tow"))   return "Towing";
+        if (hint.Contains("mech"))  return "Mechanic";
+        return "Service Provider";
     }
 }
+
 
 // ── 5: Approval stats ─────────────────────────────────────────────────────────
 

@@ -10,7 +10,7 @@ namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
 [Route("api/cs")]
-//[Authorize(Roles = AppRoles.CSAgent)]
+[Authorize(Roles = AppRoles.CSAgent)]
 public sealed class CsController : BaseController
 {
     [HttpGet("drivers/search")]

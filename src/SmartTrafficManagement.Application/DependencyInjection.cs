@@ -67,6 +67,7 @@ public static class DependencyInjection
         services.AddScoped<GetProviderDashboardQueryHandler>();
         services.AddScoped<GetProviderHistoryQueryHandler>();
         services.AddScoped<AcceptJobCommandHandler>();
+        services.AddScoped<RejectJobCommandHandler>();
         services.AddScoped<UpdateJobStatusCommandHandler>();
         services.AddScoped<UpdateProviderLocationCommandHandler>();
 
@@ -98,6 +99,8 @@ public static class DependencyInjection
         services.AddScoped<GetAdminRatingsQueryHandler>();
         services.AddScoped<GetAdminSystemStatusQueryHandler>();
         services.AddScoped<GetAdminActivityQueryHandler>();
+        services.AddScoped<CreateAdminUserCommandHandler>();
+        services.AddScoped<GetAdminSensorsQueryHandler>();
 
         // Urgent SOS + Provider Approval handlers
         services.AddScoped<GetAdminUrgentQueryHandler>();

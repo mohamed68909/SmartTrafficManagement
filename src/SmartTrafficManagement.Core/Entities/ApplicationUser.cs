@@ -15,6 +15,8 @@ public sealed class ApplicationUser : IdentityUser
 
     public bool IsActive { get; set; } = true;
 
+    public bool IsOnline { get; set; } = false;
+
     public string? StripeCustomerId { get; set; }
 
     public string? ProfilePicture { get; set; }
@@ -59,4 +61,6 @@ public sealed class ApplicationUser : IdentityUser
     public ICollection<SupportTicket> SupportTickets { get; set; } = new List<SupportTicket>();
 
     public ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
+
+    public DateTime CreatedOnUtc { get; set; } = DateTime.UtcNow;
 }

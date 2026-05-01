@@ -23,6 +23,7 @@ public static class DomainErrors
         public static readonly Error InvalidRoleForRegistration =
             new("Auth.InvalidRoleForRegistration",
                 "Invalid role. Web registration allows: Client, Provider, Seller.");
+        public static readonly Error InvalidRole               = new("Auth.InvalidRole",               "Invalid role provided");
     }
 
     public static class Vehicles

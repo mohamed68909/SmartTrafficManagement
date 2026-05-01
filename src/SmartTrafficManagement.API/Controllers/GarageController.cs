@@ -11,7 +11,7 @@ namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
 [Route("api/garage")]
-//[Authorize(Roles = AppRoles.Client)]
+[Authorize(Roles = AppRoles.Client)]
 public sealed class GarageController : BaseController
 {
     [HttpGet]

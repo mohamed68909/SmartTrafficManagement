@@ -7,7 +7,7 @@ using SmartTrafficManagement.Core.Common;
 namespace SmartTrafficManagement.API.Controllers;
 
 [Route("api/sensors")]
-//[Authorize]
+[Authorize]
 public sealed class SensorsController : BaseController
 {
     [HttpGet("vehicle-env")]

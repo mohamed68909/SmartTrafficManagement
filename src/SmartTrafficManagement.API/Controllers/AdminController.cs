@@ -10,7 +10,7 @@ namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
 [Route("api/admin")]
-//[Authorize(Roles = AppRoles.Admin)]
+[Authorize(Roles = AppRoles.Admin)]
 public sealed class AdminController : BaseController
 {
     // ── Existing endpoints ──────────────────────────────────────────────────
@@ -35,9 +35,10 @@ public sealed class AdminController : BaseController
     public async Task<ActionResult> Users(
         [FromQuery] int pageNumber,
         [FromQuery] int pageSize,
+        [FromQuery] string? role,
         [FromServices] GetAdminUsersQueryHandler handler,
         CancellationToken cancellationToken)
-        => ProcessResult(await handler.Handle(new GetAdminUsersQuery(pageNumber, pageSize), cancellationToken));
+        => ProcessResult(await handler.Handle(new GetAdminUsersQuery(pageNumber, pageSize, role), cancellationToken));
 
     [HttpGet("tickets/recent")]
     [ProducesResponseType(typeof(Result<IReadOnlyList<AdminSupportTicketRowDto>>), StatusCodes.Status200OK)]
@@ -51,9 +52,10 @@ public sealed class AdminController : BaseController
     [ProducesResponseType(typeof(Result<IReadOnlyList<AdminSosRowDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult> RecentSos(
         [FromQuery] int limit,
+        [FromQuery] string? type,
         [FromServices] GetRecentSosRequestsQueryHandler handler,
         CancellationToken cancellationToken)
-        => ProcessResult(await handler.Handle(new GetRecentSosRequestsQuery(limit), cancellationToken));
+        => ProcessResult(await handler.Handle(new GetRecentSosRequestsQuery(limit, type), cancellationToken));
 
     [HttpGet("providers")]
     [ProducesResponseType(typeof(Result<PagedResultDto<AdminProviderRowDto>>), StatusCodes.Status200OK)]
@@ -212,4 +214,19 @@ public sealed class AdminController : BaseController
         [FromServices] RejectProviderCommandHandler handler,
         CancellationToken cancellationToken)
         => ProcessResult(await handler.Handle(new RejectProviderCommand(id, request.Reason), cancellationToken));
+
+    [HttpPost("users")]
+    [ProducesResponseType(typeof(Result<AdminUserRowDto>), StatusCodes.Status201Created)]
+    public async Task<ActionResult> CreateUser(
+        [FromBody] CreateAdminUserDto request,
+        [FromServices] CreateAdminUserCommandHandler handler,
+        CancellationToken cancellationToken)
+        => ProcessResult(await handler.Handle(new CreateAdminUserCommand(request), cancellationToken));
+
+    [HttpGet("sensors")]
+    [ProducesResponseType(typeof(Result<IReadOnlyList<AdminSensorDto>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetSensors(
+        [FromServices] GetAdminSensorsQueryHandler handler,
+        CancellationToken cancellationToken)
+        => ProcessResult(await handler.Handle(new GetAdminSensorsQuery(), cancellationToken));
 }

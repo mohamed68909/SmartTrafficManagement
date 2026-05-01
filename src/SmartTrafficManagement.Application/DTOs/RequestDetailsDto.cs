@@ -5,7 +5,7 @@ namespace SmartTrafficManagement.Application.DTOs;
 public sealed class RequestDetailsDto
 {
     public Guid Id { get; set; }
-    public Guid VehicleId { get; set; }
+    public Guid? VehicleId { get; set; }
     public string ClientId { get; set; } = string.Empty;
     public string? ProviderId { get; set; }
     public ServiceType ServiceType { get; set; }

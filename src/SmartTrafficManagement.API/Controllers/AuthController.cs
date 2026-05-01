@@ -67,6 +67,25 @@ public sealed class AuthController : BaseController
         return ProcessResult(result);
     }
 
+    /// <summary>
+    /// Send (or resend) an OTP to the user's registered phone / email.
+    /// In MVP, this triggers the same flow as forgot-password (logs the OTP token).
+    /// Replace with a real SMS/email provider before production.
+    /// </summary>
+    [AllowAnonymous]
+    [HttpPost("send-otp")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> SendOtp(
+        [FromBody] ForgotPasswordRequestDto request,
+        [FromServices] ForgotPasswordCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        // Reuses the forgot-password handler which generates and logs the OTP token.
+        // Always returns 200 (never reveals if email exists — security best practice).
+        var result = await handler.Handle(new ForgotPasswordCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
+
     [AllowAnonymous]
     [HttpPost("verify-otp")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
@@ -106,7 +125,7 @@ public sealed class AuthController : BaseController
         return ProcessResult(result);
     }
 
-    [Authorize]
+   [Authorize]
     [HttpPatch("change-password")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult> ChangePassword(

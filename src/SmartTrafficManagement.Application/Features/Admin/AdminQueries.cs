@@ -11,46 +11,62 @@ namespace SmartTrafficManagement.Application.Features.Admin;
 
 public sealed record GetAdminDashboardSummaryQuery();
 public sealed record GetMonthlyOrderAnalyticsQuery(int Months);
-public sealed record GetAdminUsersQuery(int PageNumber, int PageSize);
+public sealed record GetAdminUsersQuery(int PageNumber, int PageSize, string? Role = null);
 public sealed record GetRecentSupportTicketsQuery(int Limit);
-public sealed record GetRecentSosRequestsQuery(int Limit);
+public sealed record GetRecentSosRequestsQuery(int Limit, string? Type = null);
 
 public sealed class GetAdminDashboardSummaryQueryHandler
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IStoreRepository _storeRepository;
-    private readonly IServiceRequestRepository _serviceRequestRepository;
-    private readonly ISupportRepository _supportRepository;
+    private readonly IStoreRepository            _storeRepository;
+    private readonly IServiceRequestRepository   _serviceRequestRepository;
+    private readonly ISupportRepository          _supportRepository;
+    private readonly ISensorRepository           _sensorRepository;
 
     public GetAdminDashboardSummaryQueryHandler(
         UserManager<ApplicationUser> userManager,
-        IStoreRepository storeRepository,
-        IServiceRequestRepository serviceRequestRepository,
-        ISupportRepository supportRepository)
+        IStoreRepository             storeRepository,
+        IServiceRequestRepository    serviceRequestRepository,
+        ISupportRepository           supportRepository,
+        ISensorRepository            sensorRepository)
     {
-        _userManager = userManager;
-        _storeRepository = storeRepository;
+        _userManager              = userManager;
+        _storeRepository          = storeRepository;
         _serviceRequestRepository = serviceRequestRepository;
-        _supportRepository = supportRepository;
+        _supportRepository        = supportRepository;
+        _sensorRepository         = sensorRepository;
     }
 
     public async Task<Result<AdminDashboardSummaryDto>> Handle(GetAdminDashboardSummaryQuery query, CancellationToken cancellationToken)
     {
-        var totalUsers = await _userManager.Users.CountAsync(cancellationToken);
-        var totalOrders = await _storeRepository.CountOrdersAsync(cancellationToken);
-        var pendingSos = await _serviceRequestRepository.CountPendingAsync(cancellationToken);
-        var openTickets = await _supportRepository.CountOpenTicketsAsync(cancellationToken);
-        var revenue = await _storeRepository.SumPaidOrdersTotalAsync(cancellationToken);
+        // All queries MUST be sequential — EF Core DbContext is NOT thread-safe.
+        // Running Task.WhenAll on scoped DbContext causes InvalidOperationException.
+        var totalUsers   = await _userManager.Users.CountAsync(cancellationToken);
+        var totalOrders  = await _storeRepository.CountOrdersAsync(cancellationToken);
+        var pendingSos   = await _serviceRequestRepository.CountPendingAsync(cancellationToken);
+        var openTickets  = await _supportRepository.CountOpenTicketsAsync(cancellationToken);
+        var revenue      = await _storeRepository.SumPaidOrdersTotalAsync(cancellationToken);
+        var sensors      = await _sensorRepository.GetAllAsync(cancellationToken);
+        var providers    = await _userManager.GetUsersInRoleAsync(AppRoles.Provider);
+        var sellers      = await _userManager.GetUsersInRoleAsync(AppRoles.Seller);
+
+        var pendingApprovals = providers
+            .Count(u => u.ProviderStatus == SmartTrafficManagement.Core.Enums.ProviderStatus.Pending);
 
         return Result<AdminDashboardSummaryDto>.Success(new AdminDashboardSummaryDto
         {
-            TotalUsers = totalUsers,
-            TotalOrders = totalOrders,
-            PendingSosRequests = pendingSos,
-            OpenTickets = openTickets,
-            TotalRevenue = revenue
+            TotalUsers            = totalUsers,
+            TotalProviders        = providers.Count,
+            TotalSellers          = sellers.Count,
+            TotalSensors          = sensors.Count,
+            TotalOrders           = totalOrders,
+            PendingSosRequests    = pendingSos,
+            OpenTickets           = openTickets,
+            TotalPendingApprovals = pendingApprovals,
+            TotalRevenue          = revenue
         }, 200);
     }
+
 }
 
 public sealed class GetMonthlyOrderAnalyticsQueryHandler
@@ -91,25 +107,48 @@ public sealed class GetAdminUsersQueryHandler
     {
         var pageNumber = query.PageNumber <= 0 ? 1 : query.PageNumber;
         var pageSize = query.PageSize <= 0 ? 20 : Math.Min(query.PageSize, 100);
-        var allUsers = _userManager.Users.AsNoTracking();
+        
+        IQueryable<ApplicationUser> allUsers = _userManager.Users.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(query.Role))
+        {
+            // Simple mapping since frontend sends "user" but backend uses "Client" usually, or just use exactly.
+            // Let's ensure role name capitalization
+            var roleName = char.ToUpper(query.Role[0]) + query.Role.Substring(1).ToLower();
+            // Map frontend aliases to actual role names
+            if (roleName == "User" || roleName == "Client" || roleName == "Driver")
+                roleName = AppRoles.Client;
+            
+            var usersInRole = await _userManager.GetUsersInRoleAsync(roleName);
+            var ids = usersInRole.Select(u => u.Id).ToHashSet();
+            allUsers = allUsers.Where(u => ids.Contains(u.Id));
+        }
+
         var totalCount = await allUsers.CountAsync(cancellationToken);
 
         var users = await allUsers
-            .OrderByDescending(x => x.IsActive)
-            .ThenBy(x => x.FirstName)
+            .OrderByDescending(x => x.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        var items = users.Select(x => new AdminUserRowDto
+        var items = new List<AdminUserRowDto>();
+        foreach (var x in users)
         {
-            Id = x.Id,
-            FullName = $"{x.FirstName} {x.LastName}".Trim(),
-            Email = x.Email ?? string.Empty,
-            PhoneNumber = x.PhoneNumber ?? string.Empty,
-            IsActive = x.IsActive,
-            Points = x.Points
-        }).ToList();
+            var userRoles = await _userManager.GetRolesAsync(x);
+            var role = userRoles.FirstOrDefault() ?? string.Empty;
+
+            items.Add(new AdminUserRowDto
+            {
+                Id = x.Id,
+                FullName = $"{x.FirstName} {x.LastName}".Trim(),
+                Email = x.Email ?? string.Empty,
+                PhoneNumber = x.PhoneNumber ?? string.Empty,
+                IsActive = x.IsActive,
+                Points = x.Points,
+                Role = role
+            });
+        }
 
         return Result<PagedResultDto<AdminUserRowDto>>.Success(new PagedResultDto<AdminUserRowDto>
         {
@@ -149,11 +188,14 @@ public sealed class GetRecentSosRequestsQueryHandler
     public async Task<Result<IReadOnlyList<AdminSosRowDto>>> Handle(GetRecentSosRequestsQuery query, CancellationToken cancellationToken)
     {
         var requests = await _serviceRequestRepository.GetRecentAsync(query.Limit, cancellationToken);
-        var items = requests.Select(x => new AdminSosRowDto
+        var query2 = requests.AsQueryable();
+        if (!string.IsNullOrEmpty(query.Type))
+            query2 = query2.Where(s => s.ServiceType.ToString() == query.Type);
+        var items = query2.Select(x => new AdminSosRowDto
         {
             RequestId = x.Id,
             ClientName = $"{x.Client.FirstName} {x.Client.LastName}".Trim(),
-            ProviderName = x.Provider is null ? string.Empty : $"{x.Provider.FirstName} {x.Provider.LastName}".Trim(),
+            ProviderName = x.Provider == null ? string.Empty : $"{x.Provider.FirstName} {x.Provider.LastName}".Trim(),
             ServiceType = x.ServiceType,
             Status = x.Status,
             RequestedAtUtc = x.RequestedAtUtc
@@ -195,8 +237,7 @@ public sealed class GetAdminProvidersQueryHandler
         var totalCount = await allProviders.CountAsync(cancellationToken);
 
         var providers = await allProviders
-            .OrderByDescending(u => u.IsActive)
-            .ThenBy(u => u.FirstName)
+            .OrderByDescending(u => u.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);

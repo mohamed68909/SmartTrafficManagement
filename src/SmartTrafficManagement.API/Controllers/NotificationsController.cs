@@ -8,7 +8,7 @@ using SmartTrafficManagement.Core.Interfaces;
 namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("api/notifications")]
 public sealed class NotificationsController : BaseController
 {

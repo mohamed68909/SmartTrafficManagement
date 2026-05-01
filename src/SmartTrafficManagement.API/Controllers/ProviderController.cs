@@ -1,18 +1,25 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartTrafficManagement.Application.DTOs.Provider;
 using SmartTrafficManagement.Application.Features.Provider;
 using SmartTrafficManagement.Core.Common;
 using SmartTrafficManagement.Core.Constants;
+using SmartTrafficManagement.Core.Entities;
 
 namespace SmartTrafficManagement.API.Controllers;
 
 [ApiController]
 [Route("api/provider")]
-//[Authorize(Roles = AppRoles.Provider)]
+[Authorize(Roles = AppRoles.Provider)]
 public sealed class ProviderController : BaseController
 {
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public ProviderController(UserManager<ApplicationUser> userManager)
+        => _userManager = userManager;
+
     // ── Existing endpoints ──────────────────────────────────────────────────
 
     [HttpGet("dashboard")]
@@ -51,6 +58,17 @@ public sealed class ProviderController : BaseController
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? string.Empty;
         return ProcessResult(await handler.Handle(new AcceptJobCommand(userId, requestId), cancellationToken));
+    }
+
+    [HttpPost("jobs/{requestId:guid}/reject")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> Reject(
+        Guid requestId,
+        [FromServices] RejectJobCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? string.Empty;
+        return ProcessResult(await handler.Handle(new RejectJobCommand(userId, requestId), cancellationToken));
     }
 
     [HttpPatch("jobs/status")]
@@ -158,5 +176,22 @@ public sealed class ProviderController : BaseController
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? string.Empty;
         return ProcessResult(await handler.Handle(new GetProviderProfileQuery(userId), cancellationToken));
+    }
+
+    [HttpPatch("status")]
+   [Authorize(Roles = AppRoles.Provider)]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> UpdateOnlineStatus(
+        [FromBody] UpdateProviderStatusDto request,
+        CancellationToken cancellationToken)
+    {
+        var providerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        var provider = await _userManager.FindByIdAsync(providerId);
+        if (provider is null)
+            return NotFound(Result<bool>.Failure(DomainErrors.Common.NotFound, 404));
+
+        provider.IsOnline = request.IsOnline;
+        await _userManager.UpdateAsync(provider);
+        return Ok(Result<bool>.Success(true, 200));
     }
 }

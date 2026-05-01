@@ -6,11 +6,15 @@ namespace SmartTrafficManagement.Application.DTOs.Admin;
 
 public sealed class AdminDashboardSummaryDto
 {
-    public int     TotalUsers         { get; set; }
-    public int     TotalOrders        { get; set; }
-    public int     PendingSosRequests { get; set; }
-    public int     OpenTickets        { get; set; }
-    public decimal TotalRevenue       { get; set; }
+    public int     TotalUsers              { get; set; }
+    public int     TotalProviders          { get; set; }
+    public int     TotalSellers            { get; set; }
+    public int     TotalSensors            { get; set; }
+    public int     TotalOrders             { get; set; }
+    public int     PendingSosRequests      { get; set; }
+    public int     OpenTickets             { get; set; }
+    public int     TotalPendingApprovals   { get; set; }
+    public decimal TotalRevenue            { get; set; }
 }
 
 public sealed class AdminMonthlyOrderStatsDto
@@ -25,10 +29,15 @@ public sealed class AdminUserRowDto
 {
     public string Id          { get; set; } = string.Empty;
     public string FullName    { get; set; } = string.Empty;
+    public string Name        { get; set; } = string.Empty;
     public string Email       { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
+    public string Phone       { get; set; } = string.Empty;
     public bool   IsActive    { get; set; }
     public int    Points      { get; set; }
+    public string Status      { get; set; } = string.Empty;
+    public string JoinDate    { get; set; } = string.Empty;
+    public string Role        { get; set; } = string.Empty;
 }
 
 public sealed class AdminSupportTicketRowDto
@@ -143,15 +152,42 @@ public sealed class AdminRatingDto
 // 9 – System status
 public sealed class AdminSystemStatusDto
 {
-    public bool   DbConnected        { get; set; }
-    public int    ActiveConnections  { get; set; }
-    public string Uptime             { get; set; } = string.Empty;
-    public string Version            { get; set; } = string.Empty;
+    public bool                           DbConnected       { get; set; }
+    public int                            ActiveConnections { get; set; }
+    public string                         Uptime            { get; set; } = string.Empty;
+    public string                         Version           { get; set; } = string.Empty;
+    public IReadOnlyList<ServiceStatusRow> Services         { get; set; } = [];
+}
+
+/// <summary>Individual service health row for the System Status card.</summary>
+public sealed class ServiceStatusRow
+{
+    public string Name      { get; set; } = string.Empty;  // e.g. "API Gateway"
+    public string Status    { get; set; } = string.Empty;  // "operational" | "degraded" | "down"
+    public double UptimePct { get; set; }                   // e.g. 99.97
 }
 
 // 10 – Activity log
 public sealed class AdminActivityDto
 {
     public string   Event     { get; set; } = string.Empty;
+    public string   Type      { get; set; } = string.Empty;  // "sos" | "ticket" | "approval" | "user" | "sensor"
+    public string   Icon      { get; set; } = string.Empty;  // emoji hint for the frontend
     public DateTime Timestamp { get; set; }
 }
+
+// 11 – Create admin user
+public sealed record CreateAdminUserDto(
+    string Role,
+    string FirstName,
+    string LastName,
+    string Email,
+    string PhoneNumber,
+    string Password
+);
+
+// 12 – Sensor row
+public sealed record AdminSensorDto(
+    string Id, string Name, double Lat, double Lng,
+    string Status, double Value, string Unit, DateTime LastUpdated
+);
