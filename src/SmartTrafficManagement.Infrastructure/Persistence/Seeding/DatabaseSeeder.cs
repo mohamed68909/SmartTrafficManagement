@@ -30,9 +30,7 @@ public sealed class DatabaseSeeder(
                 catch (Exception ex)
                 {
                     logger.LogError(ex, "Seeder {SeederName} failed.", seeder.GetType().Name);
-                    throw new InvalidOperationException(
-                        $"Database seeding failed in {seeder.GetType().Name}. See inner exception for details.",
-                        ex);
+                    // Do not throw here so other seeders can attempt to run, or just log.
                 }
             }
 
@@ -40,8 +38,8 @@ public sealed class DatabaseSeeder(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occurred during database seeding.");
-            throw;
+            logger.LogError(ex, "An error occurred during database seeding/migration. The database might not be available yet.");
+            // Do NOT throw here, allowing the app to start up and return API responses (even if they fail later due to no DB)
         }
     }
 }

@@ -27,7 +27,7 @@ public sealed class ExceptionHandlingMiddleware
             context.Response.ContentType = "application/json";
 
             var result = Result<bool>.Failure(
-                new Error("System.InternalError", "An internal server error occurred."),
+                new Error("System.InternalError", $"An internal server error occurred: {ex.Message}"),
                 StatusCodes.Status500InternalServerError);
             await context.Response.WriteAsync(JsonSerializer.Serialize(result));
         }
