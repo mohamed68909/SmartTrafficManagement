@@ -14,6 +14,7 @@ public sealed class RequestSosCommand
     public decimal Lat { get; set; }
     public decimal Lng { get; set; }
     public Guid? VehicleId { get; set; }   // optional — mobile users may not have a registered vehicle
+    public string? Notes { get; set; }
 }
 
 public sealed class RequestSosCommandValidator : AbstractValidator<RequestSosCommand>
@@ -23,6 +24,7 @@ public sealed class RequestSosCommandValidator : AbstractValidator<RequestSosCom
         RuleFor(x => x.Lat).InclusiveBetween(-90m, 90m);
         RuleFor(x => x.Lng).InclusiveBetween(-180m, 180m);
         RuleFor(x => x.ServiceType).IsInEnum();
+        RuleFor(x => x.Notes).MaximumLength(500);
     }
 }
 
@@ -73,7 +75,7 @@ public sealed class RequestSosCommandHandler
             Status      = RequestStatus.Pending,
             Latitude    = command.Lat,
             Longitude   = command.Lng,
-            Description = "SOS request"
+            Description = command.Notes ?? "SOS request"
         };
 
         await _serviceRequestRepository.AddAsync(request, cancellationToken);

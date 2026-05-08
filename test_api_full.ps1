@@ -1,4 +1,4 @@
-$base = "http://localhost:5000"
+$base = "http://localhost:5164"
 $token = ""
 $refreshToken = ""
 $allResults = [System.Collections.Generic.List[object]]::new()
@@ -11,6 +11,7 @@ function Test-Endpoint {
         $params = @{ Method=$method; Uri=$url; ContentType="application/json"; ErrorAction="Stop" }
         if ($body)            { $params.Body    = ($body | ConvertTo-Json -Depth 10) }
         if ($headers.Count -gt 0) { $params.Headers = $headers }
+        $params["UseBasicParsing"] = $true
         $resp = Invoke-RestMethod @params
         $status = 200
         $responseText = ($resp | ConvertTo-Json -Depth 3 -Compress)
@@ -54,7 +55,7 @@ Test-Endpoint 6  "POST" "/api/auth/reset-password"  @{email=$email; token="inval
 # Get real token via login
 try {
     $lr = Invoke-RestMethod -Method POST -Uri "$base/api/auth/login" `
-        -ContentType "application/json" -Body (@{email=$email; password=$pass} | ConvertTo-Json) -EA Stop
+        -ContentType "application/json" -Body (@{email=$email; password=$pass} | ConvertTo-Json) -EA Stop -UseBasicParsing
     if ($lr.data.accessToken)  { $token = $lr.data.accessToken }
     if ($lr.data.refreshToken) { $refreshToken = $lr.data.refreshToken }
     Write-Host "  --> Token acquired" -ForegroundColor DarkGreen
@@ -75,7 +76,7 @@ Test-Endpoint 11 "PATCH" "/api/auth/change-password" @{currentPassword=$pass; ne
 # login again with new password to keep token fresh
 try {
     $lr2 = Invoke-RestMethod -Method POST -Uri "$base/api/auth/login" `
-        -ContentType "application/json" -Body (@{email=$email;password="NewPass@1234"} | ConvertTo-Json) -EA Stop
+        -ContentType "application/json" -Body (@{email=$email;password="NewPass@1234"} | ConvertTo-Json) -EA Stop -UseBasicParsing
     if ($lr2.data.accessToken) { $token = $lr2.data.accessToken; $auth = @{Authorization="Bearer $token"} }
     Write-Host "  --> Re-authenticated with new password" -ForegroundColor DarkGreen
 } catch { Write-Host "  --> Re-login skipped: $_" -ForegroundColor Yellow }
@@ -104,7 +105,7 @@ Test-Endpoint 19 "GET"  "/api/sos/history" $null "SOS History" @(200,201) $auth
 # get a sos id to test status
 $sosId = $null
 try {
-    $hist = Invoke-RestMethod -Method GET -Uri "$base/api/sos/history" -Headers $auth -EA Stop
+    $hist = Invoke-RestMethod -Method GET -Uri "$base/api/sos/history" -Headers $auth -EA Stop -UseBasicParsing
     if ($hist.data -and $hist.data.Count -gt 0) { $sosId = $hist.data[0].id }
 } catch {}
 

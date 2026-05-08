@@ -33,40 +33,48 @@ internal sealed class ApplicationDataSeeder(
         var saraAgentUser = await GetRequiredUserAsync("sara@smarttraffic.io",ct);
 
         // ══════════════════════════════════════════════════════════════════════
-        // Section 1 — Categories
+        // Section 1 — Categories (Force Update & Insert)
         // ══════════════════════════════════════════════════════════════════════
-        if (!await dbContext.Categories.AnyAsync(ct))
+        var existingCategories = await dbContext.Categories.ToListAsync(ct);
+
+        // 1. Rename old categories to match mobile app
+        var categoryUpdates = new Dictionary<string, string>
         {
-            await dbContext.Categories.AddRangeAsync(new[]
+            { "Engine Oils", "Oils" },
+            { "Brake Parts", "Brakes" }
+        };
+
+        foreach (var update in categoryUpdates)
+        {
+            var categoryToUpdate = existingCategories.FirstOrDefault(c => c.Name == update.Key);
+            if (categoryToUpdate != null)
             {
-                new Category
-                {
-                    Name        = "Engine Oils",
-                    Description = "Synthetic and semi-synthetic engine oils for all vehicle types."
-                },
-                new Category
-                {
-                    Name        = "Tires",
-                    Description = "Passenger and SUV tires for city and highway driving."
-                },
-                new Category
-                {
-                    Name        = "Battery & Electrical",
-                    Description = "Batteries, chargers, and electrical accessories."
-                },
-                new Category
-                {
-                    Name        = "Brake Parts",
-                    Description = "Brake pads, discs, calipers, and brake fluids."
-                },
-                new Category
-                {
-                    Name        = "Filters",
-                    Description = "Air, oil, fuel, and cabin filters for all vehicles."
-                },
-            }, ct);
-            await dbContext.SaveChangesAsync(ct);
+                categoryToUpdate.Name = update.Value;
+            }
         }
+
+        // 2. Define all target categories
+        var targetCategories = new[]
+        {
+            new Category { Name = "Oils", Description = "Synthetic and semi-synthetic engine oils for all vehicle types." },
+            new Category { Name = "Tires", Description = "Passenger and SUV tires for city and highway driving." },
+            new Category { Name = "Battery & Electrical", Description = "Batteries, chargers, and electrical accessories." },
+            new Category { Name = "Brakes", Description = "Brake pads, discs, calipers, and brake fluids." },
+            new Category { Name = "Filters", Description = "Air, oil, fuel, and cabin filters for all vehicles." },
+            new Category { Name = "Engine Belts", Description = "Timing belts, serpentine belts, and V-belts." },
+            new Category { Name = "Accessories", Description = "Car care, interior accessories, and emergency kits." }
+        };
+
+        // 3. Insert any missing categories
+        foreach (var target in targetCategories)
+        {
+            if (!existingCategories.Any(c => c.Name == target.Name))
+            {
+                await dbContext.Categories.AddAsync(target, ct);
+                existingCategories.Add(target); // Keep track for the current session
+            }
+        }
+        await dbContext.SaveChangesAsync(ct);
 
         // ══════════════════════════════════════════════════════════════════════
         // Section 2 — Vehicles
@@ -184,56 +192,56 @@ internal sealed class ApplicationDataSeeder(
                 new Product
                 {
                     SellerId      = sellerUser.Id,
-                    CategoryId    = categories["Engine Oils"].Id,
-                    Name          = "Mobil 1 5W-30 Full Synthetic",
-                    Description   = "High-performance full synthetic motor oil for modern engines.",
-                    Price         = 48.99m,
-                    StockQuantity = 120
+                    CategoryId    = categories["Oils"].Id,
+                    Name          = "Engine Pro 5W-30",
+                    Description   = "Fully Synthetic · 5L High performance oil.",
+                    Price         = 850.00m,
+                    StockQuantity = 100
                 },
                 new Product
                 {
                     SellerId      = sellerUser.Id,
-                    CategoryId    = categories["Tires"].Id,
-                    Name          = "Michelin Primacy 4 - 205/55R16",
-                    Description   = "Low-noise touring tire with improved wet braking performance.",
-                    Price         = 134.50m,
-                    StockQuantity = 60
-                },
-                new Product
-                {
-                    SellerId      = sellerUser.Id,
-                    CategoryId    = categories["Battery & Electrical"].Id,
-                    Name          = "Bosch S5 Car Battery 70Ah",
-                    Description   = "Reliable maintenance-free battery with high cold-cranking power.",
-                    Price         = 110.00m,
-                    StockQuantity = 35
-                },
-                new Product
-                {
-                    SellerId      = sellerUser.Id,
-                    CategoryId    = categories["Battery & Electrical"].Id,
-                    Name          = "Varta Blue Dynamic Battery 70Ah",
-                    Description   = "Proven OEM-quality starter battery for everyday vehicles.",
-                    Price         = 88.00m,
-                    StockQuantity = 45
-                },
-                new Product
-                {
-                    SellerId      = sellerUser.Id,
-                    CategoryId    = categories["Brake Parts"].Id,
-                    Name          = "TRW Premium Brake Pads",
-                    Description   = "Low-dust, low-noise brake pads for passenger cars.",
-                    Price         = 59.99m,
+                    CategoryId    = categories["Oils"].Id,
+                    Name          = "Molygen New Gen 5W-40",
+                    Description   = "Fully Synthetic · 5L High performance oil.",
+                    Price         = 920.00m,
                     StockQuantity = 80
                 },
                 new Product
                 {
                     SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Brakes"].Id,
+                    Name          = "Ceramic Brake Pads",
+                    Description   = "Front Axle · High Performance Brembo style.",
+                    Price         = 1200.00m,
+                    StockQuantity = 50
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
                     CategoryId    = categories["Filters"].Id,
-                    Name          = "Bosch Air Filter F026400006",
-                    Description   = "OE-quality air filter for improved engine performance.",
-                    Price         = 14.50m,
-                    StockQuantity = 200
+                    Name          = "Performance Air Filter",
+                    Description   = "Washable · Reusable K&N style filter.",
+                    Price         = 650.00m,
+                    StockQuantity = 150
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Tires"].Id,
+                    Name          = "Pilot Sport 4",
+                    Description   = "225/45R17 · W-rated Max Performance Summer.",
+                    Price         = 3100.00m,
+                    StockQuantity = 40
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Tires"].Id,
+                    Name          = "Turanza T005",
+                    Description   = "225/45R17 · V-rated Grand Touring.",
+                    Price         = 2650.00m,
+                    StockQuantity = 45
                 },
             }, ct);
             await dbContext.SaveChangesAsync(ct);

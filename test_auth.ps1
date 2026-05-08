@@ -40,6 +40,7 @@ function Invoke-Test {
         }
         if ($jsonBody) { $params["Body"] = $jsonBody }
 
+        $params["UseBasicParsing"] = $true
         $response = Invoke-WebRequest @params
         $status   = $response.StatusCode
         $content  = $response.Content | ConvertFrom-Json -ErrorAction SilentlyContinue
@@ -75,7 +76,7 @@ Write-Host "⏳  Waiting for API to start..." -ForegroundColor Yellow
 $ready = $false
 for ($i = 1; $i -le 30; $i++) {
     try {
-        Invoke-WebRequest -Uri "$BASE_URL/swagger/v1/swagger.json" -ErrorAction Stop | Out-Null
+        Invoke-WebRequest -Uri "$BASE_URL/swagger/v1/swagger.json" -ErrorAction Stop -UseBasicParsing | Out-Null
         $ready = $true
         break
     } catch { Start-Sleep -Seconds 2 }

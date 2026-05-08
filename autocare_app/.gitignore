@@ -1,0 +1,61 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+
+# Android
+/android/.gradle
+/android/captures/
+/android/gradlew
+/android/gradlew.bat
+/android/local.properties
+/android/key.properties
+*.keystore
+*.jks
+
+# iOS
+/ios/.symlinks/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/app.flx
+/ios/Flutter/app.zip
+/ios/Flutter/flutter_assets/
+/ios/Flutter/flutter_export_environment.sh
+/ios/ServiceDefinitions.json
+/ios/Runner/GeneratedPluginRegistrant.*
+*.xcworkspace
+
+# macOS
+/macos/Flutter/GeneratedPluginRegistrant.swift
+/macos/Flutter/ephemeral
+
+# IntelliJ / VSCode
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+.history/
+
+# Environment files — NEVER commit these
+.env
+.env.local
+*.env
+secrets.dart
+stripe_keys.dart
+
+# Assets (fonts not committed — download separately)
+assets/fonts/*.ttf
+assets/fonts/*.otf
+
+# Misc
+*.log
+*.DS_Store
+Thumbs.db

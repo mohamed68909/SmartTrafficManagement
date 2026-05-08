@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- android/app/src/main/res/drawable-v21/launch_background.xml -->
+<!-- Dark black splash with centred AutoCare neon logo mark -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Solid black background -->
+    <item android:drawable="@android:color/black" />
+
+    <!-- Centred neon-green oval glow -->
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@mipmap/ic_launcher" />
+    </item>
+
+</layer-list>

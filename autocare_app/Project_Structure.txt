@@ -1,0 +1,94 @@
+lib/
+├── main.dart (import main_wrapper.dart or splash_screen_first.dart)
+│
+├── core/
+│   ├── theme/
+│   │   └── app_theme.dart  (merge theme.dart into this)
+│   ├── providers/
+│   │   └── app_providers.dart  (add user_provider logic here)
+│   ├── models/
+│   │   └── models.dart
+│   ├── services/
+│   │   └── stripe_service.dart
+│   └── widgets/
+│       ├── custom_button.dart
+│       ├── custom_text_field.dart
+│       ├── calendar_strip.dart
+│       ├── maintenance_category_card.dart
+│       ├── profile_avatar.dart
+│       ├── recommended_product_card.dart
+│       ├── product_icon.dart
+│       └── shared_widgets.dart
+│
+├── features/
+│   ├── auth/
+│   │   └── screens/
+│   │       ├── onboarding_screen.dart  (pick version 2, delete version 1)
+│   │       ├── login_screen.dart
+│   │       ├── otp_screen.dart
+│   │       ├── phone_number_screen.dart
+│   │       ├── registration_screen.dart
+│   │       └── splash_screen.dart
+│   │
+│   ├── dashboard/
+│   │   └── screens/
+│   │       └── dashboard_screen.dart
+│   │
+│   ├── map/
+│   │   └── screens/
+│   │       ├── map_screen.dart
+│   │       ├── navigation_screen.dart
+│   │       └── search_screen.dart
+│   │
+│   ├── reports/  (merge all 5 report files)
+│   │   └── screens/
+│   │       └── traffic_screen.dart  (enhance to handle all report types)
+│   │
+│   ├── emergency/
+│   │   └── screens/
+│   │       ├── emergency_screen.dart
+│   │       ├── emergency_fuel_screen.dart
+│   │       ├── emergency_tracking_screen.dart
+│   │       ├── fuel_tracking_screen.dart
+│   │       └── winch_service_screen.dart
+│   │
+│   ├── maintenance/
+│   │   └── screens/
+│   │       └── maintenance_screen.dart
+│   │
+│   ├── mechanic/
+│   │   └── screens/
+│   │       └── mechanic_screen.dart
+│   │
+│   ├── history/
+│   │   └── screens/
+│   │       └── history_screen.dart
+│   │
+│   ├── profile/
+│   │   └── screens/
+│   │       ├── profile_screen.dart
+│   │       ├── edit_profile_screen.dart
+│   │       ├── help_center_screen.dart
+│   │       ├── notifications_screen.dart
+│   │       ├── settings_screen.dart
+│   │       ├── rating_screen.dart
+│   │       └── order_confirmation_screen.dart
+│   │
+│   ├── store/
+│   │   └── screens/
+│   │       ├── store_screen.dart
+│   │       ├── cart_screen.dart
+│   │       ├── product_detail_screen.dart
+│   │       ├── weather_conditions_screen.dart
+│   │       ├── checkout_screen.dart
+│   │       ├── delivery_screen.dart
+│   │       ├── manage_cards_screen.dart
+│   │       ├── checkout_address_screen.dart
+│   │       ├── checkout_payment_screen.dart
+│   │       └── payment_success_screen.dart
+│   │
+│   └── vehicle/
+│       └── screens/
+│           └── vehicle_info_screen.dart
+│
+└── main_wrapper.dart (or integrate into main.dart)

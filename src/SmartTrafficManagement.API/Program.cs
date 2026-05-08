@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using SmartTrafficManagement.API.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using SmartTrafficManagement.Application;
@@ -15,7 +16,11 @@ if (!Directory.Exists(wwwrootPath))
     Directory.CreateDirectory(wwwrootPath);
 }
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 30 * 1024 * 1024; // 30 MB max form body
@@ -94,8 +99,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseStaticFiles();   // serves wwwroot (including /uploads/*)
-app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

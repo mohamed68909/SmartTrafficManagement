@@ -1,0 +1,85 @@
+import 'dart:convert';
+import '../network/api_client.dart';
+import '../network/api_constants.dart';
+
+class EmergencyService {
+  static Future<Map<String, dynamic>> requestSos({
+    required dynamic serviceType, // Accept String or int
+    required double lat,
+    required double lng,
+    String? notes,
+  }) async {
+    try {
+      final response = await ApiClient.post(
+        ApiConstants.sosRequestUrl,
+        {
+          'serviceType': serviceType,
+          'lat': lat,
+          'lng': lng,
+          'notes': notes,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {'success': true};
+      } else {
+        final errorData = jsonDecode(response.body);
+        return {'success': false, 'message': errorData['message'] ?? 'Failed to send SOS request'};
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: $e'};
+    }
+  }
+
+  static Future<List<dynamic>> getSosHistory() async {
+    try {
+      final response = await ApiClient.get(ApiConstants.sosHistoryUrl);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['data'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static Future<Map<String, dynamic>> cancelSos(String id) async {
+    try {
+      final response = await ApiClient.patch(ApiConstants.sosCancelUrl(id), {});
+      if (response.statusCode == 200) {
+        return {'success': true};
+      }
+      final errorData = jsonDecode(response.body);
+      return {'success': false, 'message': errorData['message'] ?? 'Failed to cancel'};
+    } catch (e) {
+      return {'success': false, 'message': 'Error: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> acceptSos(String id) async {
+    try {
+      final response = await ApiClient.patch(ApiConstants.sosAcceptUrl(id), {});
+      if (response.statusCode == 200) {
+        return {'success': true};
+      }
+      final errorData = jsonDecode(response.body);
+      return {'success': false, 'message': errorData['message'] ?? 'Failed to accept'};
+    } catch (e) {
+      return {'success': false, 'message': 'Error: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getSosStatus(String id) async {
+    try {
+      final response = await ApiClient.get(ApiConstants.sosStatusUrl(id));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['data'];
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+}

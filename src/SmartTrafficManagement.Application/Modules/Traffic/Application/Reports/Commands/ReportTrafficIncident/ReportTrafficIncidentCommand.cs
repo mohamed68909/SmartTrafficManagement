@@ -29,8 +29,8 @@ public sealed class ReportTrafficIncidentCommandValidator : AbstractValidator<Re
 
 public sealed class ReportTrafficIncidentCommandHandler
 {
-    private const int BasePoints = 10;
-    private const int VerificationBonusPoints = 5;
+    private const int BasePoints = 40;
+    private const int VerificationBonusPoints = 10;
     private readonly ITrafficModuleRepository _repository;
 
     public ReportTrafficIncidentCommandHandler(ITrafficModuleRepository repository)

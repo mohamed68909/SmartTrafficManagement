@@ -25,6 +25,7 @@ public sealed class GetCartQueryHandler
         {
             Items = items.Select(x => new CartItemDto
             {
+                Id = x.Id,
                 ProductId = x.ProductId,
                 ProductName = x.Product.Name,
                 Quantity = x.Quantity,

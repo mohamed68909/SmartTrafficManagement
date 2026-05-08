@@ -361,3 +361,19 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Project specific ignores
+publish_output/
+*.rar
+*.zip
+*.7z
+autocare_app/build/
+autocare_app/.dart_tool/
+autocare_app/.flutter-plugins
+autocare_app/.flutter-plugins-dependencies
+autocare_app/.packages
+autocare_app/pubspec.lock
+my-project/node_modules/
+my-project/dist/
+.env
+*.log

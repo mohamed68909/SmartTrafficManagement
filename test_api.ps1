@@ -1,4 +1,4 @@
-$base = "http://localhost:5000"
+$base = "http://localhost:5164"
 $token = ""
 $allResults = [System.Collections.Generic.List[object]]::new()
 
@@ -11,6 +11,7 @@ function Test-Endpoint {
         $params = @{ Method = $method; Uri = $url; ContentType = "application/json"; ErrorAction = "Stop" }
         if ($body) { $params.Body = ($body | ConvertTo-Json -Depth 10) }
         if ($headers.Count -gt 0) { $params.Headers = $headers }
+        $params["UseBasicParsing"] = $true
         $resp = Invoke-RestMethod @params
         $status = 200
         $responseText = ($resp | ConvertTo-Json -Depth 3 -Compress)
@@ -65,7 +66,7 @@ try {
     $loginResp = Invoke-RestMethod -Method POST -Uri "$base/api/auth/login" `
         -ContentType "application/json" `
         -Body (@{email=$email; password="Test@1234"} | ConvertTo-Json) `
-        -ErrorAction Stop
+        -ErrorAction Stop -UseBasicParsing
     if ($loginResp.data.accessToken) { $token = $loginResp.data.accessToken }
 } catch {}
 
