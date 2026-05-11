@@ -102,8 +102,8 @@ public sealed class CheckoutCommandHandler
                 stripeAmount,
                 command.Currency.ToLowerInvariant(),
                 cancellationToken);
-            paymentIntentId = stripeResult.paymentIntentId;
-            clientSecret = stripeResult.clientSecret;
+            paymentIntentId = stripeResult.PaymentIntentId;
+            clientSecret = stripeResult.ClientSecret;
         }
 
         var order = new Order

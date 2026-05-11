@@ -7,8 +7,7 @@ using SmartTrafficManagement.Infrastructure.Persistence.Seeding;
 using SmartTrafficManagement.Infrastructure.Seeding;
 using SmartTrafficManagement.Infrastructure.Realtime;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.RateLimiting;
-using System.Threading.RateLimiting;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,16 +95,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter("GlobalPolicy", opt =>
-    {
-        opt.PermitLimit = 60; // 60 requests
-        opt.Window = TimeSpan.FromMinutes(1); // per minute
-        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        opt.QueueLimit = 5;
-    });
-});
+
 
 var app = builder.Build();
 
@@ -134,10 +124,10 @@ app.UseHttpsRedirection();
 // AllowAll  → all REST controllers (mobile + web + Postman)
 // AllowFrontend → SignalR hub only (needs credential-aware CORS)
 app.UseCors("AllowAll");
-app.UseRateLimiter(); // Apply Rate Limiting middleware
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers().RequireRateLimiting("GlobalPolicy"); // Apply to all endpoints
+app.MapControllers(); // Apply to all endpoints
 app.MapHub<TrafficHub>("/hubs/traffic")
    .RequireCors("AllowFrontend");
 
