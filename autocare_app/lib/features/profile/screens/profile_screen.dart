@@ -12,6 +12,7 @@ import '../../mechanic/screens/mechanic_screen.dart';
 import 'edit_profile_screen.dart';
 import 'notifications_screen.dart';
 import 'help_center_screen.dart';
+import 'privacy_policy_screen.dart';
 import '../../vehicle/screens/vehicle_info_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -101,7 +102,9 @@ class ProfileScreen extends ConsumerWidget {
                   _MenuItem(Icons.help_outline_rounded, 'Help Center', null,
                       onTap: () => Navigator.push(context,
                           MaterialPageRoute(builder: (_) => const HelpCenterScreen()))),
-                  _MenuItem(Icons.privacy_tip_outlined, 'Privacy Policy', null),
+                  _MenuItem(Icons.privacy_tip_outlined, 'Privacy Policy', null,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()))),
                   _MenuItem(Icons.info_outline_rounded, 'About AutoCare', 'v1.0.0'),
                 ],
                 context: context,

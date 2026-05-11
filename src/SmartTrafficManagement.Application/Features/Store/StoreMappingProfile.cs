@@ -10,6 +10,7 @@ public sealed class StoreMappingProfile : Profile
     {
         CreateMap<Product, ProductDto>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+            .ForMember(dest => dest.Brand,        opt => opt.MapFrom(src => src.Brand))
             .ForMember(dest => dest.ImageUrl,     opt => opt.MapFrom(src => src.ImageUrl));
     }
 }

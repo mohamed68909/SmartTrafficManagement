@@ -77,10 +77,10 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
           final product = Product(
             id: item['productId'] ?? '',
             name: item['productName'] ?? 'Unknown',
-            brand: 'AutoCare',
-            category: 'Store',
+            brand: item['productBrand'] ?? 'AutoCare',
+            category: item['productCategory'] ?? 'Store',
             price: (item['unitPrice'] ?? 0).toDouble(),
-            imageUrl: '', // We don't have it in CartItemDto yet
+            imageUrl: item['productImageUrl'] ?? '',
           );
           return CartItem(
             cartItemId: item['id'],

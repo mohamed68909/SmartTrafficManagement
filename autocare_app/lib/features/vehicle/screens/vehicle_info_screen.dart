@@ -149,6 +149,11 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
           SnackBar(content: Text('Error: $e')),
         );
       }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _updateVehicle() async {
     if (widget.existingVehicle == null) return;
     if (selectedBrand == null || selectedModel == null || _plateController.text.isEmpty) {

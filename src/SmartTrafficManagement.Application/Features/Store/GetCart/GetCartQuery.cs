@@ -28,6 +28,9 @@ public sealed class GetCartQueryHandler
                 Id = x.Id,
                 ProductId = x.ProductId,
                 ProductName = x.Product.Name,
+                ProductBrand = x.Product.Brand,
+                ProductCategory = x.Product.Category.Name,
+                ProductImageUrl = x.Product.ImageUrl ?? string.Empty,
                 Quantity = x.Quantity,
                 UnitPrice = x.UnitPrice,
                 SubTotal = x.UnitPrice * x.Quantity

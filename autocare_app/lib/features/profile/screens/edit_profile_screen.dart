@@ -108,7 +108,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         final ImagePicker picker = ImagePicker();
                         final XFile? image = await picker.pickImage(source: ImageSource.gallery);
                         if (image != null && mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile picture updated successfully!')));
+                          setState(() => _isSaving = true);
+                          try {
+                            final photoUrl = await AuthService.uploadFile(image.path, folder: 'profiles');
+                            if (photoUrl != null) {
+                              final result = await AuthService.updateProfile({'profilePicture': photoUrl});
+                              if (result['success'] && mounted) {
+                                ref.invalidate(profileFutureProvider);
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile picture updated successfully!')));
+                              }
+                            }
+                          } finally {
+                            if (mounted) setState(() => _isSaving = false);
+                          }
                         }
                       },
                       child: Container(

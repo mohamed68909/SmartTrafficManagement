@@ -61,6 +61,13 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
             backgroundColor: Colors.green,
           ));
         }
+      } else if (result['statusCode'] == 409) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("You already have an active request. Please wait for the provider."),
+            backgroundColor: Colors.orange,
+          ));
+        }
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
