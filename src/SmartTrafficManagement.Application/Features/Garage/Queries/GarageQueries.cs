@@ -28,7 +28,8 @@ public sealed class GetMyVehiclesQueryHandler
             PlateNumber = v.PlateNumber,
             Color = v.Color,
             Type = v.Type.ToString(),
-            IsDefault = v.IsDefault
+            IsDefault = v.IsDefault,
+            RegistrationPhotoUrl = v.RegistrationPhotoUrl
         }).ToList();
 
         return Result<IReadOnlyList<VehicleResponseDto>>.Success(payload, 200);
@@ -61,7 +62,8 @@ public sealed class GetVehicleByIdQueryHandler
             PlateNumber = v.PlateNumber,
             Color = v.Color,
             Type = v.Type.ToString(),
-            IsDefault = v.IsDefault
+            IsDefault = v.IsDefault,
+            RegistrationPhotoUrl = v.RegistrationPhotoUrl
         }, 200);
     }
 }

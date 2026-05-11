@@ -6,7 +6,7 @@ import '../../../../core/providers/app_providers.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/widgets/product_icon.dart';
 import '../../../../core/models/models.dart';
-import '../../emergency/screens/emergency(16).dart';
+import '../../emergency/screens/emergency.dart';
 import 'cart_screen.dart';
 import 'product_detail_screen.dart';
 
@@ -385,9 +385,9 @@ class _MainStoreView extends ConsumerWidget {
 }
 
 // ── Promo Banner ─────────────────────────────────────────────────────────────
-class _PromoBanner extends StatelessWidget {
+class _PromoBanner extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -429,7 +429,9 @@ class _PromoBanner extends StatelessWidget {
                         letterSpacing: -0.3)),
                 const SizedBox(height: 12),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(_categoryFilterProvider.notifier).state = 'Engine Oil'; // Changed to common oil category
+                  },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size.zero,
                     padding: const EdgeInsets.symmetric(

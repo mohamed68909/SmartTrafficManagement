@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'onboadring (2).dart'; 
-import 'login(3).dart';
+import 'onboarding_two.dart'; 
+import 'login.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});

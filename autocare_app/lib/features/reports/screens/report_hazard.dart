@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'report accident(12).dart';
-import 'report traffic jam(13).dart';
-import 'report road works(14).dart';
-import 'report police(15).dart';
+import 'report_accident.dart';
+import 'report_traffic_jam.dart';
+import 'report_road_works.dart';
+import 'report_police.dart';
 
 class ReportHazardScreen extends StatelessWidget {
   const ReportHazardScreen({super.key});

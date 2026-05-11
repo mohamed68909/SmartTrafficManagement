@@ -30,6 +30,59 @@ class _SupportTicketsScreenState extends State<SupportTicketsScreen> {
     });
   }
 
+  void _showCreateTicketDialog() {
+    final subjectCtrl = TextEditingController();
+    final messageCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: const Text('Open New Ticket', style: TextStyle(color: AppColors.white)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: subjectCtrl,
+              style: const TextStyle(color: AppColors.white),
+              decoration: const InputDecoration(labelText: 'Subject', labelStyle: TextStyle(color: AppColors.textSecondary)),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: messageCtrl,
+              maxLines: 3,
+              style: const TextStyle(color: AppColors.white),
+              decoration: const InputDecoration(labelText: 'Message', labelStyle: TextStyle(color: AppColors.textSecondary)),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: AppColors.textMuted))),
+          ElevatedButton(
+            onPressed: () async {
+              if (subjectCtrl.text.trim().isEmpty || messageCtrl.text.trim().isEmpty) return;
+              Navigator.pop(context);
+              setState(() => _isLoading = true);
+              final result = await SupportService.openTicket(subject: subjectCtrl.text.trim(), message: messageCtrl.text.trim());
+              if (result['success'] == true) {
+                _loadTickets();
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Ticket opened successfully'), backgroundColor: Colors.green));
+                }
+              } else {
+                setState(() => _isLoading = false);
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['message'] ?? 'Failed to open ticket'), backgroundColor: Colors.red));
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
+            child: const Text('Submit', style: TextStyle(color: AppColors.background)),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,9 +120,7 @@ class _SupportTicketsScreenState extends State<SupportTicketsScreen> {
                   ),
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Implement open new ticket
-        },
+        onPressed: _showCreateTicketDialog,
         backgroundColor: AppColors.accent,
         child: const Icon(Icons.add, color: AppColors.background),
       ),

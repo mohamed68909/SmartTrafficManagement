@@ -56,13 +56,27 @@ internal sealed class ApplicationDataSeeder(
         // 2. Define all target categories
         var targetCategories = new[]
         {
+            // ── Group 1: Engine & Performance ───────────────────────────────
             new Category { Name = "Oils", Description = "Synthetic and semi-synthetic engine oils for all vehicle types." },
-            new Category { Name = "Tires", Description = "Passenger and SUV tires for city and highway driving." },
-            new Category { Name = "Battery & Electrical", Description = "Batteries, chargers, and electrical accessories." },
-            new Category { Name = "Brakes", Description = "Brake pads, discs, calipers, and brake fluids." },
             new Category { Name = "Filters", Description = "Air, oil, fuel, and cabin filters for all vehicles." },
             new Category { Name = "Engine Belts", Description = "Timing belts, serpentine belts, and V-belts." },
-            new Category { Name = "Accessories", Description = "Car care, interior accessories, and emergency kits." }
+            new Category { Name = "Cooling System", Description = "Radiators, water pumps, thermostats, and hoses." },
+
+            // ── Group 2: Chassis & Safety ────────────────────────────────────
+            new Category { Name = "Tires", Description = "Passenger and SUV tires for city and highway driving." },
+            new Category { Name = "Brakes", Description = "Brake pads, discs, calipers, and brake fluids." },
+            new Category { Name = "Suspension", Description = "Shock absorbers, springs, control arms, and bushings." },
+            new Category { Name = "Transmission", Description = "Gearbox parts, clutch kits, and transmission fluids." },
+
+            // ── Group 3: Electrical & Electronics ─────────────────────────────
+            new Category { Name = "Battery & Electrical", Description = "Batteries, chargers, and electrical accessories." },
+            new Category { Name = "Lighting", Description = "Headlights, taillights, fog lamps, and LED upgrades." },
+            new Category { Name = "Car Electronics", Description = "Stereos, GPS units, amplifiers, and parking sensors." },
+
+            // ── Group 4: Care & Accessories ───────────────────────────────────
+            new Category { Name = "Accessories", Description = "Car care, interior accessories, and emergency kits." },
+            new Category { Name = "Wipers & Fluids", Description = "Wiper blades, washer fluids, and coolants." },
+            new Category { Name = "Safety & Security", Description = "Dashcams, car alarms, steering wheel locks." }
         };
 
         // 3. Insert any missing categories
@@ -189,59 +203,228 @@ internal sealed class ApplicationDataSeeder(
 
             await dbContext.Products.AddRangeAsync(new[]
             {
+                // ── Oils ──────────────────────────────────────────────────────
                 new Product
                 {
                     SellerId      = sellerUser.Id,
                     CategoryId    = categories["Oils"].Id,
-                    Name          = "Engine Pro 5W-30",
+                    Name          = "Mobil 1 Advanced Full Synthetic 5W-30",
                     Description   = "Fully Synthetic · 5L High performance oil.",
                     Price         = 850.00m,
-                    StockQuantity = 100
+                    StockQuantity = 100,
+                    ImageUrl      = "https://images.unsplash.com/photo-1635848600863-7f15403e0513?q=80&w=200&auto=format&fit=crop"
                 },
                 new Product
                 {
                     SellerId      = sellerUser.Id,
                     CategoryId    = categories["Oils"].Id,
                     Name          = "Molygen New Gen 5W-40",
-                    Description   = "Fully Synthetic · 5L High performance oil.",
+                    Description   = "Molecular Friction Control · 4L Oil.",
                     Price         = 920.00m,
-                    StockQuantity = 80
+                    StockQuantity = 80,
+                    ImageUrl      = "https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Oils"].Id,
+                    Name          = "Castrol EDGE 5W-30",
+                    Description   = "Titanium Strength · 4L Synthetic Oil.",
+                    Price         = 780.00m,
+                    StockQuantity = 60,
+                    ImageUrl      = "https://images.unsplash.com/photo-1590674899484-13da0d1b58f5?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Tires ─────────────────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Tires"].Id,
+                    Name          = "Michelin Pilot Sport 4",
+                    Description   = "225/45R17 · Max Performance Summer Tire.",
+                    Price         = 3100.00m,
+                    StockQuantity = 40,
+                    ImageUrl      = "https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Tires"].Id,
+                    Name          = "Bridgestone Turanza T005",
+                    Description   = "225/45R17 · Grand Touring Summer Tire.",
+                    Price         = 2650.00m,
+                    StockQuantity = 45,
+                    ImageUrl      = "https://images.unsplash.com/photo-1549463994-47b526d705c8?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Tires"].Id,
+                    Name          = "Continental PremiumContact 6",
+                    Description   = "225/45R17 · Safety and Comfort oriented.",
+                    Price         = 2850.00m,
+                    StockQuantity = 30,
+                    ImageUrl      = "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Battery & Electrical ──────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Battery & Electrical"].Id,
+                    Name          = "Bosch S5 70Ah Battery",
+                    Description   = "Maintenance-free Silver Technology battery.",
+                    Price         = 1850.00m,
+                    StockQuantity = 20,
+                    ImageUrl      = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Battery & Electrical"].Id,
+                    Name          = "Varta Blue Dynamic",
+                    Description   = "Reliable performance for high power needs.",
+                    Price         = 1650.00m,
+                    StockQuantity = 25,
+                    ImageUrl      = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Battery & Electrical"].Id,
+                    Name          = "Energizer Premium 70Ah",
+                    Description   = "Extended life battery for modern vehicles.",
+                    Price         = 1550.00m,
+                    StockQuantity = 15,
+                    ImageUrl      = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Brakes ────────────────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Brakes"].Id,
+                    Name          = "TRW Ceramic Brake Pads",
+                    Description   = "Front Axle · Low Dust Performance Pads.",
+                    Price         = 1200.00m,
+                    StockQuantity = 50,
+                    ImageUrl      = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=200&auto=format&fit=crop"
                 },
                 new Product
                 {
                     SellerId      = sellerUser.Id,
                     CategoryId    = categories["Brakes"].Id,
-                    Name          = "Ceramic Brake Pads",
-                    Description   = "Front Axle · High Performance Brembo style.",
-                    Price         = 1200.00m,
-                    StockQuantity = 50
+                    Name          = "Brembo Sport Discs",
+                    Description   = "High carbon discs for improved cooling.",
+                    Price         = 2400.00m,
+                    StockQuantity = 20,
+                    ImageUrl      = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Brakes"].Id,
+                    Name          = "EBC Yellowstuff Pads",
+                    Description   = "Track and Street performance brake pads.",
+                    Price         = 1800.00m,
+                    StockQuantity = 15,
+                    ImageUrl      = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Filters ───────────────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Filters"].Id,
+                    Name          = "Bosch Air Filter",
+                    Description   = "High efficiency air filtration for engines.",
+                    Price         = 280.00m,
+                    StockQuantity = 150,
+                    ImageUrl      = "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=200&auto=format&fit=crop"
                 },
                 new Product
                 {
                     SellerId      = sellerUser.Id,
                     CategoryId    = categories["Filters"].Id,
-                    Name          = "Performance Air Filter",
-                    Description   = "Washable · Reusable K&N style filter.",
-                    Price         = 650.00m,
-                    StockQuantity = 150
+                    Name          = "Mann-Filter Oil Filter",
+                    Description   = "Premium filtration for extended oil life.",
+                    Price         = 150.00m,
+                    StockQuantity = 200,
+                    ImageUrl      = "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=200&auto=format&fit=crop"
                 },
                 new Product
                 {
                     SellerId      = sellerUser.Id,
-                    CategoryId    = categories["Tires"].Id,
-                    Name          = "Pilot Sport 4",
-                    Description   = "225/45R17 · W-rated Max Performance Summer.",
-                    Price         = 3100.00m,
-                    StockQuantity = 40
+                    CategoryId    = categories["Filters"].Id,
+                    Name          = "K&N Performance Air Filter",
+                    Description   = "Washable and reusable high flow filter.",
+                    Price         = 850.00m,
+                    StockQuantity = 50,
+                    ImageUrl      = "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Engine Belts ──────────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Engine Belts"].Id,
+                    Name          = "Continental Timing Belt Kit",
+                    Description   = "Complete kit including tensioners.",
+                    Price         = 1450.00m,
+                    StockQuantity = 30,
+                    ImageUrl      = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=200&auto=format&fit=crop"
                 },
                 new Product
                 {
                     SellerId      = sellerUser.Id,
-                    CategoryId    = categories["Tires"].Id,
-                    Name          = "Turanza T005",
-                    Description   = "225/45R17 · V-rated Grand Touring.",
-                    Price         = 2650.00m,
-                    StockQuantity = 45
+                    CategoryId    = categories["Engine Belts"].Id,
+                    Name          = "Gates Serpentine Belt",
+                    Description   = "High durability accessory drive belt.",
+                    Price         = 450.00m,
+                    StockQuantity = 100,
+                    ImageUrl      = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Engine Belts"].Id,
+                    Name          = "Dayco Fan Belt",
+                    Description   = "Quiet and reliable engine fan belt.",
+                    Price         = 350.00m,
+                    StockQuantity = 120,
+                    ImageUrl      = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Accessories ───────────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Accessories"].Id,
+                    Name          = "Armor All Car Wash Kit",
+                    Description   = "Complete exterior cleaning solution.",
+                    Price         = 450.00m,
+                    StockQuantity = 60,
+                    ImageUrl      = "https://images.unsplash.com/photo-1635848600863-7f15403e0513?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Accessories"].Id,
+                    Name          = "Baseus Jump Starter",
+                    Description   = "Portable 12000mAh car jump starter.",
+                    Price         = 1850.00m,
+                    StockQuantity = 40,
+                    ImageUrl      = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Accessories"].Id,
+                    Name          = "Emergency Roadside Kit",
+                    Description   = "Tools, first aid, and safety gear.",
+                    Price         = 1200.00m,
+                    StockQuantity = 35,
+                    ImageUrl      = "https://images.unsplash.com/photo-1635848600863-7f15403e0513?q=80&w=200&auto=format&fit=crop"
                 },
             }, ct);
             await dbContext.SaveChangesAsync(ct);

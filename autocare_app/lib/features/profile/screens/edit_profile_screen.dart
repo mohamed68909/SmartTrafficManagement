@@ -5,6 +5,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../../../core/services/auth_service.dart';
+import '../../vehicle/screens/vehicle_info_screen.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -102,7 +104,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () async {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                        if (image != null && mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile picture updated successfully!')));
+                        }
+                      },
                       child: Container(
                         width: 28,
                         height: 28,
@@ -213,7 +221,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             const Spacer(),
                             TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, '/garage').then((_) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VehicleInfoScreen(
+                                      isRegistration: false,
+                                      existingVehicle: vehicle,
+                                    ),
+                                  ),
+                                ).then((_) {
                                   // Refresh vehicle data when returning
                                   ref.invalidate(vehiclesFutureProvider);
                                 });

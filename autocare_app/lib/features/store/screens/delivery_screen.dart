@@ -138,7 +138,9 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
             }),
             // Add New Address
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Map and address form will open here.')));
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(

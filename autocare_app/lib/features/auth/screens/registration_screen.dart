@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
-import '../../vehicle/screens/vehicle_info_screen(5).dart';
+import '../../vehicle/screens/vehicle_info_screen.dart';
 import '../../../core/services/auth_service.dart';
 
 class RegistrationScreen extends StatefulWidget {

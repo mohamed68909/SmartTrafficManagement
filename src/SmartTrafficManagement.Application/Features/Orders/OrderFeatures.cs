@@ -21,7 +21,8 @@ public sealed class GetMyOrdersQueryHandler
             Status = x.Status,
             PaymentStatus = x.PaymentStatus,
             TotalAmount = x.TotalAmount,
-            CreatedAt = x.CreatedOnUtc
+            CreatedAt = x.CreatedOnUtc,
+            ItemsCount = x.OrderItems.Sum(i => i.Quantity)
         }).ToList();
         return Result<IReadOnlyList<OrderSummaryDto>>.Success(payload, 200);
     }
@@ -43,6 +44,7 @@ public sealed class GetOrderDetailsQueryHandler
             PaymentStatus = order.PaymentStatus,
             TotalAmount = order.TotalAmount,
             CreatedAt = order.CreatedOnUtc,
+            ItemsCount = order.OrderItems.Sum(i => i.Quantity),
             Items = order.OrderItems.Select(i => new OrderItemLineDto
             {
                 ProductName = i.Product.Name,

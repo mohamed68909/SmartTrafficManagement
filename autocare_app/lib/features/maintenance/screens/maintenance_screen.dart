@@ -16,13 +16,16 @@ const _maintenanceCategories = [
   MaintenanceItem(id: 'brakes', name: 'Brake Service', icon: '🛑', price: 750),
   MaintenanceItem(id: 'full', name: 'Full Check-up', icon: '🔧', price: 1200),
   MaintenanceItem(id: 'ac', name: 'AC Service', icon: '❄️', price: 380),
+  MaintenanceItem(id: 'suspension', name: 'Suspension', icon: '⛓️', price: 950),
+  MaintenanceItem(id: 'transmission', name: 'Transmission', icon: '⚙️', price: 1500),
+  MaintenanceItem(id: 'lighting', name: 'Lighting', icon: '💡', price: 250),
 ];
 
 const _recommendedProducts = [
-  {'name': 'Liqui Moly 5W-30', 'type': 'Engine Oil', 'price': 850, 'icon': '🛢️'},
-  {'name': 'Brembo Brake Pads', 'type': 'Brake System', 'price': 1200, 'icon': '🔴'},
+  {'name': 'Mobil 1 5W-30', 'type': 'Engine Oil', 'price': 850, 'icon': '🛢️'},
+  {'name': 'TRW Ceramic Pads', 'type': 'Brake System', 'price': 1200, 'icon': '🔴'},
   {'name': 'Bosch Air Filter', 'type': 'Air System', 'price': 280, 'icon': '💨'},
-  {'name': 'NGK Spark Plugs', 'type': 'Ignition', 'price': 320, 'icon': '⚡'},
+  {'name': 'Varta Blue Dynamic', 'type': 'Electrical', 'price': 1650, 'icon': '⚡'},
 ];
 
 class MaintenanceScreen extends ConsumerStatefulWidget {
@@ -34,6 +37,36 @@ class MaintenanceScreen extends ConsumerStatefulWidget {
 
 class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
   final Set<String> _selectedProducts = {};
+
+  void _handleDiagnosticResult(String result) {
+    // Map result string to category ID
+    String? categoryId;
+    final r = result.toLowerCase();
+    if (r.contains('oil')) {
+      categoryId = 'oil';
+    } else if (r.contains('belt')) {
+      categoryId = 'belts';
+    } else if (r.contains('tire') || r.contains('rotation')) {
+      categoryId = 'rotation';
+    } else if (r.contains('brake')) {
+      categoryId = 'brakes';
+    } else if (r.contains('full') || r.contains('check')) {
+      categoryId = 'full';
+    } else if (r.contains('ac') || r.contains('air')) {
+      categoryId = 'ac';
+    }
+
+    if (categoryId != null) {
+      ref.read(maintenanceSelectionProvider.notifier).select(categoryId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Diagnostic recommended: $result.'),
+          backgroundColor: AppColors.accent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,10 +191,15 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
 
   Widget _buildDiagnoseBanner(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const CarDiagnosticScreen()),
-      ),
+      onTap: () async {
+        final result = await Navigator.push<String>(
+          context,
+          MaterialPageRoute(builder: (_) => const CarDiagnosticScreen()),
+        );
+        if (result != null && mounted) {
+          _handleDiagnosticResult(result);
+        }
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(

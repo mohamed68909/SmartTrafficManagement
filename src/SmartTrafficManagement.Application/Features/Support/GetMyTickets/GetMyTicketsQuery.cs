@@ -8,7 +8,7 @@ public sealed class MyTicketDto
 {
     public Guid Id { get; set; }
     public string Subject { get; set; } = string.Empty;
-    public TicketStatus Status { get; set; }
+    public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
 }
 
@@ -26,7 +26,7 @@ public sealed class GetMyTicketsQueryHandler
         {
             Id = x.Id,
             Subject = x.Subject,
-            Status = x.Status,
+            Status = x.Status.ToString(),
             CreatedAt = x.CreatedOnUtc
         }).ToList();
 

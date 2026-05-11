@@ -34,7 +34,7 @@ class _CheckoutPaymentScreenState
 
     try {
       // 1. Sync cart to backend and create order (gets clientSecret if needed)
-      final checkoutResult = await PaymentService.syncCartAndCheckout(cart);
+      final checkoutResult = await PaymentService.syncCartAndCheckout(cart, method);
 
       if (!mounted) return;
 

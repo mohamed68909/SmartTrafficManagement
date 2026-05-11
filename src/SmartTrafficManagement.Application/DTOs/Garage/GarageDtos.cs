@@ -33,4 +33,5 @@ public sealed class VehicleResponseDto
     public string Color { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
     public bool IsDefault { get; set; }
+    public string? RegistrationPhotoUrl { get; set; }
 }

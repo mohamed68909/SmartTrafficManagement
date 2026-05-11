@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../../../core/services/auth_service.dart';
-import '../../auth/screens/login(3).dart';
+import '../../auth/screens/login.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../history/screens/history_screen.dart';
 import '../../store/screens/manage_cards_screen.dart';
@@ -12,7 +12,7 @@ import '../../mechanic/screens/mechanic_screen.dart';
 import 'edit_profile_screen.dart';
 import 'notifications_screen.dart';
 import 'help_center_screen.dart';
-import '../../vehicle/screens/vehicle_info_screen(5).dart';
+import '../../vehicle/screens/vehicle_info_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});

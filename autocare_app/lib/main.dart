@@ -25,22 +25,22 @@ import 'features/store/screens/weather_conditions_screen.dart';
 import 'features/maintenance/screens/maintenance_screen.dart';
 import 'features/profile/screens/profile_screen.dart';
 import 'features/profile/screens/edit_profile_screen.dart';
-import 'features/profile/screens/settings_screen_34.dart';
+import 'features/profile/screens/settings_screen.dart';
 import 'features/store/screens/cart_screen.dart';
-import 'features/profile/screens/order_confirmation_screen_27.dart';
-import 'features/profile/screens/rating_screen_37.dart';
+import 'features/profile/screens/order_confirmation_screen.dart';
+import 'features/profile/screens/rating_screen.dart';
 import 'features/profile/screens/help_center_screen.dart';
 
 // Screens - Smart Traffic
 import 'features/auth/screens/splash_screen_first.dart';
 import 'features/auth/screens/main_wrapper.dart';
-import 'features/maps/screens/map_screen(9).dart';
-import 'features/maps/screens/navigation_screen(9).dart';
+import 'features/maps/screens/map_screen.dart';
+import 'features/maps/screens/navigation_screen.dart';
 import 'features/traffic/screens/traffic_screen.dart';
-import 'features/emergency/screens/emergency(16).dart';
-import 'features/reports/screens/report_hazard(11).dart';
-import 'features/emergency/screens/winch_service(17).dart';
-import 'features/emergency/screens/fuel tracking(20).dart';
+import 'features/emergency/screens/emergency.dart';
+import 'features/reports/screens/report_hazard.dart';
+import 'features/emergency/screens/winch_service.dart';
+import 'features/emergency/screens/fuel_tracking.dart';
 
 // Global navigator key for Smart Traffic features
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

@@ -23,7 +23,8 @@ class OrderService {
               status: _mapStatus(json['status']),
               category: OrderCategory.shop,
               subtitle: '${json['itemsCount'] ?? 0} items',
-            )));
+            );
+          }).toList());
       }
 
       // 2. Fetch SOS Requests

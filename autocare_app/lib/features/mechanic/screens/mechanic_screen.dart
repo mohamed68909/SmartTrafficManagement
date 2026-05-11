@@ -481,7 +481,7 @@ class _MechanicScreenState extends ConsumerState<MechanicScreen>
                     title: const Text('End Call?',
                         style: TextStyle(color: AppColors.white)),
                     content: const Text(
-                      'Are you sure you want to end the mechanic call?',
+                      'Are you sure you want to end the mechanic call? You can book a repair service if needed.',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
                     actions: [
@@ -490,6 +490,16 @@ class _MechanicScreenState extends ConsumerState<MechanicScreen>
                           child: const Text('Cancel',
                               style:
                                   TextStyle(color: AppColors.textSecondary))),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(ctx);
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/maintenance');
+                          },
+                          child: const Text('Book Repair',
+                              style: TextStyle(
+                                  color: AppColors.accent,
+                                  fontWeight: FontWeight.w700))),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(ctx);

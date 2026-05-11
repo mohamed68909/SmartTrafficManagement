@@ -45,6 +45,13 @@ public enum TransactionType
     Refund = 4
 }
 
+public enum PaymentMethod
+{
+    Card = 1,
+    Wallet = 2,
+    Cash = 3
+}
+
 public enum TicketStatus
 {
     Open = 1,

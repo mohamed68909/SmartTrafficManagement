@@ -55,7 +55,8 @@ public sealed class AddVehicleCommandHandler
         PlateNumber = vehicle.PlateNumber,
         Color = vehicle.Color,
         Type = vehicle.Type.ToString(),
-        IsDefault = vehicle.IsDefault
+        IsDefault = vehicle.IsDefault,
+        RegistrationPhotoUrl = vehicle.RegistrationPhotoUrl
     };
 }
 
@@ -101,7 +102,8 @@ public sealed class UpdateVehicleCommandHandler
             PlateNumber = vehicle.PlateNumber,
             Color = vehicle.Color,
             Type = vehicle.Type.ToString(),
-            IsDefault = vehicle.IsDefault
+            IsDefault = vehicle.IsDefault,
+            RegistrationPhotoUrl = vehicle.RegistrationPhotoUrl
         }, 200);
     }
 }

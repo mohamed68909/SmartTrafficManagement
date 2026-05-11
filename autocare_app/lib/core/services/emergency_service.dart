@@ -3,6 +3,19 @@ import '../network/api_client.dart';
 import '../network/api_constants.dart';
 
 class EmergencyService {
+  static String _getEnumString(dynamic type) {
+    if (type is String) return type;
+    switch (type) {
+      case 1: return 'Maintenance';
+      case 2: return 'Inspection';
+      case 3: return 'Emergency';
+      case 4: return 'Towing';
+      case 5: return 'FuelDelivery';
+      case 6: return 'VideoSupport';
+      default: return 'Emergency';
+    }
+  }
+
   static Future<Map<String, dynamic>> requestSos({
     required dynamic serviceType, // Accept String or int
     required double lat,
@@ -13,10 +26,10 @@ class EmergencyService {
       final response = await ApiClient.post(
         ApiConstants.sosRequestUrl,
         {
-          'serviceType': serviceType,
-          'lat': lat,
-          'lng': lng,
-          'notes': notes,
+          'ServiceType': _getEnumString(serviceType),
+          'Lat': lat,
+          'Lng': lng,
+          'Notes': notes,
         },
       );
 

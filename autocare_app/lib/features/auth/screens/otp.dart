@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../maps/screens/map_screen(9).dart';
+import '../../maps/screens/map_screen.dart';
 
 class OTP6 extends StatefulWidget {
   final String phoneNumber;

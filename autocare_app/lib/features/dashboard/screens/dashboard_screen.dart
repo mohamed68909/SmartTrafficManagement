@@ -10,6 +10,8 @@ import '../../history/screens/history_screen.dart';
 import '../../mechanic/screens/mechanic_screen.dart';
 import '../../vehicle/screens/vehicle_tracker_screen.dart';
 import '../../maintenance/screens/car_diagnostic_screen.dart';
+import '../../emergency/screens/emergency.dart';
+import '../../emergency/screens/winch_service.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -227,7 +229,7 @@ class DashboardScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: actions.map((action) {
               return GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (action['screen'] == 'mechanic') {
                     Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const MechanicScreen()));
@@ -238,8 +240,13 @@ class DashboardScreen extends ConsumerWidget {
                     Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const VehicleTrackerScreen()));
                   } else if (action['screen'] == 'diagnostic') {
-                    Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const CarDiagnosticScreen()));
+                    final result = await Navigator.push<String>(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CarDiagnosticScreen()),
+                    );
+                    if (result != null && context.mounted) {
+                      _handleDashboardDiagnosticResult(context, ref, result);
+                    }
                   } else if (action['screen'] == 'store') {
                     ref.read(navIndexProvider.notifier).state = 2;
                   }
@@ -367,6 +374,47 @@ class DashboardScreen extends ConsumerWidget {
           const SizedBox(height: 14),
           ...orders.map((order) => _OrderTile(order: order)),
         ],
+      ),
+    );
+  }
+}
+
+void _handleDashboardDiagnosticResult(BuildContext context, WidgetRef ref, String result) {
+  final r = result.toLowerCase();
+
+  if (r.contains('emergency')) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const EmergencyScreen()));
+  } else if (r.contains('tow') || r.contains('winch')) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const WinchServiceScreen()));
+  } else {
+    // Map to maintenance and navigate
+    String? categoryId;
+    if (r.contains('oil')) {
+      categoryId = 'oil';
+    } else if (r.contains('belt')) {
+      categoryId = 'belts';
+    } else if (r.contains('tire') || r.contains('rotation')) {
+      categoryId = 'rotation';
+    } else if (r.contains('brake')) {
+      categoryId = 'brakes';
+    } else if (r.contains('full') || r.contains('check')) {
+      categoryId = 'full';
+    } else if (r.contains('ac') || r.contains('air')) {
+      categoryId = 'ac';
+    }
+
+    if (categoryId != null) {
+      ref.read(maintenanceSelectionProvider.notifier).select(categoryId);
+    }
+
+    // Navigate to maintenance tab (index 3 according to shell.dart)
+    ref.read(navIndexProvider.notifier).state = 3;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Diagnostic recommendation: $result.'),
+        backgroundColor: AppColors.accent,
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

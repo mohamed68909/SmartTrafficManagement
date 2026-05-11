@@ -7,11 +7,18 @@ import '../models/models.dart';
 class PaymentService {
   /// Syncs local cart to the backend and initiates checkout.
   /// Returns the clientSecret and orderId needed by Stripe.
-  static Future<Map<String, dynamic>> syncCartAndCheckout(List<CartItem> cartItems) async {
+  static Future<Map<String, dynamic>> syncCartAndCheckout(List<CartItem> cartItems, String paymentMethod) async {
     try {
+      int methodInt = 1; // Default to Card
+      if (paymentMethod == 'wallet') methodInt = 2;
+      if (paymentMethod == 'cash') methodInt = 3;
+
       final response = await ApiClient.post(
         ApiConstants.checkoutUrl,
-        {'currency': 'usd'},
+        {
+          'currency': 'usd',
+          'paymentMethod': methodInt,
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

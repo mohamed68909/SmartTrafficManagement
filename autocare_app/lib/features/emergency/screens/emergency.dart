@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:geolocator/geolocator.dart';
 
-import 'winch_service(17).dart';
-import 'emergency fuel(19).dart';
+import 'winch_service.dart';
+import 'emergency_fuel.dart';
 import '../../../../core/services/emergency_service.dart';
 
 class EmergencyScreen extends StatefulWidget {
@@ -30,19 +31,72 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
     }
   }
 
-  void _showSOSOptions() {
-    // Call the API in the background
-    EmergencyService.requestSos(
-      serviceType: 3, // 3 = Emergency
-      lat: 30.0444, // Dummy Cairo lat
-      lng: 31.2357, // Dummy Cairo lng
-    ).then((result) {
-      if (!result['success']) {
-        debugPrint("Failed to send SOS to backend: ${result['message']}");
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) throw Exception('Location services are disabled.');
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) throw Exception('Location permissions are denied');
+    }
+    if (permission == LocationPermission.deniedForever) throw Exception('Location permissions are permanently denied.');
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> _requestService(int serviceType, String serviceName) async {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Requesting $serviceName...")));
+    try {
+      Position position = await _getCurrentLocation();
+      final result = await EmergencyService.requestSos(
+        serviceType: serviceType,
+        lat: position.latitude,
+        lng: position.longitude,
+      );
+      if (result['success']) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("$serviceName requested successfully! Help is on the way."),
+            backgroundColor: Colors.green,
+          ));
+        }
       } else {
-        debugPrint("SOS Sent successfully to backend!");
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Failed to request $serviceName: ${result['message']}"),
+            backgroundColor: Colors.red,
+          ));
+        }
       }
-    });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Location Error: $e"),
+          backgroundColor: Colors.red,
+        ));
+      }
+    }
+  }
+
+  void _showSOSOptions() async {
+    // Call the API in the background with real GPS
+    try {
+      Position position = await _getCurrentLocation();
+      EmergencyService.requestSos(
+        serviceType: 3, // 3 = Emergency
+        lat: position.latitude,
+        lng: position.longitude,
+      ).then((result) {
+        if (!result['success']) {
+          debugPrint("Failed to send SOS to backend: ${result['message']}");
+        } else {
+          debugPrint("SOS Sent successfully to backend!");
+        }
+      });
+    } catch (e) {
+      debugPrint("SOS Location Error: $e");
+    }
 
     showModalBottomSheet(
       context: context,
@@ -191,9 +245,9 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                   }),
 
                   _serviceCard("Mechanic", "Live support", Icons.build_outlined,
-                      () => print("Mechanic Clicked")),
+                      () => _requestService(1, "Mechanic")),
                   _serviceCard("Jumpstart", "Battery boost",
-                      Icons.bolt_outlined, () => print("Jumpstart Clicked")),
+                      Icons.bolt_outlined, () => _requestService(3, "Jumpstart")),
                 ],
               ),
               const SizedBox(height: 30),

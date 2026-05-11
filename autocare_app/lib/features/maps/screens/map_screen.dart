@@ -7,11 +7,11 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:async';
 
-import '../../emergency/screens/winch_service(17).dart';
-import 'search_screen(10).dart';
-import '../../reports/screens/report_hazard(11).dart';
-import 'navigation_screen(9).dart';
-import '../../emergency/screens/emergency(16).dart';
+import '../../emergency/screens/winch_service.dart';
+import 'search_screen.dart';
+import '../../reports/screens/report_hazard.dart';
+import 'navigation_screen.dart';
+import '../../emergency/screens/emergency.dart';
 import '../../store/screens/store_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 

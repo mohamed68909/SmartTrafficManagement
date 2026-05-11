@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/services/auth_service.dart';
-import 'login(3).dart';
+import 'login.dart';
 
 /// Full 3-step forgot-password flow:
 ///   Step 1 → Enter email  (calls forgotPassword)

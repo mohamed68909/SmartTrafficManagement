@@ -438,7 +438,7 @@ internal sealed class BulkDataSeeder(
             return await dbContext.Products.AsNoTracking().Select(p => p.Id).ToListAsync(ct);
 
         var added = 0;
-        for (var i = 0; added < 5; i++)
+        for (var i = 0; added < 45; i++)
         {
             ct.ThrowIfCancellationRequested();
 

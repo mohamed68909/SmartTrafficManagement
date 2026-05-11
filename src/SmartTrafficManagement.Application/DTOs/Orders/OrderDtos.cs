@@ -9,6 +9,7 @@ public class OrderSummaryDto
     public PaymentStatus PaymentStatus { get; set; }
     public decimal TotalAmount { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int ItemsCount { get; set; }
 }
 
 public sealed class OrderDetailsDto : OrderSummaryDto

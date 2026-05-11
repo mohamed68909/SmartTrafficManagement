@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../history/screens/history_screen.dart';
 
 class OrderConfirmationScreen extends StatefulWidget {
   const OrderConfirmationScreen({super.key});
@@ -123,7 +124,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                 height: 60,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryScreen()));
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: isDark ? Colors.white : Colors.black87,
@@ -132,7 +133,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
                   ),
-                  child: const Text('Continue Shopping'),
+                  child: const Text('Track Order'),
                 ),
               ),
               const SizedBox(height: 40),

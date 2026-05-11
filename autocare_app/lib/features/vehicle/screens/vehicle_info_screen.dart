@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../auth/screens/phone_number (6).dart';
+import '../../auth/screens/phone_number.dart';
 import '../../../../core/models/vehicle_model.dart';
 import '../../../../core/services/garage_service.dart';
 
 class VehicleInfoScreen extends StatefulWidget {
   final bool isRegistration;
-  const VehicleInfoScreen({super.key, this.isRegistration = true});
+  final Vehicle? existingVehicle;
+  const VehicleInfoScreen({super.key, this.isRegistration = true, this.existingVehicle});
 
   @override
   State<VehicleInfoScreen> createState() => _VehicleInfoScreenState();
@@ -25,6 +26,17 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
   final TextEditingController _plateController = TextEditingController();
 
   final Color neonGreen = const Color(0xFFCCFF00);
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingVehicle != null) {
+      selectedBrand = widget.existingVehicle!.make;
+      selectedModel = widget.existingVehicle!.model;
+      selectedType = widget.existingVehicle!.type;
+      _plateController.text = widget.existingVehicle!.plateNumber;
+    }
+  }
 
   @override
   void dispose() {
@@ -137,6 +149,56 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
           SnackBar(content: Text('Error: $e')),
         );
       }
+  Future<void> _updateVehicle() async {
+    if (widget.existingVehicle == null) return;
+    if (selectedBrand == null || selectedModel == null || _plateController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill all required fields')));
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      final updatedVehicle = Vehicle(
+        id: widget.existingVehicle!.id,
+        make: selectedBrand!,
+        model: selectedModel!,
+        year: widget.existingVehicle!.year,
+        plateNumber: _plateController.text,
+        color: widget.existingVehicle!.color,
+        type: selectedType,
+        isDefault: widget.existingVehicle!.isDefault,
+        registrationPhotoUrl: widget.existingVehicle!.registrationPhotoUrl,
+      );
+      final result = await GarageService.updateVehicle(updatedVehicle.id, updatedVehicle);
+      if (result['success']) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vehicle updated successfully!')));
+          Navigator.pop(context);
+        }
+      } else {
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['message'] ?? 'Failed to update')));
+      }
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _deleteVehicle() async {
+    if (widget.existingVehicle == null) return;
+    setState(() => _isLoading = true);
+    try {
+      final result = await GarageService.deleteVehicle(widget.existingVehicle!.id);
+      if (result['success']) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vehicle deleted successfully!')));
+          Navigator.pop(context);
+        }
+      } else {
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['message'] ?? 'Failed to delete')));
+      }
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -252,22 +314,49 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
       
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(25.0),
-        child: ElevatedButton(
-          onPressed: _isLoading ? null : _addVehicle,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: neonGreen,
-            minimumSize: const Size(double.infinity, 60),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            elevation: 10,
-            shadowColor: neonGreen.withValues(alpha:0.3),
-          ),
-          child: _isLoading 
-            ? const CircularProgressIndicator(color: Colors.black)
-            : const Text(
-                "NEXT", 
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18)
+        child: widget.isRegistration || widget.existingVehicle == null
+            ? ElevatedButton(
+                onPressed: _isLoading ? null : _addVehicle,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: neonGreen,
+                  minimumSize: const Size(double.infinity, 60),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                ),
+                child: _isLoading 
+                  ? const CircularProgressIndicator(color: Colors.black)
+                  : Text(widget.isRegistration ? "NEXT" : "ADD VEHICLE", style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18)),
+              )
+            : Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _updateVehicle,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: neonGreen,
+                        minimumSize: const Size(double.infinity, 60),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                      child: _isLoading 
+                        ? const CircularProgressIndicator(color: Colors.black)
+                        : const Text("UPDATE", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 16)),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _deleteVehicle,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        minimumSize: const Size(double.infinity, 60),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                      child: _isLoading 
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("DELETE", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)),
+                    ),
+                  ),
+                ],
               ),
-        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
-import 'OTP(6).dart'; 
+import 'otp.dart'; 
 
 class PhoneNumberScreen extends StatefulWidget {
   const PhoneNumberScreen({super.key});
