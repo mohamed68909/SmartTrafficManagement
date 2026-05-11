@@ -89,12 +89,18 @@ internal sealed class IdentitySeeder(
             providerDocuments: "https://docs.example.com/fe-id.pdf|https://docs.example.com/fe-license.pdf");
 
         // ── CS Agents ──────────────────────────────────────────────────────────
-        // cs@test.com and sara@smarttraffic.io are both Sarah Kamal — separate
-        // accounts with different e-mails; seed both, do NOT merge.
-        await EnsureUserInRoleAsync("cs@test.com",              "CSAgent@123", AppRoles.CSAgent, "Sarah", "Kamal",  isActive: true);
-        await EnsureUserInRoleAsync("sara@smarttraffic.io",     "CSAgent@123", AppRoles.CSAgent, "Sarah", "Kamal",  isActive: true);
-        await EnsureUserInRoleAsync("omar@smarttraffic.io",     "CSAgent@123", AppRoles.CSAgent, "Omar",  "Fouad",  isActive: true);
-        await EnsureUserInRoleAsync("rana@smarttraffic.io",     "CSAgent@123", AppRoles.CSAgent, "Rana",  "Hossam", isActive: false);
+        // Only one CS Agent as requested by user
+        await EnsureUserInRoleAsync("cs@test.com", "CSAgent@123", AppRoles.CSAgent, "Sarah", "Kamal", isActive: true);
+
+        // Ensure no other CS Agents exist in the database
+        var csAgents = await userManager.GetUsersInRoleAsync(AppRoles.CSAgent);
+        foreach (var agent in csAgents)
+        {
+            if (agent.Email != "cs@test.com")
+            {
+                await userManager.DeleteAsync(agent);
+            }
+        }
     }
 
     // ── Helper ─────────────────────────────────────────────────────────────────

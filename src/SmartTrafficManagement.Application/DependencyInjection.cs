@@ -30,6 +30,7 @@ using SmartTrafficManagement.Application.Modules.Traffic.Application.Incidents.Q
 using SmartTrafficManagement.Application.Modules.Traffic.Application.Incidents.Queries.GetIncidentsByLocation;
 using SmartTrafficManagement.Application.Modules.Traffic.Application.Reports.Commands.ReportTrafficIncident;
 using SmartTrafficManagement.Application.Modules.Traffic.Application.Sensors.Queries.GetLatestVehicleEnvironment;
+using SmartTrafficManagement.Application.Features.Diagnostics;
 
 namespace SmartTrafficManagement.Application;
 
@@ -51,6 +52,7 @@ public static class DependencyInjection
         services.AddScoped<GetProfileQueryHandler>();
         services.AddScoped<ForgotPasswordCommandHandler>();
         services.AddScoped<ResetPasswordCommandHandler>();
+        services.AddScoped<VerifyDocumentsCommandHandler>();
 
         services.AddScoped<AddVehicleCommandHandler>();
         services.AddScoped<UpdateVehicleCommandHandler>();
@@ -167,6 +169,11 @@ public static class DependencyInjection
         services.AddScoped<GetActiveTrafficIncidentsQueryHandler>();
         services.AddScoped<GetIncidentsByLocationQueryHandler>();
         services.AddScoped<GetLatestVehicleEnvironmentQueryHandler>();
+
+        // ── Expert System ─────────────────────────────────────────────────────
+        services.AddScoped<GetRootQuestionQueryHandler>();
+        services.AddScoped<SubmitAnswerCommandHandler>();
+
         return services;
     }
 }

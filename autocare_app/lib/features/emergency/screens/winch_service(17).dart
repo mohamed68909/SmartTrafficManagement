@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'dart:math' as math; // ضروري للبيانات العشوائية
+import 'dart:math' as math;
 import '../../../core/services/emergency_service.dart';
-import 'emergency tracking(18).dart'; // تأكد أن اسم الملف صحيح عندك
+import 'emergency tracking(18).dart';
 
-// موديل بيانات الخدمة
 class WinchService {
   final String id;
   final String title;
@@ -34,7 +33,6 @@ class WinchServiceScreen extends StatefulWidget {
 }
 
 class _WinchServiceScreenState extends State<WinchServiceScreen> {
-  // الألوان الخاصة بمشروعك
   final Color accentColor = const Color(0xFFCCFF00);
   final Color darkBackground = const Color(0xFF0A0A0A);
   final Color cardBackground = const Color(0xFF1A1A1A);
@@ -42,7 +40,6 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
   String _currentAddress = "Locating your position...";
   int selectedIndex = 0;
 
-  // قائمة أنواع الأوناش المتوفرة
   final List<WinchService> services = [
     WinchService(id: '1', title: 'Professional Flatbed', type: 'Flatbed Truck', rating: 4.8, distance: 2.3, price: 300, eta: '8 mins'),
     WinchService(id: '2', title: 'Heavy Duty Winch', type: 'Tow Truck', rating: 4.9, distance: 4.1, price: 500, eta: '15 mins'),
@@ -54,10 +51,9 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
   @override
   void initState() {
     super.initState();
-    _determinePosition(); // جلب الموقع فور فتح الصفحة
+    _determinePosition();
   }
 
-  // دالة تحديد الموقع الفعلي
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -103,7 +99,6 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // زر العودة
               TextButton.icon(
                 onPressed: () => Navigator.pop(context), 
                 icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 16), 
@@ -113,7 +108,6 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
               const Text("Select Winch Service", style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               
-              // عرض العنوان الفعلي
               Row(
                 children: [
                   Icon(Icons.location_on_outlined, color: accentColor, size: 18), 
@@ -130,7 +124,6 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
               
               const SizedBox(height: 30),
               
-              // قائمة الأوناش
               Expanded(
                 child: ListView.separated(
                   itemCount: services.length,
@@ -147,7 +140,6 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
               
               const SizedBox(height: 20),
               
-              // زر الطلب الديناميكي
               SizedBox(
                 width: double.infinity, 
                 height: 60, 
@@ -178,7 +170,6 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
                     if (mounted) Navigator.pop(context);
 
                     if (result['success']) {
-                      // بيانات عشوائية للسائق والـ ID
                       final List<String> drivers = ["Ahmed Hassan", "Mohamed Ziad", "Sayed Ali", "Mahmoud Nasr", "Ibrahim Gad"];
                       final String randomDriver = (drivers..shuffle()).first;
                       final String randomTruckId = "#TR${1000 + (math.Random().nextInt(9000))}";
@@ -191,7 +182,7 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
                               driverName: randomDriver,
                               winchType: services[selectedIndex].title,
                               rating: services[selectedIndex].rating,
-                              price: "${services[selectedIndex].price} EGP",
+                              price: "${services[selectedIndex].price} USD",
                               eta: services[selectedIndex].eta,
                               distanceText: "${services[selectedIndex].distance} km",
                               distanceKm: services[selectedIndex].distance,
@@ -224,7 +215,6 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
   }
 }
 
-// ويدجت الكارت الخاص بكل خدمة
 class ServiceCard extends StatelessWidget {
   final WinchService service;
   final bool isSelected;
@@ -279,7 +269,7 @@ class ServiceCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end, 
               children: [
-                Text("${service.price} EGP", style: TextStyle(color: accentColor, fontWeight: FontWeight.bold, fontSize: 16)), 
+                Text("${service.price} USD", style: TextStyle(color: accentColor, fontWeight: FontWeight.bold, fontSize: 16)), 
                 Text(service.eta, style: const TextStyle(color: Colors.white70, fontSize: 12))
               ]
             )

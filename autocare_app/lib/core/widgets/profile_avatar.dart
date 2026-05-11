@@ -20,7 +20,6 @@ class ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // الحصول على أول حرف من الاسم الأول والأخير
     String initials = "";
     if (firstName.isNotEmpty) initials += firstName[0].toUpperCase();
     if (lastName.isNotEmpty) initials += lastName[0].toUpperCase();

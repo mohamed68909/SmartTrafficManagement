@@ -17,6 +17,7 @@ public static class DomainErrors
     {
         public static readonly Error InvalidCredentials        = new("Auth.InvalidCredentials",        "Invalid login credentials");
         public static readonly Error EmailAlreadyExists        = new("Auth.EmailAlreadyExists",        "Email is already in use");
+        public static readonly Error PhoneAlreadyExists        = new("Auth.PhoneAlreadyExists",        "Phone number is already in use");
         public static readonly Error IdentityOperationFailed   = new("Auth.IdentityOperationFailed",   "Identity operation failed");
         public static readonly Error InvalidGoogleToken        = new("Auth.InvalidGoogleToken",        "The provided Google ID token is invalid or has expired");
         public static readonly Error InvalidResetToken          = new("Auth.InvalidResetToken",          "Password reset token is invalid or has expired.");

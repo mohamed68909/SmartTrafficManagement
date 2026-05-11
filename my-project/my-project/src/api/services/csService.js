@@ -140,23 +140,8 @@ export const toggleAgentStatus = async (online) =>
   api.post("/cs/agent/status", { online });
 
 export const getTicketById = async (id) => {
-  const endpoints = [
-    `/support/tickets/${encodeURIComponent(id)}`,
-    `/cs/tickets/${encodeURIComponent(id)}`,
-    `/tickets/${encodeURIComponent(id)}`,
-  ];
-  let lastErr = null;
-  for (const endpoint of endpoints) {
-    try {
-      const raw = await api.get(endpoint);
-      return raw ? mapTicket(raw) : null;
-    } catch (err) {
-      const status = err?.status ?? err?.statusCode ?? err?.response?.status;
-      if (status !== 404) throw err;
-      lastErr = err;
-    }
-  }
-  throw lastErr || new Error("Ticket not found");
+  const raw = await api.get(`/support/tickets/${encodeURIComponent(id)}`);
+  return raw ? mapTicket(raw) : null;
 };
 
 // Detect if input looks like a UUID or short ticket ID
@@ -182,46 +167,21 @@ export const searchTickets = async (query) => {
 };
 
 export const escalateTicket = async (id) => {
-  const endpoints = [
-    `/support/tickets/${encodeURIComponent(id)}/escalate`,
-    `/cs/tickets/${encodeURIComponent(id)}/escalate`,
-    `/tickets/${encodeURIComponent(id)}/escalate`,
-  ];
-  let lastErr = null;
-  for (const endpoint of endpoints) {
-    try {
-      return await api.post(endpoint);
-    } catch (err) {
-      const status = err?.status ?? err?.statusCode ?? err?.response?.status;
-      if (status !== 404) throw err;
-      lastErr = err;
-    }
-  }
-  throw lastErr || new Error("Escalate endpoint not found");
+  return api.post(`/support/tickets/${encodeURIComponent(id)}/escalate`);
 };
 
 export const searchTicketsByUserName = async (userName) => {
+  // Backend doesn't have a search-by-username endpoint yet,
+  // so we fetch all tickets via stats and filter client-side.
+  // This is a known limitation — a proper search endpoint should be added.
   const q = encodeURIComponent(userName.trim());
-  const endpoints = [
-    `/support/tickets/user/${q}`,
-    `/support/tickets/by-user/${q}`,
-    `/support/tickets?username=${q}`,
-    `/support/tickets?userName=${q}`,
-    `/support/tickets/${q}`,
-  ];
-
-  let lastError = null;
-  for (const endpoint of endpoints) {
-    try {
-      const raw = await api.get(endpoint);
-      const list = toList(raw);
-      return (list.length ? list : raw ? [raw] : []).map(mapTicket);
-    } catch (err) {
-      lastError = err;
-    }
+  try {
+    const raw = await api.get(`/support/tickets/user/${q}`);
+    const list = toList(raw);
+    return (list.length ? list : raw ? [raw] : []).map(mapTicket);
+  } catch {
+    return [];
   }
-
-  throw lastError || new Error("Ticket search failed");
 };
 
 export const getTicketsStats = async () => {
@@ -287,45 +247,17 @@ export const mapChatMessage = (m = {}) => {
 
 export const getChatHistory = async (ticketId) => {
   const id = encodeURIComponent(ticketId);
-  const endpoints = [
-    `/chat/history/${id}`,
-    `/chat/${id}`,
-    `/chat/messages/${id}`,
-    `/chat?ticketId=${id}`,
-  ];
-
-  let lastErr = null;
-  for (const endpoint of endpoints) {
-    try {
-      const raw = await api.get(endpoint);
-      return toList(raw).map(mapChatMessage);
-    } catch (err) {
-      const status = err?.status ?? err?.statusCode ?? err?.response?.status;
-      if (status !== 404) throw err;
-      lastErr = err;
-    }
+  try {
+    const raw = await api.get(`/chat/history/${id}`);
+    return toList(raw).map(mapChatMessage);
+  } catch (err) {
+    if (err?.status === 404 || err?.response?.status === 404) return [];
+    throw err;
   }
-
-  // If all 404 — return empty gracefully instead of crashing
-  return [];
 };
 
 export const sendChatMessage = async (ticketId, message, type = 1) => {
   const body = { ticketId, message, type };
-
-  const endpoints = ["/chat", "/chat/send", "/chat/messages", "/chat/message"];
-
-  let lastErr = null;
-  for (const endpoint of endpoints) {
-    try {
-      const raw = await api.post(endpoint, body);
-      return raw ? mapChatMessage(raw) : null;
-    } catch (err) {
-      const status = err?.status ?? err?.statusCode ?? err?.response?.status;
-      if (status !== 404) throw err;
-      lastErr = err;
-    }
-  }
-
-  throw lastErr || new Error("Chat send endpoint not found");
+  const raw = await api.post("/chat/send", body);
+  return raw ? mapChatMessage(raw) : null;
 };

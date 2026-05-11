@@ -72,7 +72,7 @@ public sealed class CheckoutCommandHandler
         {
             UserId = userId,
             Status = OrderStatus.Pending,
-            PaymentStatus = PaymentStatus.Pending,
+            PaymentStatus = PaymentStatus.Paid, // Mocked to Paid directly
             PaymentIntentId = paymentIntentId,
             TotalAmount = totalAmount,
             OrderItems = cartItems.Select(x => new OrderItem

@@ -1,4 +1,4 @@
-﻿//  ADMIN SERVICE 
+//  ADMIN SERVICE 
 import { API_CONFIG } from "../config";
 import api from "../apiClient";
 import {
@@ -478,7 +478,24 @@ export const getSensors = async () => {
 };
 export const getTraffic = async () => {
   if (!API_CONFIG.BASE_URL) return MOCK_ADMIN_TRAFFIC;
-  return { markers: [], _raw: {} };
+  try {
+    const raw = await api.get("/trafficincidents");
+    const list = toList(raw);
+    return {
+      markers: list.map((inc) => ({
+        id: inc.id,
+        title: inc.title ?? "Incident",
+        description: inc.description ?? "",
+        lat: inc.latitude,
+        lng: inc.longitude,
+        severity: inc.severity ?? "Medium",
+        location: inc.location ?? "",
+      })),
+      _raw: raw,
+    };
+  } catch {
+    return { markers: [], _raw: {} };
+  }
 };
 export const getAbout = async () => {
   if (!API_CONFIG.BASE_URL) return MOCK_ADMIN_ABOUT;
@@ -550,8 +567,16 @@ export const getMe = async () => {
   return mapMe(r);
 };
 
-export const getNotifications = async () => MOCK_ADMIN_NOTIFICATIONS ?? [];
-export const getEventLog = async () => MOCK_ADMIN_ABOUT?.eventLog ?? [];
+export const getNotifications = async () => {
+  if (!API_CONFIG.BASE_URL) return MOCK_ADMIN_NOTIFICATIONS ?? [];
+  const r = await api.get("/notifications");
+  return toList(r);
+};
+export const getEventLog = async () => {
+  if (!API_CONFIG.BASE_URL) return MOCK_ADMIN_ABOUT?.eventLog ?? [];
+  const r = await api.get("/admin/activity");
+  return mapActivity(r);
+};
 export const getRatingsOverview = async () => null;
 
 // POST / PUT / DELETE

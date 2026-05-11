@@ -29,6 +29,11 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<Rating> Ratings => Set<Rating>();
 
+    // ── Expert System ────────────────────────────────────────────────────────
+    public DbSet<DiagnosticQuestion> DiagnosticQuestions => Set<DiagnosticQuestion>();
+    public DbSet<DiagnosticAnswer>   DiagnosticAnswers   => Set<DiagnosticAnswer>();
+    public DbSet<DiagnosticResult>   DiagnosticResults   => Set<DiagnosticResult>();
+
     // ── Soft-delete interception ─────────────────────────────────────────────
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

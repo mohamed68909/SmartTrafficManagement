@@ -212,7 +212,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                     fontWeight: FontWeight.w600)),
                             const Spacer(),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/garage').then((_) {
+                                  // Refresh vehicle data when returning
+                                  ref.invalidate(vehiclesFutureProvider);
+                                });
+                              },
                               child: const Text('Change',
                                   style: TextStyle(
                                       color: AppColors.accent,

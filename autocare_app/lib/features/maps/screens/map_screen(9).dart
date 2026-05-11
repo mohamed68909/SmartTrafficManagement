@@ -345,7 +345,6 @@ class _MapScreenState extends State<MapScreen> {
                           builder: (context) => const ReportHazardScreen()))),
               _actionCard("Winch", Icons.local_shipping_outlined, neonGreen,
                   () {
-                // ده الكود اللي هيفتح صفحة الونش فوراً
                 Navigator.push(
                   context,
                   MaterialPageRoute(

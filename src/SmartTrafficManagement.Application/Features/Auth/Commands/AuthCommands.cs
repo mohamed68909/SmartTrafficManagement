@@ -5,6 +5,7 @@ using SmartTrafficManagement.Core.Common;
 using SmartTrafficManagement.Core.Constants;
 using SmartTrafficManagement.Core.Entities;
 using SmartTrafficManagement.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartTrafficManagement.Application.Features.Auth.Commands;
 
@@ -41,6 +42,12 @@ public sealed class RegisterCommandHandler
         if (await _userManager.FindByEmailAsync(request.Email) is not null)
         {
             return Result<AuthResponseDto>.Failure(DomainErrors.Auth.EmailAlreadyExists, 409);
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber) && 
+            await _userManager.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber, cancellationToken))
+        {
+            return Result<AuthResponseDto>.Failure(DomainErrors.Auth.PhoneAlreadyExists, 409);
         }
 
         var user = new ApplicationUser
@@ -277,6 +284,13 @@ public sealed class UpdateProfileCommandHandler
         if (user is null)
         {
             return Result<ProfileResponseDto>.Failure(DomainErrors.Common.NotFound, 404);
+        }
+
+        if (!string.IsNullOrWhiteSpace(command.Request.PhoneNumber) && 
+            command.Request.PhoneNumber != user.PhoneNumber &&
+            await _userManager.Users.AnyAsync(u => u.PhoneNumber == command.Request.PhoneNumber, cancellationToken))
+        {
+            return Result<ProfileResponseDto>.Failure(DomainErrors.Auth.PhoneAlreadyExists, 409);
         }
 
         user.FirstName = command.Request.FirstName;

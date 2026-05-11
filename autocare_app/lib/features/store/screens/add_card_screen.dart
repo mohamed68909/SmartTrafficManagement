@@ -24,30 +24,41 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
   bool _isProcessing = false;
 
   Future<void> _saveCard() async {
-    if (_cardDetails == null || !_cardDetails!.complete) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColors.error,
-          content: const Text('Please enter valid card details'),
-        ),
-      );
-      return;
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+      if (_cardDetails == null || !_cardDetails!.complete) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: AppColors.error,
+            content: Text('Please enter valid card details'),
+          ),
+        );
+        return;
+      }
     }
 
     setState(() => _isProcessing = true);
 
     try {
-      // 1. Create Payment Method via Stripe SDK securely
-      final paymentMethod = await Stripe.instance.createPaymentMethod(
-        params: const PaymentMethodParams.card(
-          paymentMethodData: PaymentMethodData(),
-        ),
-      );
+      String paymentMethodId = '';
+      
+      if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
+        // Mock Stripe for Desktop
+        await Future.delayed(const Duration(seconds: 1));
+        paymentMethodId = 'pm_mock_${DateTime.now().millisecondsSinceEpoch}';
+      } else {
+        // 1. Create Payment Method via Stripe SDK securely
+        final paymentMethod = await Stripe.instance.createPaymentMethod(
+          params: const PaymentMethodParams.card(
+            paymentMethodData: PaymentMethodData(),
+          ),
+        );
+        paymentMethodId = paymentMethod.id;
+      }
 
       // 2. Send PaymentMethod ID to the backend to attach to customer
       final response = await ApiClient.post(
         ApiConstants.cardsUrl,
-        {'paymentMethodId': paymentMethod.id},
+        {'paymentMethodId': paymentMethodId},
       );
 
       if (!mounted) return;

@@ -304,7 +304,7 @@ class _PaymentSuccessScreenState extends ConsumerState<PaymentSuccessScreen>
             border: Border.all(color: AppColors.accent.withValues(alpha:0.3)),
           ),
           child: Text(
-            '${widget.total.toStringAsFixed(0)} EGP',
+            '${widget.total.toStringAsFixed(0)} USD',
             style: const TextStyle(
               color: AppColors.accent,
               fontSize: 26,

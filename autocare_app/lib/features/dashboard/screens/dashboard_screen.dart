@@ -9,6 +9,7 @@ import '../../../../core/models/models.dart';
 import '../../history/screens/history_screen.dart';
 import '../../mechanic/screens/mechanic_screen.dart';
 import '../../vehicle/screens/vehicle_tracker_screen.dart';
+import '../../maintenance/screens/car_diagnostic_screen.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -211,7 +212,7 @@ class DashboardScreen extends ConsumerWidget {
     final actions = [
       {'icon': Icons.video_call_rounded, 'label': 'Mechanic\nCall', 'screen': 'mechanic'},
       {'icon': Icons.gps_fixed_rounded, 'label': 'Smart\nTracker', 'screen': 'tracker'},
-      {'icon': Icons.tire_repair_rounded, 'label': 'Tire\nService', 'screen': 'store'},
+      {'icon': Icons.medical_information_rounded, 'label': 'Car\nDiagnosis', 'screen': 'diagnostic'},
       {'icon': Icons.history_rounded, 'label': 'Order\nHistory', 'screen': 'history'},
     ];
 
@@ -236,6 +237,9 @@ class DashboardScreen extends ConsumerWidget {
                   } else if (action['screen'] == 'tracker') {
                     Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const VehicleTrackerScreen()));
+                  } else if (action['screen'] == 'diagnostic') {
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const CarDiagnosticScreen()));
                   } else if (action['screen'] == 'store') {
                     ref.read(navIndexProvider.notifier).state = 2;
                   }
@@ -328,7 +332,7 @@ class DashboardScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Text(
-                      '850 EGP',
+                      '850 USD',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -425,7 +429,7 @@ class _OrderTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${order.price.toStringAsFixed(0)} EGP',
+                  '${order.price.toStringAsFixed(0)} USD',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,

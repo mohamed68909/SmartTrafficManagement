@@ -115,6 +115,7 @@ public static class DependencyInjection
         services.AddScoped<ISupportRepository, SupportRepository>();
         services.AddScoped<ISensorRepository, StubSensorRepository>();
         services.AddScoped<IGoogleTokenVerifier, GoogleTokenVerifier>();
+        services.AddScoped<IDiagnosticsRepository, DiagnosticsRepository>();
 
         // File upload
         services.AddHttpContextAccessor();

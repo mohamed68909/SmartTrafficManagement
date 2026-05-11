@@ -1,4 +1,6 @@
 // lib/core/services/stripe_service.dart
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
@@ -7,6 +9,10 @@ class StripeService {
       'pk_test_51TUhceDd73slVpASb5Ba9vB8lkijS4ESlfbFZFIZTFq2bXNrp8QU8B2tKdIEuJsCSVYjyzyBsM9sVMvVEbf4roz900cshwZCQO';
 
   static void init() {
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
+      debugPrint('Stripe initialization skipped on this platform.');
+      return;
+    }
     Stripe.publishableKey = _publishableKey;
     Stripe.merchantIdentifier = 'autocare.egypt';
   }
@@ -18,6 +24,13 @@ class StripeService {
     required String customerEmail,
     required String customerName,
   }) async {
+    // Mock for Desktop/Web testing to avoid MissingPluginException
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
+      debugPrint('Simulating successful Stripe payment for Desktop/Web...');
+      await Future.delayed(const Duration(seconds: 2));
+      return true;
+    }
+
     await Stripe.instance.initPaymentSheet(
       paymentSheetParameters: SetupPaymentSheetParameters(
         paymentIntentClientSecret: clientSecret,

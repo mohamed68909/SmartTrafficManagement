@@ -13,9 +13,11 @@ class OrderService {
       if (orderResp.statusCode == 200) {
         final body = jsonDecode(orderResp.body);
         final List<dynamic> data = body['data'] ?? [];
-        allOrders.addAll(data.map((json) => Order(
-              id: json['id'] ?? '',
-              title: 'Order #${json['id'].toString().substring(0, 5).toUpperCase()}',
+        allOrders.addAll(data.map((json) {
+          final orderIdStr = (json['orderId'] ?? '').toString();
+          return Order(
+              id: orderIdStr,
+              title: 'Order #${orderIdStr.length >= 5 ? orderIdStr.substring(0, 5).toUpperCase() : orderIdStr}',
               date: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
               price: (json['totalAmount'] ?? 0).toDouble(),
               status: _mapStatus(json['status']),
@@ -53,10 +55,12 @@ class OrderService {
 
   static String _mapServiceType(int? type) {
     switch (type) {
-      case 0: return 'Towing';
-      case 1: return 'Tire Change';
-      case 2: return 'Fuel Delivery';
-      case 3: return 'Battery Jump';
+      case 1: return 'Maintenance';
+      case 2: return 'Inspection';
+      case 3: return 'Emergency';
+      case 4: return 'Towing';
+      case 5: return 'Fuel Delivery';
+      case 6: return 'Video Support';
       default: return 'Emergency Aid';
     }
   }

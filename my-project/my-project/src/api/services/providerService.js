@@ -184,12 +184,12 @@ export const getProfile = async () => {
 
 // ── Actions ──
 export const acceptRequest = async (id) =>
-  api.post(`/provider/requests/${id}/accept`);
+  api.patch(`/provider/jobs/accept/${id}`);
 export const rejectRequest = async (id) =>
-  api.post(`/provider/requests/${id}/reject`);
+  api.post(`/provider/jobs/${id}/reject`);
 export const toggleOnline = async (v) =>
   api.post("/provider/status", { online: v });
 export const updateStatus = async (s) =>
-  api.post("/provider/active-mission/status", { status: s });
-export const callDriver = async () => api.post("/provider/active-mission/call");
-export const sendSOS = async () => api.post("/provider/active-mission/sos");
+  api.patch("/provider/jobs/status", { status: s });
+// callDriver and sendSOS removed — no matching backend endpoints.
+// Use the SOS module (POST /sos/request) or phone dialer instead.

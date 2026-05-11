@@ -2,18 +2,17 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class ApiConstants {
-  // تفعيل السيرفر الحقيقي (Production)
-  static const bool isProduction = false;
+  static const bool isProduction = true;
 
   static String get baseUrl {
     if (isProduction) {
-      return 'https://smarttrafficmanagement.runasp.net/api';
+      return 'https://smarttrafficmanagemet.runasp.net/api';
     }
     
     // Local HTTPS URLs for backend
     if (kIsWeb) return 'https://localhost:7188/api';
-    if (Platform.isAndroid) return 'https://10.0.2.2:7188/api';
-    return 'https://localhost:7188/api';
+    if (Platform.isAndroid) return 'https://10.0.2.2:7188/api'; 
+    return 'https://10.0.2.2:7188/api';
   }
   
   // Auth
@@ -29,10 +28,12 @@ class ApiConstants {
   static String get changePasswordUrl => '$baseUrl/Auth/change-password';
   static String get profileUrl => '$baseUrl/Auth/profile';
   static String get updateProfileUrl => '$baseUrl/Auth/profile/update';
+  static String get verifyDocumentsUrl => '$baseUrl/Auth/verify-documents';
 
   // Notifications
   static String get notificationsUrl => '$baseUrl/notifications';
   static String markNotificationReadUrl(String id) => '$baseUrl/notifications/$id/read';
+  static String deleteNotificationUrl(String id) => '$baseUrl/notifications/$id'; // DELETE
 
   // Store
   static String get productsUrl => '$baseUrl/store/products';
@@ -41,6 +42,7 @@ class ApiConstants {
 
   // Garage
   static String get garageUrl => '$baseUrl/garage';
+  static String garageVehicleUrl(String id) => '$baseUrl/garage/$id'; // GET single / PUT / DELETE
 
   // SOS & Emergency
   static String get sosRequestUrl => '$baseUrl/sos/request';
@@ -59,9 +61,13 @@ class ApiConstants {
   static String get cartItemsUrl => '$baseUrl/cart/items';
   static String cartItemUrl(String id) => '$baseUrl/cart/items/$id';
 
-  // Profile & Support
+  // Ratings
   static String get ratingsMyUrl => '$baseUrl/ratings/my';
+  static String get ratingsUrl => '$baseUrl/ratings'; // POST submit new rating
+
+  // Support & Chat
   static String get supportTicketsMyUrl => '$baseUrl/support/tickets/my';
+  static String get supportOpenTicketUrl => '$baseUrl/support/tickets/open'; // POST open ticket
   static String supportCloseUrl(String id) => '$baseUrl/support/close/$id';
   static String chatHistoryUrl(String ticketId) => '$baseUrl/chat/history/$ticketId';
   static String get chatSendUrl => '$baseUrl/chat/send';
@@ -74,9 +80,15 @@ class ApiConstants {
   static String get cardsUrl => '$baseUrl/payments/cards';
   static String deleteCardUrl(String id) => '$baseUrl/payments/cards/$id';
   static String get stripeConfigUrl => '$baseUrl/payments/stripe/config';
+  static String get paymentHistoryUrl => '$baseUrl/payments/history'; // GET history list
+  static String paymentByIdUrl(String id) => '$baseUrl/payments/$id';  // GET single payment
 
   // Sensors & Upload
-  static String get sensorsVehicleEnvUrl => '$baseUrl/sensors/vehicle-env';
+  static String sensorsVehicleEnvUrl(String vehicleId) => '$baseUrl/sensors/vehicle-env?vehicleId=$vehicleId';
   static String get uploadUrl => '$baseUrl/upload';
   static String get uploadMultipleUrl => '$baseUrl/upload/multiple';
+
+  // Expert System / Car Diagnostics
+  static String get diagnosticsStartUrl => '$baseUrl/diagnostics/start';
+  static String get diagnosticsAnswerUrl => '$baseUrl/diagnostics/answer';
 }

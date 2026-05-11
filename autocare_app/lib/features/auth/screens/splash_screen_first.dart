@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'onboarding (1).dart'; // Import الخاص بصفحة الاونبوردينج
+import 'onboarding (1).dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +15,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // مؤقت زمني لتحديث شريط التحميل
     Timer.periodic(const Duration(milliseconds: 40), (timer) {
       if (mounted) {
         setState(() {
@@ -24,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen> {
           } else {
             timer.cancel(); 
             
-            // التعديل هنا: الانتقال لصفحة الـ Onboarding بدلاً من التسجيل
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const OnboardingScreen()),

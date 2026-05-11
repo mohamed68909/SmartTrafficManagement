@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'registration_screen(4).dart';
+import 'forgot_password_screen.dart';
 import '../../maps/screens/map_screen(9).dart';
 import '../../../core/services/auth_service.dart';
 
@@ -17,7 +19,61 @@ class _LoginScreen3State extends State<LoginScreen3> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
+  bool _isLoading        = false;
+  bool _isGoogleLoading  = false;
+  bool _obscurePass      = true;
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+    serverClientId: 'YOUR_WEB_CLIENT_ID_HERE.apps.googleusercontent.com', // Must match backend ClientId
+  );
+
+  // ── Google Sign-In handler ────────────────────────────────────────────────
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isGoogleLoading = true);
+    try {
+      final account = await _googleSignIn.signIn();
+      if (account == null) {
+        // User cancelled the flow
+        setState(() => _isGoogleLoading = false);
+        return;
+      }
+
+      final auth     = await account.authentication;
+      final idToken  = auth.idToken;
+
+      if (idToken == null) {
+        _snack('Google Sign-In failed: no ID token received.');
+        setState(() => _isGoogleLoading = false);
+        return;
+      }
+
+      final result = await AuthService.googleLogin(idToken);
+
+      if (!mounted) return;
+      setState(() => _isGoogleLoading = false);
+
+      if (result['success'] == true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MapScreen9()),
+        );
+      } else {
+        _snack(result['message'] ?? 'Google Sign-In failed.');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isGoogleLoading = false);
+        _snack('Google Sign-In error: ${e.toString()}');
+      }
+    }
+  }
+
+  void _snack(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: const Color(0xFF1E1E1E)),
+    );
+  }
 
   void _handleLogin() async {
     final email = _emailController.text.trim();
@@ -54,68 +110,10 @@ class _LoginScreen3State extends State<LoginScreen3> {
     }
   }
 
-  void _showForgotPasswordDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: const Color(0xFF121212),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Reset Password",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Enter your new password below",
-                    style: TextStyle(color: Colors.white54, fontSize: 14),
-                  ),
-                  const SizedBox(height: 25),
-                  const Text("New Password",
-                      style: TextStyle(color: Colors.white, fontSize: 14)),
-                  const SizedBox(height: 8),
-                  _buildTextField(hint: "********", isPassword: true),
-                  const SizedBox(height: 20),
-                  const Text("Confirm Password",
-                      style: TextStyle(color: Colors.white, fontSize: 14)),
-                  const SizedBox(height: 8),
-                  _buildTextField(hint: "********", isPassword: true),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: neonGreen,
-                      minimumSize: const Size(double.infinity, 55),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text(
-                      "Apply",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+  void _goToForgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
     );
   }
 
@@ -177,12 +175,23 @@ class _LoginScreen3State extends State<LoginScreen3> {
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              _buildTextField(hint: "Enter your password", isPassword: true, controller: _passwordController),
+              _buildTextField(
+                hint: "Enter your password",
+                isPassword: _obscurePass,
+                controller: _passwordController,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscurePass ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white38,
+                  ),
+                  onPressed: () => setState(() => _obscurePass = !_obscurePass),
+                ),
+              ),
               const SizedBox(height: 15),
               Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton(
-                  onPressed: _showForgotPasswordDialog,
+                  onPressed: _goToForgotPassword,
                   child: Text(
                     "Forgot Password?",
                     style: TextStyle(
@@ -226,12 +235,22 @@ class _LoginScreen3State extends State<LoginScreen3> {
               Row(
                 children: [
                   Expanded(
-                      child: _buildSocialButton(
-                          "Google", FontAwesomeIcons.google, Colors.redAccent)),
+                    child: _buildSocialButton(
+                      "Google",
+                      FontAwesomeIcons.google,
+                      Colors.redAccent,
+                      onTap: _isGoogleLoading ? null : _handleGoogleSignIn,
+                      isLoading: _isGoogleLoading,
+                    ),
+                  ),
                   const SizedBox(width: 20),
                   Expanded(
-                      child: _buildSocialButton(
-                          "Apple", Icons.apple, Colors.white)),
+                    child: _buildSocialButton(
+                      "Apple",
+                      Icons.apple,
+                      Colors.white,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 40),
@@ -268,7 +287,12 @@ class _LoginScreen3State extends State<LoginScreen3> {
     );
   }
 
-  Widget _buildTextField({required String hint, bool isPassword = false, TextEditingController? controller}) {
+  Widget _buildTextField({
+    required String hint,
+    bool isPassword = false,
+    TextEditingController? controller,
+    Widget? suffixIcon,
+  }) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
@@ -278,6 +302,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
         hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
         filled: true,
         fillColor: darkGrey,
+        suffixIcon: suffixIcon,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         border: OutlineInputBorder(
@@ -288,24 +313,49 @@ class _LoginScreen3State extends State<LoginScreen3> {
     );
   }
 
-  Widget _buildSocialButton(String label, IconData icon, Color iconColor) {
+  Widget _buildSocialButton(
+    String label,
+    IconData icon,
+    Color iconColor, {
+    VoidCallback? onTap,
+    bool isLoading = false,
+  }) {
     return Container(
       height: 65,
       decoration: BoxDecoration(
         color: darkGrey,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: onTap != null
+              ? iconColor.withValues(alpha: 0.3)
+              : Colors.white10,
+          width: 1,
+        ),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         borderRadius: BorderRadius.circular(15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: iconColor, size: 24),
+            isLoading
+                ? SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(iconColor),
+                    ),
+                  )
+                : Icon(icon, color: iconColor, size: 22),
             const SizedBox(width: 10),
-            Text(label,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            Text(
+              label,
+              style: TextStyle(
+                color: onTap != null ? Colors.white : Colors.white38,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ),

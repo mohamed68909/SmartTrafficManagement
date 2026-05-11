@@ -15,7 +15,6 @@ class VehicleInfoScreen extends StatefulWidget {
 }
 
 class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
-  // متغيرات الحالة (State)
   String? selectedBrand;
   String? selectedModel;
   File? plateImage;
@@ -25,7 +24,7 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
 
   final TextEditingController _plateController = TextEditingController();
 
-  final Color neonGreen = const Color(0xFFCCFF00); // لوننا الرسمي
+  final Color neonGreen = const Color(0xFFCCFF00);
 
   @override
   void dispose() {
@@ -33,7 +32,6 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
     super.dispose();
   }
 
-  // دالة اختيار الصورة (كاميرا أو استوديو)
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: source);
@@ -45,7 +43,6 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
     }
   }
 
-  // قائمة اختيار مصدر الصورة (BottomSheet)
   void _showImagePickerOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -167,7 +164,6 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // اختار الماركة
             _buildLabel("SELECT BRAND/MAKE"),
             _buildDropdown(
               "Choose Brand", 
@@ -178,7 +174,6 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
 
             const SizedBox(height: 25),
 
-            // اختار الموديل
             _buildLabel("SELECT MODEL"),
             _buildDropdown(
               "Choose Model", 
@@ -189,7 +184,6 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
 
             const SizedBox(height: 25),
 
-            // نوع المركبة
             _buildLabel("VEHICLE TYPE"),
             _buildDropdown(
               "Choose Type", 
@@ -200,17 +194,15 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
 
             const SizedBox(height: 25),
 
-            // رقم اللوحة
             _buildLabel("PLATE NUMBER"),
             TextField(
               controller: _plateController,
               style: const TextStyle(color: Colors.white),
-              decoration: _inputDecoration("e.g., 6593 ج ي ب"),
+              decoration: _inputDecoration("e.g., ABC 123"),
             ),
 
             const SizedBox(height: 25),
 
-            // رفع صورة اللوحة
             _buildLabel("UPLOAD LICENSE PLATE PHOTO"),
             const SizedBox(height: 10),
             
@@ -258,7 +250,6 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
         ),
       ),
       
-      // الزرار السفلي المربوط بصفحة 6
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(25.0),
         child: ElevatedButton(
@@ -281,7 +272,6 @@ class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
     );
   }
 
-  // --- Helper Widgets عشان الكود يكون منظم ---
 
   Widget _buildLabel(String text) => Padding(
     padding: const EdgeInsets.only(bottom: 10),

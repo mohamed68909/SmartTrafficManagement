@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// 1. تأكد إن المسار ده صح حسب اسم الفولدر عندك
 import 'login(3).dart'; 
 
 class OnboardingScreenTwo extends StatelessWidget {
@@ -58,17 +57,15 @@ class OnboardingScreenTwo extends StatelessWidget {
                     children: [
                       _buildDot(false),
                       const SizedBox(width: 8),
-                      _buildDot(true), // النقطة الثانية هي المتفعلة
+                      _buildDot(true),
                       const SizedBox(width: 8),
                       _buildDot(false),
                     ],
                   ),
                   const SizedBox(height: 40),
 
-                  // --- تعديل زرار Get Started ---
                   ElevatedButton(
                     onPressed: () {
-                      // الـ Navigator عشان ينقلك لصفحة اللوجن
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -94,7 +91,6 @@ class OnboardingScreenTwo extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // --- تعديل زرار Skip (اختياري بس بيفيد في الـ UX) ---
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -121,7 +117,6 @@ class OnboardingScreenTwo extends StatelessWidget {
     );
   }
 
-  // --- باقي الدوال (Icons, Dots) زي ما هي بدون تغيير ---
   Widget _buildGlowIconGroupData() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

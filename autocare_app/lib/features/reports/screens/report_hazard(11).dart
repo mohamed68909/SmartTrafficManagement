@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'report accident(12).dart'; // تأكد إن الاسم هو نفس اسم الملف عندك
+import 'report accident(12).dart';
 import 'report traffic jam(13).dart';
 import 'report road works(14).dart';
 import 'report police(15).dart';
@@ -8,8 +8,8 @@ import 'report police(15).dart';
 class ReportHazardScreen extends StatelessWidget {
   const ReportHazardScreen({super.key});
 
-  final Color neonGreen = const Color(0xFFCCFF00); // اللون الفسفوري
-  final Color darkCardBg = const Color(0xFF161616); // لون خلفية المربعات
+  final Color neonGreen = const Color(0xFFCCFF00);
+  final Color darkCardBg = const Color(0xFF161616);
 
   @override
   Widget build(BuildContext context) {
@@ -59,14 +59,13 @@ class ReportHazardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // --- شبكة التقارير (الزراير) ---
               GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
-                childAspectRatio: 0.85, // حل مشكلة الـ Overflow الداخلي
+                childAspectRatio: 0.85,
                 children: [
                   _buildReportCard(
                     context: context,
@@ -74,7 +73,6 @@ class ReportHazardScreen extends StatelessWidget {
                     glowColor: Colors.redAccent,
                     label: "Accident",
                     onTap: () {
-                      // --- دي الحركة اللي بتنقل من صفحة للتانية ---
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -89,7 +87,6 @@ class ReportHazardScreen extends StatelessWidget {
                     glowColor: Colors.orangeAccent,
                     label: "Traffic Jam",
                     onTap: () {
-                      // الربط الفعلي
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -100,11 +97,10 @@ class ReportHazardScreen extends StatelessWidget {
                   ),
                   _buildReportCard(
                     context: context,
-                    iconData: Icons.fence_rounded, // أيقونة الإصلاحات
+                    iconData: Icons.fence_rounded,
                     glowColor: neonGreen,
                     label: "Road Works",
                     onTap: () {
-                      // كود الانتقال لصفحة 14
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -115,11 +111,10 @@ class ReportHazardScreen extends StatelessWidget {
                   ),
                   _buildReportCard(
                     context: context,
-                    iconData: Icons.shield_rounded, // أيقونة الدرع
+                    iconData: Icons.shield_rounded,
                     glowColor: Colors.blueAccent,
                     label: "Police",
                     onTap: () {
-                      // كود الانتقال لصفحة 15
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -133,7 +128,6 @@ class ReportHazardScreen extends StatelessWidget {
 
               const SizedBox(height: 40),
 
-              // --- شريط النصيحة (Tip Bar) ---
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -193,7 +187,6 @@ class ReportHazardScreen extends StatelessWidget {
     );
   }
 
-  // ويجت بناء المربعات (الزراير)
   Widget _buildReportCard({
     required BuildContext context,
     required IconData iconData,

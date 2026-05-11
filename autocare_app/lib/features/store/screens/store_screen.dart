@@ -486,7 +486,7 @@ class _ProductTile extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Text('${product.price.toStringAsFixed(0)} EGP',
+                        Text('${product.price.toStringAsFixed(0)} USD',
                             style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
@@ -728,7 +728,7 @@ class _TireTileFromProduct extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${product.price.toStringAsFixed(0)} EGP / tire',
+                Text('${product.price.toStringAsFixed(0)} USD / tire',
                     style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,

@@ -19,7 +19,7 @@ class _ReportRoadWorksScreenState extends State<ReportRoadWorksScreen> {
   final Color darkCardBg = const Color(0xFF161616);
   
   File? _image; 
-  String _address = "جاري تحديد موقعك...";
+  String _address = "Locating your position...";
   bool _isLoadingLocation = true;
   bool _isSubmitting = false;
   final TextEditingController _detailsController = TextEditingController();
@@ -69,14 +69,13 @@ class _ReportRoadWorksScreenState extends State<ReportRoadWorksScreen> {
     }
   }
 
-  // دالة تحديد الموقع
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setState(() => _address = "خدمات الموقع معطلة");
+      setState(() => _address = "Location services disabled");
       return;
     }
 
@@ -84,7 +83,7 @@ class _ReportRoadWorksScreenState extends State<ReportRoadWorksScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        setState(() => _address = "تم رفض صلاحية الموقع");
+        setState(() => _address = "Location permission denied");
         return;
       }
     }
@@ -106,11 +105,10 @@ class _ReportRoadWorksScreenState extends State<ReportRoadWorksScreen> {
         });
       }
     } catch (e) {
-      setState(() => _address = "فشل في تحديد العنوان");
+      setState(() => _address = "Failed to determine address");
     }
   }
 
-  // دالة اختيار الصورة
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
@@ -118,7 +116,6 @@ class _ReportRoadWorksScreenState extends State<ReportRoadWorksScreen> {
     }
   }
 
-  // قائمة اختيار (كاميرا/استوديو)
   void _showPickerOptions() {
     showModalBottomSheet(
       context: context,
@@ -177,7 +174,6 @@ class _ReportRoadWorksScreenState extends State<ReportRoadWorksScreen> {
             const Text("Provide additional details about the hazard", style: TextStyle(color: Colors.white54, fontSize: 14)),
             const SizedBox(height: 30),
 
-            // كارت الموقع
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(color: darkCardBg, borderRadius: BorderRadius.circular(20)),
@@ -219,7 +215,6 @@ class _ReportRoadWorksScreenState extends State<ReportRoadWorksScreen> {
             const Text("Photo (Optional)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
 
-            // مربع الصور المنقط
             InkWell(
               onTap: _showPickerOptions,
               child: DottedBorder(

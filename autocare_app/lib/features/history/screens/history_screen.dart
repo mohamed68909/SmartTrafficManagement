@@ -198,7 +198,7 @@ class _OrderHistoryTile extends StatelessWidget {
                 ],
               ),
               Text(
-                '${order.price.toStringAsFixed(0)} EGP',
+                '${order.price.toStringAsFixed(0)} USD',
                 style: const TextStyle(
                   color: AppColors.white,
                   fontSize: 15,

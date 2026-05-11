@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import '../../../core/services/emergency_service.dart';
-// تأكد من صحة اسم الملف هنا (استخدم الأندر سكور أفضل في التسمية)
 import 'fuel tracking(20).dart'; 
 
 class EmergencyFuelScreen19 extends StatefulWidget {
@@ -17,9 +16,9 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
   final Color darkCard = const Color(0xFF111111);
   
   String _currentAddress = "Locating...";
-  double _lat = 0.0; // الإحداثيات الحقيقية للمستخدم
+  double _lat = 0.0;
   double _lng = 0.0;
-  int _selectedFuelPrice = 22; // بنزين 92 بـ 22 جنيه
+  int _selectedFuelPrice = 22;
   String _selectedFuelName = "92";
   double _fuelAmount = 10.0;
   final int _deliveryFee = 50;
@@ -51,7 +50,6 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
 
     try {
       Position position = await Geolocator.getCurrentPosition();
-      // ✅ حفظ الإحداثيات الحقيقية
       _lat = position.latitude;
       _lng = position.longitude;
       List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
@@ -70,7 +68,6 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
 
   @override
   Widget build(BuildContext context) {
-    // حساب الحسابات هنا جوه الـ build عشان تتحدث مع كل حركة في السلايدر
     int fuelTotal = (_fuelAmount * _selectedFuelPrice).toInt();
     int grandTotal = fuelTotal + _deliveryFee;
 
@@ -115,7 +112,6 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
 
               const SizedBox(height: 40),
 
-              // بنبعت الـ grandTotal كـ parameter عشان نتفادى إيرور الـ Scope
               _buildRequestButton(grandTotal),
               
               const SizedBox(height: 15),
@@ -179,7 +175,7 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
             children: [
               Text(name, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 5),
-              Text("$price EGP/L", style: const TextStyle(color: Colors.white38, fontSize: 14)),
+              Text("$price USD/L", style: const TextStyle(color: Colors.white38, fontSize: 14)),
             ],
           ),
         ),
@@ -230,11 +226,11 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
       decoration: BoxDecoration(color: darkCard, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white10)),
       child: Column(
         children: [
-          _summaryRow("Fuel (${_fuelAmount.toInt()}L × $_selectedFuelPrice EGP)", "$fuelTotal EGP"),
+          _summaryRow("Fuel (${_fuelAmount.toInt()}L × $_selectedFuelPrice USD)", "$fuelTotal USD"),
           const SizedBox(height: 12),
-          _summaryRow("Delivery Fee", "$_deliveryFee EGP"),
+          _summaryRow("Delivery Fee", "$_deliveryFee USD"),
           const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Divider(color: Colors.white10)),
-          _summaryRow("Total", "$grandTotal EGP", isTotal: true),
+          _summaryRow("Total", "$grandTotal USD", isTotal: true),
         ],
       ),
     );
@@ -267,7 +263,6 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
             builder: (context) => const Center(child: CircularProgressIndicator(color: Color(0xFFCCFF00))),
           );
 
-          // 2. Call API — بنبعت الإحداثيات الحقيقية للمستخدم
           final result = await EmergencyService.requestSos(
             serviceType: 5, // FuelDelivery
             lat: _lat,
@@ -286,7 +281,7 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
                   builder: (context) => FuelTracking20(
                     fuelType: _selectedFuelName,
                     amount: _fuelAmount.toInt().toString(),
-                    totalPrice: "$total EGP",
+                    totalPrice: "$total USD",
                   ),
                 ),
               );

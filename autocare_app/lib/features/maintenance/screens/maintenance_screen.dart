@@ -7,6 +7,7 @@ import '../../../../core/providers/app_providers.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/models/models.dart';
 import '../../store/screens/checkout_address_screen.dart';
+import 'car_diagnostic_screen.dart';
 
 const _maintenanceCategories = [
   MaintenanceItem(id: 'oil', name: 'Oil Change', icon: '🛢️', price: 450),
@@ -71,6 +72,9 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                         color: AppColors.textSecondary, fontSize: 13),
                   ),
                   const SizedBox(height: 24),
+                  // ── Diagnose First Banner ─────────────────────────────────
+                  _buildDiagnoseBanner(context),
+                  const SizedBox(height: 20),
                   const SectionHeader(title: 'Service Categories'),
                   const SizedBox(height: 14),
                   _buildServiceGrid(selectedCategories),
@@ -109,7 +113,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                                 color: AppColors.textSecondary, fontSize: 12)),
                         const SizedBox(height: 2),
                         Text(
-                          '${total.toStringAsFixed(0)} EGP',
+                          '${total.toStringAsFixed(0)} USD',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
@@ -146,6 +150,63 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDiagnoseBanner(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const CarDiagnosticScreen()),
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: AppColors.accent.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.accent.withValues(alpha: 0.25)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.medical_information_rounded,
+                  color: AppColors.accent, size: 20),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Not sure what you need?',
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Run our Expert System to diagnose your car first.',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded,
+                color: AppColors.accent, size: 20),
           ],
         ),
       ),
@@ -198,7 +259,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${item.price} EGP',
+                  '${item.price} USD',
                   style: TextStyle(
                     fontSize: 10,
                     color: isSelected
@@ -216,7 +277,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
 
   Widget _buildRecommendedProducts() {
     return SizedBox(
-      height: 130,
+      height: 145, // Increased to fix vertical overflow
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: _recommendedProducts.length,
@@ -235,7 +296,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
             }),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: 130,
+              width: 145, // Increased to fix horizontal overflow
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: isSelected
@@ -260,25 +321,34 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                       fontWeight: FontWeight.w600,
                       color: AppColors.white,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
                     p['type'] as String,
                     style: const TextStyle(
                         fontSize: 10, color: AppColors.textMuted),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${p['price']} EGP',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.accent,
+                      Flexible(
+                        child: Text(
+                          '${p['price']} USD',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.accent,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      const SizedBox(width: 4),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 2),

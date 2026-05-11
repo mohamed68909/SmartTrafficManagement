@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../network/api_client.dart';
 import '../network/api_constants.dart';
 
 class NotificationService {
@@ -42,6 +43,19 @@ class NotificationService {
         },
       );
 
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Delete a notification permanently.
+  /// Maps to: DELETE /api/notifications/{id}
+  static Future<bool> deleteNotification(String id) async {
+    try {
+      final response = await ApiClient.delete(
+        ApiConstants.deleteNotificationUrl(id),
+      );
       return response.statusCode == 200;
     } catch (e) {
       return false;

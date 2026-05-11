@@ -16,7 +16,7 @@ namespace SmartTrafficManagement.API.Controllers;
 public sealed class CartController : BaseController
 {
     [HttpGet]
-    [Authorize(Roles = AppRoles.Client)]
+    [Authorize]
     [ProducesResponseType(typeof(Result<CartDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> Get([FromServices] GetCartQueryHandler handler, CancellationToken cancellationToken)
     {
@@ -25,7 +25,7 @@ public sealed class CartController : BaseController
     }
 
     [HttpPost("items")]
-    [Authorize(Roles = AppRoles.Client)]
+    [Authorize]
     [ProducesResponseType(typeof(Result<CartDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> AddItem([FromBody] AddToCartCommand command, [FromServices] AddToCartCommandHandler handler, CancellationToken cancellationToken)
     {

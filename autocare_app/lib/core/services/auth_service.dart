@@ -369,4 +369,86 @@ class AuthService {
     final token = prefs.getString('jwt_token');
     return token != null && token.isNotEmpty;
   }
+
+  // Upload a single file and return its URL, or null on failure.
+  static Future<String?> uploadFile(String filePath, {String folder = 'documents'}) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+
+      final uri = Uri.parse('${ApiConstants.uploadUrl}?folder=$folder');
+      final request = http.MultipartRequest('POST', uri);
+
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+
+      request.files.add(await http.MultipartFile.fromPath('file', filePath));
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return body['data']?['url'] as String?;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Verify Documents (called after registration)
+  static Future<Map<String, dynamic>> verifyDocuments({
+    String? idFrontUrl,
+    String? idBackUrl,
+    String? licenseFrontUrl,
+    String? licenseBackUrl,
+    String? carFrontUrl,
+    String? carBackUrl,
+    required String vehicleMake,
+    required String vehicleModel,
+    required String vehiclePlateNumber,
+    required String vehicleColor,
+    required int vehicleYear,
+    String vehicleType = 'Car',
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+
+      if (token == null) return {'success': false, 'message': 'Not authenticated'};
+
+      final response = await http.post(
+        Uri.parse(ApiConstants.verifyDocumentsUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'idFrontUrl':         idFrontUrl,
+          'idBackUrl':          idBackUrl,
+          'licenseFrontUrl':    licenseFrontUrl,
+          'licenseBackUrl':     licenseBackUrl,
+          'carFrontUrl':        carFrontUrl,
+          'carBackUrl':         carBackUrl,
+          'vehicleMake':        vehicleMake,
+          'vehicleModel':       vehicleModel,
+          'vehiclePlateNumber': vehiclePlateNumber,
+          'vehicleColor':       vehicleColor,
+          'vehicleYear':        vehicleYear,
+          'vehicleType':        vehicleType,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': jsonDecode(response.body)};
+      } else {
+        final data = jsonDecode(response.body);
+        return {'success': false, 'message': data['message'] ?? 'Failed to submit documents.'};
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error.'};
+    }
+  }
 }

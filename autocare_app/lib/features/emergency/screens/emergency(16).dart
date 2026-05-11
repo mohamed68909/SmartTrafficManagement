@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'winch_service(17).dart';
-// 1. استيراد صفحة الطوارئ للبنزين (رقم 19)
 import 'emergency fuel(19).dart';
 import '../../../../core/services/emergency_service.dart';
 
@@ -62,17 +61,17 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
             _sosTile(
-                title: "Ambulance (إسعاف)",
+                title: "Ambulance",
                 number: "123",
                 icon: Icons.medical_services,
                 color: Colors.red),
             _sosTile(
-                title: "Police (شرطة)",
+                title: "Police",
                 number: "122",
                 icon: Icons.local_police,
                 color: Colors.blue),
             _sosTile(
-                title: "Fire (مطافئ)",
+                title: "Fire",
                 number: "180",
                 icon: Icons.fire_truck,
                 color: Colors.orange),
@@ -181,7 +180,6 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                     );
                   }),
 
-                  // 2. تعديل كود كارت البنزين لفتح الصفحة الجديدة
                   _serviceCard(
                       "Fuel", "Fuel delivery", Icons.local_gas_station_outlined,
                       () {

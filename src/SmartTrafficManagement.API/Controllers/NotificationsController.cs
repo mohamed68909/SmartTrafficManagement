@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using SmartTrafficManagement.Application.DTOs.Notifications;
 using SmartTrafficManagement.Core.Common;
 using SmartTrafficManagement.Core.Interfaces;
+using SmartTrafficManagement.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using SmartTrafficManagement.Core.Entities;
 
 namespace SmartTrafficManagement.API.Controllers;
 
@@ -89,6 +93,33 @@ public sealed class NotificationsController : BaseController
             return ProcessResult(Result<bool>.Failure(DomainErrors.Common.NotFound, 404));
         }
 
+        return ProcessResult(Result<bool>.Success(true, 200));
+    }
+
+    [AllowAnonymous]
+    [HttpPost("seed")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> SeedNotifications(
+        [FromServices] ApplicationDbContext dbContext,
+        [FromServices] UserManager<ApplicationUser> userManager,
+        CancellationToken cancellationToken)
+    {
+        var users = await userManager.Users.ToListAsync(cancellationToken);
+        int added = 0;
+
+        foreach (var user in users)
+        {
+            var notifs = new List<Notification>
+            {
+                new Notification { UserId = user.Id, Title = "Welcome to AutoCare", Message = "Thank you for registering! Explore our services like store, garage, and emergency.", IsRead = false, CreatedAt = DateTime.UtcNow },
+                new Notification { UserId = user.Id, Title = "Winter Checkup", Message = "Schedule your winter inspection now to ensure your vehicle is safe for cold weather.", IsRead = false, CreatedAt = DateTime.UtcNow.AddDays(-1) },
+                new Notification { UserId = user.Id, Title = "Emergency SOS Ready", Message = "Your SOS emergency service is ready. Tap the red button anytime you need immediate assistance.", IsRead = true, CreatedAt = DateTime.UtcNow.AddDays(-2) }
+            };
+            await dbContext.Notifications.AddRangeAsync(notifs, cancellationToken);
+            added += 3;
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
         return ProcessResult(Result<bool>.Success(true, 200));
     }
 }

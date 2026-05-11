@@ -51,7 +51,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
     ),
     (
       'How do I earn and redeem points?',
-      'You earn 1 point per 10 EGP spent. Points can be redeemed at checkout by selecting Digital Wallet. 100 points = 10 EGP discount.'
+      'You earn 1 point per 10 USD spent. Points can be redeemed at checkout by selecting Digital Wallet. 100 points = 10 USD discount.'
     ),
     (
       'What is the return policy?',
@@ -59,7 +59,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
     ),
     (
       'Is the Mechanic Video Call free?',
-      'The first 15 minutes of each call are free. Extended sessions are billed at 50 EGP per 15 minutes, deducted from your Wallet balance.'
+      'The first 15 minutes of each call are free. Extended sessions are billed at 50 USD per 15 minutes, deducted from your Wallet balance.'
     ),
   ];
 
@@ -242,19 +242,6 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: AppColors.surface,
-        behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        content: const Text('Feature coming soon!',
-            style: TextStyle(color: AppColors.white)),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-// 1. استيراد صفحة الخريطة (تأكد من صحة مسار الملف عندك)
 import '../../maps/screens/map_screen(9).dart';
 
 class OTP6 extends StatefulWidget {
@@ -34,7 +33,6 @@ class _OTP6State extends State<OTP6> {
     });
   }
 
-  // --- دالة إظهار المربع الصغير (Resend Dialog) ---
   void _showResendDialog() {
     showDialog(
       context: context,
@@ -60,7 +58,7 @@ class _OTP6State extends State<OTP6> {
               ),
               const SizedBox(height: 10),
               const Text(
-                "We will send a new 4-digit code to your number.",
+                "We will send a new 6-digit code to your number.",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white54, fontSize: 14),
               ),
@@ -147,7 +145,7 @@ class _OTP6State extends State<OTP6> {
                     fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
-              const Text("Enter the 4-digit code sent to",
+              const Text("Enter the 6-digit code sent to",
                   style: TextStyle(color: Colors.white54, fontSize: 16)),
               Text(
                 "+20 $maskedPhone",
@@ -162,6 +160,8 @@ class _OTP6State extends State<OTP6> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _otpBox(first: true, last: false),
+                  _otpBox(first: false, last: false),
+                  _otpBox(first: false, last: false),
                   _otpBox(first: false, last: false),
                   _otpBox(first: false, last: false),
                   _otpBox(first: false, last: true),
@@ -190,10 +190,8 @@ class _OTP6State extends State<OTP6> {
 
               const SizedBox(height: 100),
 
-              // --- زرار الـ Verify المحدث للتحويل للخريطة ---
               ElevatedButton(
                 onPressed: () {
-                  // الانتقال لصفحة الخريطة ومسح صفحة الـ OTP من الذاكرة
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -223,8 +221,8 @@ class _OTP6State extends State<OTP6> {
 
   Widget _otpBox({required bool first, last}) {
     return Container(
-      height: 80,
-      width: 65,
+      height: 65,
+      width: 48,
       decoration: BoxDecoration(
         color: darkGrey,
         borderRadius: BorderRadius.circular(15),

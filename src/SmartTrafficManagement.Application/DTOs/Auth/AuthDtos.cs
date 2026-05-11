@@ -107,3 +107,34 @@ public sealed class ResetPasswordRequestDto
     public string Token       { get; set; } = string.Empty;
     public string NewPassword { get; set; } = string.Empty;
 }
+
+/// <summary>
+/// Sent by the mobile app after registration to submit document photos and vehicle info.
+/// Personal document URLs are stored pipe-delimited in ApplicationUser.ProviderDocuments.
+/// Vehicle info is stored as a new Vehicle entity linked to the user.
+/// </summary>
+public sealed class VerifyDocumentsRequestDto
+{
+    // --- Personal Document URLs ---
+    public string? IdFrontUrl        { get; set; }
+    public string? IdBackUrl         { get; set; }
+    public string? LicenseFrontUrl   { get; set; }
+    public string? LicenseBackUrl    { get; set; }
+
+    // --- Vehicle Info & Photos ---
+    public string? CarFrontUrl       { get; set; }
+    public string? CarBackUrl        { get; set; }
+    public string  VehicleMake       { get; set; } = string.Empty;
+    public string  VehicleModel      { get; set; } = string.Empty;
+    public string  VehiclePlateNumber{ get; set; } = string.Empty;
+    public string  VehicleColor      { get; set; } = string.Empty;
+    public int     VehicleYear       { get; set; }
+    public string  VehicleType       { get; set; } = "Car";
+}
+
+public sealed class VerifyDocumentsResponseDto
+{
+    public bool   Success    { get; set; }
+    public string Message    { get; set; } = string.Empty;
+    public Guid?  VehicleId  { get; set; }
+}

@@ -189,5 +189,27 @@ public sealed class AuthController : BaseController
             new ResetPasswordCommand(request), cancellationToken);
         return ProcessResult(result);
     }
+
+    /// <summary>
+    /// Called by the mobile app after successful registration.
+    /// Submits up to 4 personal document URLs (ID, License) and vehicle info with car photos.
+    /// Documents are stored pipe-delimited; a Vehicle record is created/updated automatically.
+    /// </summary>
+    [Authorize]
+    [HttpPost("verify-documents")]
+    [ProducesResponseType(typeof(Result<VerifyDocumentsResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<VerifyDocumentsResponseDto>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> VerifyDocuments(
+        [FromBody] VerifyDocumentsRequestDto request,
+        [FromServices] VerifyDocumentsCommandHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                     ?? User.FindFirstValue("sub")
+                     ?? string.Empty;
+
+        var result = await handler.Handle(new VerifyDocumentsCommand(userId, request), cancellationToken);
+        return ProcessResult(result);
+    }
 }
 

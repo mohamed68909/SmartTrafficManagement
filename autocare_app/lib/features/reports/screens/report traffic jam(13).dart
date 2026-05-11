@@ -19,7 +19,7 @@ class _ReportTrafficJamScreenState extends State<ReportTrafficJamScreen> {
   final Color darkCardBg = const Color(0xFF161616);
   
   File? _image; 
-  String _address = "جاري تحديد موقعك...";
+  String _address = "Locating your position...";
   bool _isLoadingLocation = true;
   bool _isSubmitting = false;
   final TextEditingController _detailsController = TextEditingController();
@@ -75,7 +75,7 @@ class _ReportTrafficJamScreenState extends State<ReportTrafficJamScreen> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setState(() => _address = "خدمات الموقع معطلة");
+      setState(() => _address = "Location services disabled");
       return;
     }
 
@@ -83,7 +83,7 @@ class _ReportTrafficJamScreenState extends State<ReportTrafficJamScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        setState(() => _address = "تم رفض صلاحية الموقع");
+        setState(() => _address = "Location permission denied");
         return;
       }
     }
@@ -105,7 +105,7 @@ class _ReportTrafficJamScreenState extends State<ReportTrafficJamScreen> {
         });
       }
     } catch (e) {
-      setState(() => _address = "فشل في تحديد العنوان");
+      setState(() => _address = "Failed to determine address");
     }
   }
 

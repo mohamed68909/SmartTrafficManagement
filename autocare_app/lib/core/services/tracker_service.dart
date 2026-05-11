@@ -1,15 +1,16 @@
 import 'dart:convert';
 import '../network/api_client.dart';
+import '../network/api_constants.dart';
 
 class TrackerService {
   static Future<SensorData?> getVehicleEnvironment(String vehicleId) async {
     try {
-      final response = await ApiClient.get('/sensors/vehicle-env?vehicleId=$vehicleId');
+      final response = await ApiClient.get(ApiConstants.sensorsVehicleEnvUrl(vehicleId));
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
-        if (body['isSuccess']) {
-          return SensorData.fromJson(body['value']);
+        if (body['isSuccess'] == true) {
+          return SensorData.fromJson(body['data']);
         }
       }
       return null;

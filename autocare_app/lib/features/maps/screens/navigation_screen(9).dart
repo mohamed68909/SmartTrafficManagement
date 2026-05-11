@@ -26,7 +26,6 @@ class NavigationScreen9 extends StatefulWidget {
 class _NavigationScreen9State extends State<NavigationScreen9> {
   final MapController _mapController = MapController();
   
-  // متغيرات تتبع الموقع والاتجاه
   LatLng _liveLocation = const LatLng(31.2598, 32.2882);
   double _liveHeading = 0.0;
   StreamSubscription<Position>? _positionStream;
@@ -37,11 +36,10 @@ class _NavigationScreen9State extends State<NavigationScreen9> {
     _startNavigationTracking();
   }
 
-  // دالة التتبع اللحظي أثناء الملاحة
   void _startNavigationTracking() {
     const locationSettings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 0, // تحديث فوري مع كل حركة
+      distanceFilter: 0,
     );
 
     _positionStream = Geolocator.getPositionStream(locationSettings: locationSettings)
@@ -51,7 +49,6 @@ class _NavigationScreen9State extends State<NavigationScreen9> {
           _liveLocation = LatLng(position.latitude, position.longitude);
           _liveHeading = position.heading;
         });
-        // تحريك الكاميرا تلقائياً مع السهم عشان يفضل في نص الشاشة
         _mapController.move(_liveLocation, 17.0);
       }
     });
@@ -71,7 +68,6 @@ class _NavigationScreen9State extends State<NavigationScreen9> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 1. الخريطة مع حل مشكلة الـ Access Blocked
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
@@ -81,7 +77,7 @@ class _NavigationScreen9State extends State<NavigationScreen9> {
             children: [
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.smart_traffic.ziad.nav', // تعريف التطبيق للسيرفر
+                userAgentPackageName: 'com.smart_traffic.ziad.nav',
                 tileBuilder: (context, tileWidget, tile) {
                   return ColorFiltered(
                     colorFilter: const ColorFilter.matrix([
@@ -107,17 +103,15 @@ class _NavigationScreen9State extends State<NavigationScreen9> {
               ),
               MarkerLayer(
                 markers: [
-                  // --- السهم اللحظي المتفاعل ---
                   Marker(
                     point: _liveLocation,
                     width: 70,
                     height: 70,
                     child: Transform.rotate(
-                      angle: (_liveHeading * (math.pi / 180)), // يلف مع اتجاهك الحقيقي
+                      angle: (_liveHeading * (math.pi / 180)),
                       child: const Icon(Icons.navigation, color: Colors.blueAccent, size: 45),
                     ),
                   ),
-                  // علامة الهدف (العلم)
                   Marker(
                     point: widget.destination,
                     child: Icon(Icons.flag_circle, color: neonGreen, size: 45),
@@ -127,7 +121,6 @@ class _NavigationScreen9State extends State<NavigationScreen9> {
             ],
           ),
 
-          // 2. الشريط العلوي (الوقت المتبقي)
           SafeArea(
             child: Align(
               alignment: Alignment.topCenter,
@@ -135,7 +128,6 @@ class _NavigationScreen9State extends State<NavigationScreen9> {
             ),
           ),
 
-          // 3. الكارت السفلي (المسافة وزر الخروج)
           Align(
             alignment: Alignment.bottomCenter,
             child: _buildBottomCard(),

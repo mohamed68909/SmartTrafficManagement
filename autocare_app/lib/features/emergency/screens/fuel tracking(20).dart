@@ -123,7 +123,6 @@ class _FuelTracking20State extends State<FuelTracking20> {
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  // حل مشكلة الـ Access Blocked: إضافة User Agent فريد
                   userAgentPackageName: 'com.smart_traffic.app.fuel_tracking', 
                   tileBuilder: (context, tileWidget, tile) => ColorFiltered(
                     colorFilter: const ColorFilter.matrix([
@@ -161,30 +160,52 @@ class _FuelTracking20State extends State<FuelTracking20> {
               ],
             ),
 
-          // كارت الوقت في الأعلى
           SafeArea(
             child: Align(
               alignment: Alignment.topCenter,
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: neonGreen, 
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha:0.3), blurRadius: 10)]
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text("Nearest Support Arriving In", style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 12)),
-                    Text(_eta, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 28)),
-                  ],
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Back button
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12, top: 8),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white24),
+                          ),
+                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: neonGreen, 
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10)]
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("Nearest Support Arriving In", style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 12)),
+                        Text(_eta, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 28)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
 
-          // تفاصيل الطلب في الأسفل
           Align(alignment: Alignment.bottomCenter, child: _buildOrderSummary()),
         ],
       ),
@@ -213,7 +234,6 @@ class _FuelTracking20State extends State<FuelTracking20> {
                 child: Icon(Icons.local_gas_station, color: neonGreen, size: 24)
               ),
               const SizedBox(width: 12),
-              // حل مشكلة الـ Overflow: استخدام Expanded هنا
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +253,6 @@ class _FuelTracking20State extends State<FuelTracking20> {
                 ),
               ),
               const SizedBox(width: 8),
-              // السعر في اليمين مع FittedBox لضمان عدم الانضغاط
               FittedBox(
                 child: Text(
                   widget.totalPrice, 

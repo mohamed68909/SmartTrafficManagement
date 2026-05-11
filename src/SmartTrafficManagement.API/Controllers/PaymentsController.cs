@@ -38,7 +38,24 @@ public sealed class PaymentsController : BaseController
         Event stripeEvent;
         try
         {
-            stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, webhookSecret);
+            if (!string.IsNullOrWhiteSpace(webhookSecret))
+            {
+                // ── Production path: verify Stripe signature ──────────────────────
+                // Stripe signs every webhook request with HMAC-SHA256.
+                // Get the secret from: Stripe Dashboard → Webhooks → Signing secret
+                // or via Stripe CLI:   stripe listen --print-secret
+                stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, webhookSecret);
+            }
+            else
+            {
+                // ── Development path: no signature verification ───────────────────
+                // WebhookSecret is not configured in appsettings.json.
+                // Parse the raw JSON without HMAC verification so local testing works.
+                // ⚠️  NEVER leave the secret empty in production — set
+                //     Stripe:WebhookSecret in appsettings.production.json or as an
+                //     environment variable before going live.
+                stripeEvent = EventUtility.ParseEvent(payload, throwOnApiVersionMismatch: false);
+            }
         }
         catch
         {
@@ -59,7 +76,7 @@ public sealed class PaymentsController : BaseController
         }, cancellationToken));
     }
 
-    //Authorize]
+    [Authorize]
     [HttpPost("cards")]
     [ProducesResponseType(typeof(Result<SavedCardDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<SavedCardDto>), StatusCodes.Status400BadRequest)]

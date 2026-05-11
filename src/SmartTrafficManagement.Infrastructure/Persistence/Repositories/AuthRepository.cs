@@ -21,6 +21,17 @@ public sealed class AuthRepository : IAuthRepository
             .FirstOrDefaultAsync(x => x.Token == token && x.RevokedOnUtc == null, cancellationToken);
     }
 
+    public async Task<Vehicle?> GetDefaultVehicleAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Vehicles
+            .FirstOrDefaultAsync(v => v.OwnerId == userId, cancellationToken);
+    }
+
+    public async Task AddVehicleAsync(Vehicle vehicle, CancellationToken cancellationToken = default)
+    {
+        await _dbContext.Vehicles.AddAsync(vehicle, cancellationToken);
+    }
+
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _dbContext.SaveChangesAsync(cancellationToken);

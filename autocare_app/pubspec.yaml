@@ -73,6 +73,7 @@ dependencies:
   cached_network_image: ^3.3.0      # Image caching
   flutter_rating_bar: ^4.0.1        # Rating widgets
   shimmer: ^3.0.0                   # Loading effects
+  google_sign_in: ^6.2.1            # Google OAuth Sign-In
 
   # ============================================================
   # LOCAL NOTIFICATIONS (From gr_pr)

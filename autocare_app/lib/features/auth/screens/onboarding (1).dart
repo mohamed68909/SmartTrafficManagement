@@ -73,7 +73,6 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
 
-                  // زر التالي (Next)
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -93,10 +92,8 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // زر التخطي (Skip)
                   TextButton(
                     onPressed: () {
-                      // لو عاوز اليوزر يروح يسجل الأول:
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => const LoginScreen3()),

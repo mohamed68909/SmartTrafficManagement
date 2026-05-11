@@ -395,6 +395,123 @@ namespace SmartTrafficManagement.Infrastructure.Migrations
                     b.ToTable("ChatMessages", (string)null);
                 });
 
+            modelBuilder.Entity("SmartTrafficManagement.Core.Entities.DiagnosticAnswer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("NextQuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ResultId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime?>("UpdatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NextQuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("ResultId");
+
+                    b.ToTable("DiagnosticAnswers", (string)null);
+                });
+
+            modelBuilder.Entity("SmartTrafficManagement.Core.Entities.DiagnosticQuestion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRoot")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("UpdatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DiagnosticQuestions", (string)null);
+                });
+
+            modelBuilder.Entity("SmartTrafficManagement.Core.Entities.DiagnosticResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RecommendedServiceType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Tip")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Urgency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValue("Medium");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DiagnosticResults", (string)null);
+                });
+
             modelBuilder.Entity("SmartTrafficManagement.Core.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1153,6 +1270,31 @@ namespace SmartTrafficManagement.Infrastructure.Migrations
                     b.Navigation("SupportTicket");
                 });
 
+            modelBuilder.Entity("SmartTrafficManagement.Core.Entities.DiagnosticAnswer", b =>
+                {
+                    b.HasOne("SmartTrafficManagement.Core.Entities.DiagnosticQuestion", "NextQuestion")
+                        .WithMany()
+                        .HasForeignKey("NextQuestionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SmartTrafficManagement.Core.Entities.DiagnosticQuestion", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartTrafficManagement.Core.Entities.DiagnosticResult", "Result")
+                        .WithMany()
+                        .HasForeignKey("ResultId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("NextQuestion");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Result");
+                });
+
             modelBuilder.Entity("SmartTrafficManagement.Core.Entities.Notification", b =>
                 {
                     b.HasOne("SmartTrafficManagement.Core.Entities.ApplicationUser", "User")
@@ -1389,6 +1531,11 @@ namespace SmartTrafficManagement.Infrastructure.Migrations
             modelBuilder.Entity("SmartTrafficManagement.Core.Entities.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("SmartTrafficManagement.Core.Entities.DiagnosticQuestion", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("SmartTrafficManagement.Core.Entities.Order", b =>

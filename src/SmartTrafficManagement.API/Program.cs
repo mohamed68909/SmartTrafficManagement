@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using SmartTrafficManagement.Application;
 using SmartTrafficManagement.Infrastructure;
 using SmartTrafficManagement.Infrastructure.Persistence.Seeding;
+using SmartTrafficManagement.Infrastructure.Seeding;
 using SmartTrafficManagement.Infrastructure.Realtime;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,7 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(optio
 builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
+    // ── Web browsers & SignalR (requires explicit origins + credentials) ──
     options.AddPolicy("AllowFrontend", policy =>
     {
         var allowedOrigins = builder.Configuration
@@ -37,6 +41,19 @@ builder.Services.AddCors(options =>
 
         policy
             .WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+
+    // ── Mobile apps & REST clients (Flutter, Postman, native apps) ────────
+    // Flutter's http package does NOT send an Origin header (not a browser),
+    // so SetIsOriginAllowed is used instead of WithOrigins.
+    // AllowCredentials() is kept so JWT Bearer tokens are forwarded correctly.
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .SetIsOriginAllowed(_ => true)   // accept any origin (incl. null / mobile)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -79,12 +96,26 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("GlobalPolicy", opt =>
+    {
+        opt.PermitLimit = 60; // 60 requests
+        opt.Window = TimeSpan.FromMinutes(1); // per minute
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 5;
+    });
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var databaseSeeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
     await databaseSeeder.SeedAsync(CancellationToken.None);
+
+    // Seed Expert System decision tree (idempotent — skips if already seeded)
+    await DiagnosticsSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 app.UseSwagger();
@@ -100,10 +131,13 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseStaticFiles();   // serves wwwroot (including /uploads/*)
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend");
+// AllowAll  → all REST controllers (mobile + web + Postman)
+// AllowFrontend → SignalR hub only (needs credential-aware CORS)
+app.UseCors("AllowAll");
+app.UseRateLimiter(); // Apply Rate Limiting middleware
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+app.MapControllers().RequireRateLimiting("GlobalPolicy"); // Apply to all endpoints
 app.MapHub<TrafficHub>("/hubs/traffic")
    .RequireCors("AllowFrontend");
 

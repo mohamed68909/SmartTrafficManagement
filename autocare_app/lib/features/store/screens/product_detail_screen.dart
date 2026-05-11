@@ -205,7 +205,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                                   color: AppColors.textMuted, fontSize: 11)),
                           const SizedBox(height: 2),
                           Text(
-                            '${p.price.toStringAsFixed(0)} EGP',
+                            '${p.price.toStringAsFixed(0)} USD',
                             style: const TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.w900,
@@ -336,7 +336,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                     style: TextStyle(
                         color: AppColors.textSecondary, fontSize: 11)),
                 Text(
-                  '${total.toStringAsFixed(0)} EGP',
+                  '${total.toStringAsFixed(0)} USD',
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
@@ -407,7 +407,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
 
   Widget _specsTab(Product p) {
     final specs = [
-      ['Part Number', 'AC-${p.id}-EGP'],
+      ['Part Number', 'AC-${p.id}-USD'],
       ['Brand', p.brand],
       ['Category', p.category],
       ['Specifications', p.specs ?? 'Standard'],

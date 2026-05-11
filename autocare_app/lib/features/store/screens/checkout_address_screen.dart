@@ -57,7 +57,25 @@ class _CheckoutAddressScreenState
                       )),
                   const SizedBox(height: 8),
                   // Add new address
-                  _AddNewAddressButton(),
+                  _AddNewAddressButton(
+                    onAddressAdded: (label, address) {
+                      // In a real app, persist to backend
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: AppColors.success,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          content: Row(
+                            children: [
+                              const Icon(Icons.check_circle, color: Colors.white, size: 16),
+                              const SizedBox(width: 8),
+                              Text('"$label" address saved!', style: const TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                   const SizedBox(height: 28),
                   // Order mini summary
                   _OrderMiniSummary(
@@ -92,7 +110,7 @@ class _CheckoutAddressScreenState
                       color: AppColors.textSecondary, fontSize: 12)),
               const SizedBox(height: 2),
               Text(
-                '${subtotal.toStringAsFixed(0)} EGP',
+                '${subtotal.toStringAsFixed(0)} USD',
                 style: const TextStyle(
                   color: AppColors.white,
                   fontSize: 18,
@@ -294,10 +312,14 @@ class _AddressTile extends StatelessWidget {
 }
 
 class _AddNewAddressButton extends StatelessWidget {
+  final void Function(String label, String address)? onAddressAdded;
+
+  const _AddNewAddressButton({this.onAddressAdded});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => _showAddAddressDialog(context),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -324,6 +346,63 @@ class _AddNewAddressButton extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showAddAddressDialog(BuildContext context) {
+    final labelCtrl = TextEditingController();
+    final addressCtrl = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Add New Address', style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: labelCtrl,
+              style: const TextStyle(color: AppColors.white),
+              decoration: const InputDecoration(
+                hintText: 'Label (e.g. Home, Work)',
+                hintStyle: TextStyle(color: AppColors.textMuted),
+                prefixIcon: Icon(Icons.label_outlined, color: AppColors.accent, size: 18),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: addressCtrl,
+              style: const TextStyle(color: AppColors.white),
+              decoration: const InputDecoration(
+                hintText: 'Full address',
+                hintStyle: TextStyle(color: AppColors.textMuted),
+                prefixIcon: Icon(Icons.location_on_outlined, color: AppColors.accent, size: 18),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () {
+              if (labelCtrl.text.trim().isNotEmpty && addressCtrl.text.trim().isNotEmpty) {
+                Navigator.pop(ctx);
+                onAddressAdded?.call(labelCtrl.text.trim(), addressCtrl.text.trim());
+              }
+            },
+            child: const Text('Save', style: TextStyle(color: AppColors.background, fontWeight: FontWeight.w700)),
+          ),
+        ],
       ),
     );
   }
@@ -360,7 +439,7 @@ class _OrderMiniSummary extends StatelessWidget {
                     color: AppColors.textSecondary, fontSize: 13),
               ),
               Text(
-                '${subtotal.toStringAsFixed(0)} EGP',
+                '${subtotal.toStringAsFixed(0)} USD',
                 style: const TextStyle(
                     color: AppColors.white,
                     fontSize: 13,
@@ -375,7 +454,7 @@ class _OrderMiniSummary extends StatelessWidget {
               Text('Delivery fee',
                   style:
                       TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-              Text('50 EGP',
+              Text('50 USD',
                   style: TextStyle(
                       color: AppColors.white,
                       fontSize: 13,
@@ -387,3 +466,4 @@ class _OrderMiniSummary extends StatelessWidget {
     );
   }
 }
+

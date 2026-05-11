@@ -18,7 +18,7 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
   final Color darkCardBg = const Color(0xFF161616);
   
   File? _image; 
-  String _address = "جاري تحديد موقعك...";
+  String _address = "Locating your position...";
   bool _isLoadingLocation = true;
   double? _lat;
   double? _lng;
@@ -38,24 +38,21 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
     _determinePosition(); 
   }
 
-  // --- دالة تحديد الموقع مع معالجة الصلاحيات ---
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // التأكد من تشغيل خدمات الموقع
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setState(() => _address = "خدمات الموقع معطلة");
+      setState(() => _address = "Location services disabled");
       return;
     }
 
-    // التأكد من الصلاحيات
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        setState(() => _address = "تم رفض صلاحية الموقع");
+        setState(() => _address = "Location permission denied");
         return;
       }
     }
@@ -79,11 +76,10 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
         });
       }
     } catch (e) {
-      setState(() => _address = "فشل في تحديد العنوان");
+      setState(() => _address = "Failed to determine address");
     }
   }
 
-  // --- دالة اختيار مصدر الصورة ---
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
@@ -91,7 +87,6 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
     }
   }
 
-  // --- قائمة الخيارات (Bottom Sheet) ---
   void _showPickerOptions() {
     showModalBottomSheet(
       context: context,
@@ -141,11 +136,10 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
 
     try {
       final result = await TrafficService.reportIncident(
-        lat: _lat!,
-        lng: _lng!,
-        type: 'Accident',
-        severity: 'High',
-        description: _descController.text.isNotEmpty ? _descController.text : 'Accident reported',
+        title: 'Accident',
+        location: _address,
+        description: _descController.text.isNotEmpty ? _descController.text : 'Accident reported at $_address',
+        isVerified: _image != null,
       );
 
       if (result['success']) {
@@ -196,7 +190,6 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
             const Text("Provide additional details about the hazard", style: TextStyle(color: Colors.white54, fontSize: 16)),
             const SizedBox(height: 30),
 
-            // كارت الموقع
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(color: darkCardBg, borderRadius: BorderRadius.circular(20)),
@@ -238,9 +231,8 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
             const Text("Photo (Optional)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
 
-            // مربع الصور المنقط (الزرار)
             InkWell(
-              onTap: _showPickerOptions, // بيفتح القائمة
+              onTap: _showPickerOptions,
               child: DottedBorder(
                 color: Colors.white24,
                 dashPattern: const [8, 4],

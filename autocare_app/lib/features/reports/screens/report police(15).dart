@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'dart:io';
+import '../../../core/services/traffic_service.dart';
+import '../../../core/theme/app_theme.dart';
 
 class ReportPoliceScreen extends StatefulWidget {
   const ReportPoliceScreen({super.key});
@@ -17,8 +19,10 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
   final Color darkCardBg = const Color(0xFF161616);
   
   File? _image; 
-  String _address = "جاري تحديد موقعك...";
+  String _address = "Locating your position...";
   bool _isLoadingLocation = true;
+  bool _isSubmitting = false;
+  final TextEditingController _detailsController = TextEditingController();
 
   @override
   void initState() {
@@ -26,14 +30,52 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
     _determinePosition(); 
   }
 
-  // دالة تحديد الموقع
+  @override
+  void dispose() {
+    _detailsController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitReport() async {
+    if (_isLoadingLocation) return;
+    
+    setState(() => _isSubmitting = true);
+    
+    final result = await TrafficService.reportIncident(
+      title: 'Police Presence',
+      description: _detailsController.text.isEmpty ? 'Police presence reported at $_address' : _detailsController.text,
+      location: _address,
+      isVerified: _image != null,
+    );
+
+    setState(() => _isSubmitting = false);
+
+    if (result['success']) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.success,
+            content: const Text('Report submitted! You earned 50 points.', style: TextStyle(color: Colors.white)),
+          ),
+        );
+        Navigator.pop(context);
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message'] ?? 'Failed to submit report')),
+        );
+      }
+    }
+  }
+
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setState(() => _address = "خدمات الموقع معطلة");
+      setState(() => _address = "Location services disabled");
       return;
     }
 
@@ -41,7 +83,7 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        setState(() => _address = "تم رفض صلاحية الموقع");
+        setState(() => _address = "Location permission denied");
         return;
       }
     }
@@ -63,11 +105,10 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
         });
       }
     } catch (e) {
-      setState(() => _address = "فشل في تحديد العنوان");
+      setState(() => _address = "Failed to determine address");
     }
   }
 
-  // دالة اختيار الصورة
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
@@ -75,7 +116,6 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
     }
   }
 
-  // قائمة اختيار (كاميرا/استوديو)
   void _showPickerOptions() {
     showModalBottomSheet(
       context: context,
@@ -134,7 +174,6 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
             const Text("Provide additional details about the hazard", style: TextStyle(color: Colors.white54, fontSize: 14)),
             const SizedBox(height: 30),
 
-            // كارت الموقع
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(color: darkCardBg, borderRadius: BorderRadius.circular(20)),
@@ -160,6 +199,7 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
             const Text("Details (Optional)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             TextField(
+              controller: _detailsController,
               maxLines: 4,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
@@ -175,7 +215,6 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
             const Text("Photo (Optional)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
 
-            // مربع الصور المنقط
             InkWell(
               onTap: _showPickerOptions,
               child: DottedBorder(
@@ -207,16 +246,18 @@ class _ReportPoliceScreenState extends State<ReportPoliceScreen> {
 
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: (_isLoadingLocation || _isSubmitting) ? null : _submitReport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: neonGreen, 
                 minimumSize: const Size(double.infinity, 65),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
               ),
-              child: Text(
-                _isLoadingLocation ? "Locating..." : "Submit Report",
-                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18),
-              ),
+              child: _isSubmitting 
+                ? const CircularProgressIndicator(color: Colors.black)
+                : Text(
+                    _isLoadingLocation ? "Locating..." : "Submit Report",
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18),
+                  ),
             ),
             const SizedBox(height: 20),
             Center(

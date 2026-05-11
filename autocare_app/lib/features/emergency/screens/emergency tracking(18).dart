@@ -3,7 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart'; // مكتبة الاتصال
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'dart:async';
 
@@ -48,7 +48,6 @@ class _EmergencyTracking18State extends State<EmergencyTracking18> {
     _initTracking();
   }
 
-  // دالة الاتصال التلقائي بالرقم المطلوب
   Future<void> _makePhoneCall() async {
     final Uri launchUri = Uri(
       scheme: 'tel',
@@ -147,18 +146,42 @@ class _EmergencyTracking18State extends State<EmergencyTracking18> {
           SafeArea(
             child: Align(
               alignment: Alignment.topCenter,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                width: double.infinity,
-                decoration: BoxDecoration(color: neonGreen, borderRadius: BorderRadius.circular(15)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text("Estimated Arrival", style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 12)),
-                    Text(widget.eta, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 32)),
-                  ],
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Back button
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12, top: 8),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white24),
+                          ),
+                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    width: double.infinity,
+                    decoration: BoxDecoration(color: neonGreen, borderRadius: BorderRadius.circular(15)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("Estimated Arrival", style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 12)),
+                        Text(widget.eta, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 32)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -192,12 +215,11 @@ class _EmergencyTracking18State extends State<EmergencyTracking18> {
           ),
           const SizedBox(height: 20),
           
-          // زرار الاتصال المحدث (Full Width)
           SizedBox(
             width: double.infinity,
             height: 55,
             child: ElevatedButton.icon(
-              onPressed: _makePhoneCall, // نداء دالة الاتصال
+              onPressed: _makePhoneCall,
               icon: const Icon(Icons.phone, color: Colors.black, size: 22),
               label: const Text("Call Driver Now", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18)),
               style: ElevatedButton.styleFrom(

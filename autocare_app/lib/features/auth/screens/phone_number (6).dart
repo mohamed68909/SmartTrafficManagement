@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
-// تأكد أن مسار الملف واسمه صح (بالأقواس زي ما تحب)
 import 'OTP(6).dart'; 
 
 class PhoneNumberScreen extends StatefulWidget {
@@ -15,7 +14,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   final Color neonGreen = const Color(0xFFCCFF00);
   final Color darkGrey = const Color(0xFF1E1E1E);
   
-  // المتغير اللي هيشيل الرقم كامل عشان نبعته للصفحة اللي بعدها
   String _completeNumber = "";
 
   @override
@@ -101,7 +99,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
 
               ElevatedButton(
                 onPressed: () {
-                  // بنادي على الكلاس OTP6 اللي جوه ملف OTP(6).dart
                   Navigator.push(
                     context,
                     MaterialPageRoute(

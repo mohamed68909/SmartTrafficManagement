@@ -61,7 +61,7 @@ public sealed class MapController : BaseController
     /// Response includes:
     /// - summary    : road name summary
     /// - distance   : human-readable ("12.5 km")
-    /// - duration   : human-readable ("18 دقيقة")
+    /// - duration   : human-readable ("18 mins")
     /// - distanceMeters / durationSeconds : numeric values
     /// - encodedPolyline : Google encoded polyline for drawing on map
     /// - steps[]    : turn-by-turn navigation steps

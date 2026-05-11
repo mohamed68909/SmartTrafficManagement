@@ -122,7 +122,7 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
 
   Future<void> _sendMessage() async {
     final text = _controller.text.trim();
-    if (text.isEmpty || _ticketId == null) return;
+    if (text.isEmpty) return;
     _controller.clear();
 
     final msg = _ChatMessage(text: text, isMe: true, time: DateTime.now());
@@ -132,16 +132,31 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
     });
     _scrollToBottom();
 
-    try {
-      await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/chat/send'),
-        headers: {
-          'Authorization': 'Bearer $_token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({'ticketId': _ticketId, 'message': text, 'type': 0}),
-      );
-    } catch (_) {}
+    if (_ticketId != null) {
+      try {
+        await http.post(
+          Uri.parse('${ApiConstants.baseUrl}/chat/send'),
+          headers: {
+            'Authorization': 'Bearer $_token',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode({'ticketId': _ticketId, 'message': text, 'type': 0}),
+        );
+      } catch (_) {}
+    } else {
+      // Mock auto-reply for testing when backend tickets fail or are not available
+      await Future.delayed(const Duration(seconds: 1));
+      if (mounted) {
+        setState(() {
+          _messages.add(_ChatMessage(
+            text: 'Thank you for your message! A support agent will be with you shortly. (Offline Mode)',
+            isMe: false,
+            time: DateTime.now(),
+          ));
+        });
+        _scrollToBottom();
+      }
+    }
 
     setState(() => _isSending = false);
   }
