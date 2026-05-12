@@ -67,7 +67,15 @@ public sealed class AddToCartCommandHandler
         }
         else
         {
-            cartItem.Quantity += command.Quantity;
+            if (cartItem.IsDeleted)
+            {
+                cartItem.IsDeleted = false;
+                cartItem.Quantity = command.Quantity;
+            }
+            else
+            {
+                cartItem.Quantity += command.Quantity;
+            }
             cartItem.UpdatedOnUtc = DateTime.UtcNow;
         }
 

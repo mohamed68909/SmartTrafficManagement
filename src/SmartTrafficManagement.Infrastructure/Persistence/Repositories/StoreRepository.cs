@@ -53,14 +53,20 @@ public sealed class StoreRepository : IStoreRepository
 
     public async Task<Product?> GetProductByIdAsync(Guid productId, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId, cancellationToken);
+        return await _dbContext.Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == productId, cancellationToken);
     }
 
     public async Task<CartItem?> GetCartItemAsync(string userId, Guid productId, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.CartItems.FirstOrDefaultAsync(
-            x => x.UserId == userId && x.ProductId == productId,
-            cancellationToken);
+        // IgnoreQueryFilters: must include soft-deleted rows so we can reactivate them
+        // instead of hitting a duplicate-key error on the (UserId, ProductId) unique index.
+        return await _dbContext.CartItems
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(
+                x => x.UserId == userId && x.ProductId == productId,
+                cancellationToken);
     }
 
     public async Task<IReadOnlyList<CartItem>> GetCartItemsAsync(string userId, CancellationToken cancellationToken = default)
@@ -68,6 +74,7 @@ public sealed class StoreRepository : IStoreRepository
         return await _dbContext.CartItems
             .AsNoTracking()
             .Include(x => x.Product)
+                .ThenInclude(p => p.Category)       // ← fix: was missing, caused NullRef on Category.Name
             .Where(x => x.UserId == userId)
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToListAsync(cancellationToken);
