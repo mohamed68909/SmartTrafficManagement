@@ -28,12 +28,12 @@ class Product {
     return Product(
       id: json['id'] ?? '',
       name: json['name'] ?? 'Unknown Product',
-      brand: 'Generic', // Assuming generic brand since it's not in the DTO
-      category: json['categoryName'] ?? 'Oils', // Default category
+      brand: json['brand'] ?? 'AutoCare',
+      category: json['categoryName'] ?? 'General',
       price: (json['price'] ?? 0).toDouble(),
       imageUrl: json['imageUrl'] ?? '',
       specs: json['description'],
-      rating: 4.5, // Default rating
+      rating: 4.8, 
       quantity: 1,
     );
   }

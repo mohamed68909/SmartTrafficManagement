@@ -426,6 +426,72 @@ internal sealed class ApplicationDataSeeder(
                     StockQuantity = 35,
                     ImageUrl      = "https://images.unsplash.com/photo-1635848600863-7f15403e0513?q=80&w=200&auto=format&fit=crop"
                 },
+
+                // ── Lighting ──────────────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Lighting"].Id,
+                    Name          = "Philips X-tremeVision Pro150 H7",
+                    Description   = "Up to 150% brighter light for better visibility.",
+                    Price         = 850.00m,
+                    StockQuantity = 40,
+                    ImageUrl      = "https://images.unsplash.com/photo-1635848600863-7f15403e0513?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Lighting"].Id,
+                    Name          = "OSRAM Night Breaker Laser H4",
+                    Description   = "Next generation halogen headlamp.",
+                    Price         = 700.00m,
+                    StockQuantity = 60,
+                    ImageUrl      = "https://images.unsplash.com/photo-1635848600863-7f15403e0513?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Car Electronics ───────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Car Electronics"].Id,
+                    Name          = "Pioneer SPH-10BT Smartphone Receiver",
+                    Description   = "Smart sync, Bluetooth, and voice control.",
+                    Price         = 3500.00m,
+                    StockQuantity = 15,
+                    ImageUrl      = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Car Electronics"].Id,
+                    Name          = "Garmin Drive 52 GPS Navigator",
+                    Description   = "5-inch display with easy-to-read maps.",
+                    Price         = 4200.00m,
+                    StockQuantity = 20,
+                    ImageUrl      = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=200&auto=format&fit=crop"
+                },
+
+                // ── Wipers & Fluids ───────────────────────────────────────────
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Wipers & Fluids"].Id,
+                    Name          = "Bosch ICON Wiper Blades",
+                    Description   = "ClearMax 365 technology for extreme weather.",
+                    Price         = 550.00m,
+                    StockQuantity = 80,
+                    ImageUrl      = "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=200&auto=format&fit=crop"
+                },
+                new Product
+                {
+                    SellerId      = sellerUser.Id,
+                    CategoryId    = categories["Wipers & Fluids"].Id,
+                    Name          = "Prestone Antifreeze & Coolant",
+                    Description   = "All vehicles 50/50 prediluted formula.",
+                    Price         = 380.00m,
+                    StockQuantity = 120,
+                    ImageUrl      = "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=200&auto=format&fit=crop"
+                },
             }, ct);
             await dbContext.SaveChangesAsync(ct);
         }
@@ -488,7 +554,7 @@ internal sealed class ApplicationDataSeeder(
                     ProviderId     = providerUser.Id,
                     VehicleId      = driverVehicle.Id,
                     ServiceType    = ServiceType.Maintenance,
-                    Status         = RequestStatus.Accepted,
+                    Status         = RequestStatus.Completed,
                     Description    = "Periodic maintenance, oil and filter change.",
                     EstimatedCost  = 85m,
                     Latitude       = 30.0444m,

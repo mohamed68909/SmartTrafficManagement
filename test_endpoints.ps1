@@ -2,7 +2,7 @@
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 
-$BASE = "https://smarttrafficmanagemet.runasp.net/api"
+$BASE = "https://smarttrafficmanagement.runasp.net/api"
 $TOKEN = $null
 $results = @()
 

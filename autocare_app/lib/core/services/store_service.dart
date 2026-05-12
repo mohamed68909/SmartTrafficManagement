@@ -13,7 +13,8 @@ class StoreService {
         final List<dynamic> data = body['data']['items'];
         return data.map((json) => Product.fromJson(json)).toList();
       } else {
-        throw Exception('Failed to load products');
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['error']?['message'] ?? 'Failed to load products');
       }
     } catch (e) {
       throw Exception('Network error: $e');

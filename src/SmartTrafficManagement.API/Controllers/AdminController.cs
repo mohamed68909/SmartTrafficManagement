@@ -5,6 +5,7 @@ using SmartTrafficManagement.Application.DTOs.Admin;
 using SmartTrafficManagement.Application.Features.Admin;
 using SmartTrafficManagement.Core.Common;
 using SmartTrafficManagement.Core.Constants;
+using SmartTrafficManagement.Infrastructure.Seeding;
 
 namespace SmartTrafficManagement.API.Controllers;
 
@@ -229,6 +230,23 @@ public sealed class AdminController : BaseController
         [FromServices] GetAdminSensorsQueryHandler handler,
         CancellationToken cancellationToken)
         => ProcessResult(await handler.Handle(new GetAdminSensorsQuery(), cancellationToken));
+
+    // ── Expert System / Diagnostics ─────────────────────────────────────────
+
+    /// <summary>
+    /// Re-seeds the car-diagnostics Expert System decision tree.
+    /// Safe to call multiple times — the seeder is idempotent (skips if already seeded).
+    /// Use this if the diagnostics feature shows "Could Not Connect" on the mobile app.
+    /// </summary>
+    [HttpPost("diagnostics/reseed")]
+    [ProducesResponseType(typeof(Result<string>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> ReseedDiagnostics(
+        [FromServices] IServiceProvider services,
+        CancellationToken cancellationToken)
+    {
+        await DiagnosticsSeeder.SeedAsync(services);
+        return Ok(new { success = true, message = "Diagnostics Expert System seeded successfully." });
+    }
 
 
 }

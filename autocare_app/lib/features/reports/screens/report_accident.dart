@@ -62,21 +62,39 @@ class _ReportAccidentScreenState extends State<ReportAccidentScreen> {
         desiredAccuracy: LocationAccuracy.high
       );
       
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude, position.longitude
-      );
-      
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks[0];
-        setState(() {
-          _lat = position.latitude;
-          _lng = position.longitude;
-          _address = "${place.street}, ${place.locality}, ${place.administrativeArea}";
-          _isLoadingLocation = false;
-        });
+      setState(() {
+        _lat = position.latitude;
+        _lng = position.longitude;
+      });
+
+      try {
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+          position.latitude, position.longitude
+        );
+        
+        if (placemarks.isNotEmpty) {
+          Placemark place = placemarks[0];
+          setState(() {
+            _address = "${place.street}, ${place.locality}, ${place.administrativeArea}";
+            _isLoadingLocation = false;
+          });
+          return;
+        }
+      } catch (e) {
+        debugPrint("Geocoding failed: $e");
       }
+
+      // Fallback to coordinates
+      setState(() {
+        _address = "Lat: ${position.latitude.toStringAsFixed(4)}, Lng: ${position.longitude.toStringAsFixed(4)}";
+        _isLoadingLocation = false;
+      });
+
     } catch (e) {
-      setState(() => _address = "Failed to determine address");
+      setState(() {
+        _address = "Failed to get location";
+        _isLoadingLocation = false;
+      });
     }
   }
 

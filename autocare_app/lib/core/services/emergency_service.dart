@@ -37,10 +37,14 @@ class EmergencyService {
         return {'success': true};
       } else {
         final errorData = jsonDecode(response.body);
-        return {'success': false, 'message': errorData['message'] ?? 'Failed to send SOS request'};
+        return {
+          'success': false, 
+          'message': errorData['error']?['message'] ?? 'Failed to send SOS request',
+          'statusCode': response.statusCode
+        };
       }
     } catch (e) {
-      return {'success': false, 'message': 'Network error: $e'};
+      return {'success': false, 'message': 'Network error: $e', 'statusCode': 0};
     }
   }
 
@@ -64,7 +68,7 @@ class EmergencyService {
         return {'success': true};
       }
       final errorData = jsonDecode(response.body);
-      return {'success': false, 'message': errorData['message'] ?? 'Failed to cancel'};
+      return {'success': false, 'message': errorData['error']?['message'] ?? 'Failed to cancel'};
     } catch (e) {
       return {'success': false, 'message': 'Error: $e'};
     }
@@ -77,7 +81,7 @@ class EmergencyService {
         return {'success': true};
       }
       final errorData = jsonDecode(response.body);
-      return {'success': false, 'message': errorData['message'] ?? 'Failed to accept'};
+      return {'success': false, 'message': errorData['error']?['message'] ?? 'Failed to accept'};
     } catch (e) {
       return {'success': false, 'message': 'Error: $e'};
     }

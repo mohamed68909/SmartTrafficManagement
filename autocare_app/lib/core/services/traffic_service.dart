@@ -24,7 +24,7 @@ class TrafficService {
         return {'success': true, 'data': jsonDecode(response.body)['data']};
       } else {
         final errorData = jsonDecode(response.body);
-        return {'success': false, 'message': errorData['message'] ?? 'Failed to submit report'};
+        return {'success': false, 'message': errorData['error']?['message'] ?? 'Failed to submit report'};
       }
     } catch (e) {
       return {'success': false, 'message': 'Network error: $e'};
