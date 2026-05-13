@@ -1,4 +1,4 @@
-// lib/features/store/screens/payment_success_screen.dart
+﻿// lib/features/store/screens/payment_success_screen.dart
 // Route: /store/payment-success
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -304,7 +304,7 @@ class _PaymentSuccessScreenState extends ConsumerState<PaymentSuccessScreen>
             border: Border.all(color: AppColors.accent.withValues(alpha:0.3)),
           ),
           child: Text(
-            '${widget.total.toStringAsFixed(0)} USD',
+            '${widget.total.toStringAsFixed(0)} EGP',
             style: const TextStyle(
               color: AppColors.accent,
               fontSize: 26,
@@ -560,3 +560,5 @@ class _ConfettiPainter extends CustomPainter {
   @override
   bool shouldRepaint(_ConfettiPainter old) => old.progress != progress;
 }
+
+

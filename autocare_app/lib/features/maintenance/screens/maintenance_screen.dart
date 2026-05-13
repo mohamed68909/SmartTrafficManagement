@@ -1,4 +1,4 @@
-// lib/features/maintenance/screens/maintenance_screen.dart
+﻿// lib/features/maintenance/screens/maintenance_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -146,7 +146,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                                 color: AppColors.textSecondary, fontSize: 12)),
                         const SizedBox(height: 2),
                         Text(
-                          '${total.toStringAsFixed(0)} USD',
+                          '${total.toStringAsFixed(0)} EGP',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
@@ -297,7 +297,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${item.price} USD',
+                  '${item.price} EGP',
                   style: TextStyle(
                     fontSize: 10,
                     color: isSelected
@@ -376,7 +376,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                     children: [
                       Flexible(
                         child: Text(
-                          '${p['price']} USD',
+                          '${p['price']} EGP',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -520,3 +520,5 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
     );
   }
 }
+
+

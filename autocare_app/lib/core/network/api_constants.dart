@@ -35,8 +35,11 @@ class ApiConstants {
   static String markNotificationReadUrl(String id) => '$baseUrl/notifications/$id/read';
   static String deleteNotificationUrl(String id) => '$baseUrl/notifications/$id'; // DELETE
 
-  // Store
-  static String get productsUrl => '$baseUrl/store/products';
+  // Store — TASK-08: pagination support
+  static String get productsUrl =>
+      '$baseUrl/store/products?pageNumber=1&pageSize=50';
+  static String productsPagedUrl(int page, int size) =>
+      '$baseUrl/store/products?pageNumber=$page&pageSize=$size';
   static String get categoriesUrl => '$baseUrl/store/categories';
   static String get checkoutUrl => '$baseUrl/store/checkout';
 

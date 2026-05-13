@@ -1,4 +1,4 @@
-// lib/features/store/screens/store_screen.dart
+﻿// lib/features/store/screens/store_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -488,7 +488,7 @@ class _ProductTile extends ConsumerWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Text('${product.price.toStringAsFixed(0)} USD',
+                        Text('${product.price.toStringAsFixed(0)} EGP',
                             style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
@@ -728,13 +728,17 @@ class _TireTileFromProduct extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${product.price.toStringAsFixed(0)} USD / tire',
-                    style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.white)),
+                Expanded(
+                  child: Text('${product.price.toStringAsFixed(0)} EGP / tire',
+                      style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.white),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                const SizedBox(width: 10),
                 ElevatedButton.icon(
                 onPressed: () async {
                   await ref.read(cartProvider.notifier).addItem(product);
@@ -759,3 +763,5 @@ class _TireTileFromProduct extends ConsumerWidget {
     );
   }
 }
+
+

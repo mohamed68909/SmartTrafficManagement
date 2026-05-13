@@ -1,4 +1,4 @@
-// lib/main.dart
+﻿// lib/main.dart
 // MERGED VERSION - Combines AutoCare, GrPr, and Smart Traffic Management
 // Author: Merged Flutter Developer
 // Date: 2026-05-03
@@ -11,8 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter/foundation.dart';
 
 // Core imports
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/theme/app_theme.dart' as grpr_theme;
+import 'core/theme/app_theme.dart' as grpr_theme;
 import 'core/services/stripe_service.dart';
 import 'core/theme/theme_notifier.dart';
 import 'core/user_provider.dart';
@@ -57,7 +56,12 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  HttpOverrides.global = MyHttpOverrides();
+
+  
+  
+  if (kDebugMode) {
+    HttpOverrides.global = MyHttpOverrides();
+  }
 
   // ========== ORIENTATION LOCK (from AutoCare) ==========
   await SystemChrome.setPreferredOrientations([
@@ -438,3 +442,4 @@ class MainMenuScreen extends StatelessWidget {
     );
   }
 }
+

@@ -342,3 +342,56 @@ void showSuccessDialog(
     ),
   );
 }
+
+// ─── Checkout Stepper ─────────────────────────────────────────────────────────
+/// Shows a 3-step progress bar for the checkout flow.
+/// [activeStep]: 0 = Address, 1 = Payment, 2 = Confirm
+Widget buildCheckoutStepper(int activeStep) {
+  const steps = ['Address', 'Payment', 'Confirm'];
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+    child: Row(
+      children: steps.asMap().entries.map((entry) {
+        final i      = entry.key;
+        final label  = entry.value;
+        final isDone = i < activeStep;
+        final isActive = i == activeStep;
+        return Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      height: 3,
+                      decoration: BoxDecoration(
+                        color: isDone || isActive
+                            ? AppColors.accent
+                            : AppColors.border,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+                        color: isActive || isDone
+                            ? AppColors.accent
+                            : AppColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (i < steps.length - 1) const SizedBox(width: 4),
+            ],
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+

@@ -1,4 +1,4 @@
-// lib/features/store/screens/product_detail_screen.dart
+﻿// lib/features/store/screens/product_detail_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -205,7 +205,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                                   color: AppColors.textMuted, fontSize: 11)),
                           const SizedBox(height: 2),
                           Text(
-                            '${p.price.toStringAsFixed(0)} USD',
+                            '${p.price.toStringAsFixed(0)} EGP',
                             style: const TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.w900,
@@ -336,7 +336,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                     style: TextStyle(
                         color: AppColors.textSecondary, fontSize: 11)),
                 Text(
-                  '${total.toStringAsFixed(0)} USD',
+                  '${total.toStringAsFixed(0)} EGP',
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
@@ -556,3 +556,5 @@ class _FeaturePill extends StatelessWidget {
     );
   }
 }
+
+

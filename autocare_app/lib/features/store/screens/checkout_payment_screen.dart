@@ -8,6 +8,7 @@ import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/models/models.dart';
 import '../../../../core/services/stripe_service.dart';
 import '../../../../core/services/payment_service.dart';
+import '../../../../core/services/auth_service.dart';
 import 'payment_success_screen.dart';
 import 'checkout_address_screen.dart';
 import 'manage_cards_screen.dart';
@@ -33,8 +34,11 @@ class _CheckoutPaymentScreenState
     setState(() => _isProcessing = true);
 
     try {
-      // 1. Sync cart to backend and create order (gets clientSecret if needed)
-      final checkoutResult = await PaymentService.syncCartAndCheckout(cart, method);
+      
+      final checkoutResult = await PaymentService.syncCartAndCheckout(
+        cart,
+        method,
+      );
 
       if (!mounted) return;
 
@@ -42,7 +46,7 @@ class _CheckoutPaymentScreenState
         setState(() => _isProcessing = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: AppColors.error.withValues(alpha:0.9),
+            backgroundColor: AppColors.error.withValues(alpha: 0.9),
             content: Text(
               checkoutResult['message'] ?? 'Checkout failed',
               style: const TextStyle(color: Colors.white),
@@ -52,31 +56,48 @@ class _CheckoutPaymentScreenState
         return;
       }
 
-      final clientSecret = checkoutResult['clientSecret'];
-      final orderId = checkoutResult['orderId'] ?? 'ORD-${DateTime.now().millisecondsSinceEpoch}';
-
+      
       if (method == 'card') {
-        // 2. Process Payment via Stripe (Mocked as successful to avoid Stripe SDK errors)
-        final success = true; // Bypassed StripeService.processBackendPayment
-        
-        if (!mounted) return;
-        setState(() => _isProcessing = false);
-        if (success) {
-          _navigateToSuccess(total, method, orderId);
+        final clientSecret = checkoutResult['clientSecret'];
+        if (clientSecret != null && clientSecret.toString().isNotEmpty) {
+          
+          final profileResponse = await AuthService.getProfile();
+          final profileData = profileResponse?['data'] as Map<String, dynamic>?;
+          final email = profileData?['email'] as String? ?? '';
+          final firstName = profileData?['firstName'] as String? ?? '';
+          final lastName = profileData?['lastName'] as String? ?? '';
+          final name = '$firstName $lastName'.trim();
+
+          final paid = await StripeService.processBackendPayment(
+            clientSecret: clientSecret.toString(),
+            customerEmail: email,
+            customerName: name.isNotEmpty ? name : 'AutoCare Customer',
+          );
+
+          if (!paid) {
+            
+            if (!mounted) return;
+            setState(() => _isProcessing = false);
+            return;
+          }
         }
-      } else {
-        // For cash on delivery or wallet
-        await Future.delayed(const Duration(milliseconds: 800));
-        if (!mounted) return;
-        setState(() => _isProcessing = false);
-        _navigateToSuccess(total, method, orderId);
+        
+        
       }
+
+      if (!mounted) return;
+      setState(() => _isProcessing = false);
+
+      final orderId = checkoutResult['orderId']?.toString()
+          ?? 'ORD-${DateTime.now().millisecondsSinceEpoch}';
+      _navigateToSuccess(total, method, orderId);
+
     } catch (e) {
       if (!mounted) return;
       setState(() => _isProcessing = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: AppColors.error.withValues(alpha:0.9),
+          backgroundColor: AppColors.error.withValues(alpha: 0.9),
           content: Text(
             e.toString().replaceAll('Exception: ', ''),
             style: const TextStyle(color: Colors.white),
@@ -112,13 +133,19 @@ class _CheckoutPaymentScreenState
 
   @override
   Widget build(BuildContext context) {
-    final selectedMethod = ref.watch(selectedPaymentProvider);
-    final cards = ref.watch(paymentMethodProvider);
-    final cart = ref.watch(cartProvider);
-    final subtotal = cart.fold<double>(0, (s, i) => s + i.total);
+    final selectedMethod  = ref.watch(selectedPaymentProvider);
+    final cards           = ref.watch(paymentMethodProvider);
+    final cart            = ref.watch(cartProvider);
+    final profileAsync    = ref.watch(profileFutureProvider);
+    final subtotal        = cart.fold<double>(0, (s, i) => s + i.total);
     final displaySubtotal = subtotal > 0 ? subtotal : 850.0;
-    final deliveryFee = 50.0;
-    final total = displaySubtotal + deliveryFee;
+    final deliveryFee     = 50.0;
+    final total           = displaySubtotal + deliveryFee;
+
+    
+    final profileData = profileAsync.asData?.value?['data'] as Map<String, dynamic>?;
+    final walletPoints = (profileData?['points'] as num?)?.toInt() ?? 0;
+    final walletEgp    = (walletPoints / 100).toStringAsFixed(0);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -138,7 +165,8 @@ class _CheckoutPaymentScreenState
                   _StorePaymentTile(
                     icon: Icons.account_balance_wallet_rounded,
                     title: 'Digital Wallet',
-                    subtitle: '1,250 points  ·  ~${(1250 / 100).toStringAsFixed(0)} USD value',
+                    
+                    subtitle: '$walletPoints pts  ·  ~$walletEgp EGP',
                     value: 'wallet',
                     selected: selectedMethod,
                     onTap: () => ref
@@ -192,10 +220,10 @@ class _CheckoutPaymentScreenState
                       children: [
                         _TotalRow(
                             label: 'Items (${cart.isEmpty ? 1 : cart.length})',
-                            value: '${displaySubtotal.toStringAsFixed(0)} USD'),
+                            value: '${displaySubtotal.toStringAsFixed(0)} EGP'),
                         const SizedBox(height: 8),
                         const _TotalRow(
-                            label: 'Delivery', value: '50 USD'),
+                            label: 'Delivery', value: '50 EGP'),
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 12),
                           child: NeonDivider(),
@@ -212,7 +240,7 @@ class _CheckoutPaymentScreenState
                               ),
                             ),
                             Text(
-                              '${total.toStringAsFixed(0)} USD',
+                              '${total.toStringAsFixed(0)} EGP',
                               style: const TextStyle(
                                 color: AppColors.accent,
                                 fontSize: 24,
@@ -242,8 +270,8 @@ class _CheckoutPaymentScreenState
             ),
             child: AccentButton(
               label: selectedMethod == 'card'
-                  ? '  Pay ${total.toStringAsFixed(0)} USD  •  Stripe'
-                  : 'Place Order  —  ${total.toStringAsFixed(0)} USD',
+                  ? '  Pay ${total.toStringAsFixed(0)} EGP  •  Stripe'
+                  : 'Place Order  —  ${total.toStringAsFixed(0)} EGP',
               onTap: _pay,
               isLoading: _isProcessing,
               icon: selectedMethod == 'card'
@@ -422,7 +450,7 @@ class _StripeSecurityNote extends StatelessWidget {
           SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Payment processed securely by Stripe. Card details are never stored on our servers.',
+              'Payments are secured by Stripe. Card details are never stored on our servers. Currency: Egyptian Pound (EGP).',
               style: TextStyle(color: AppColors.textSecondary, fontSize: 11, height: 1.4),
             ),
           ),
@@ -431,3 +459,4 @@ class _StripeSecurityNote extends StatelessWidget {
     );
   }
 }
+

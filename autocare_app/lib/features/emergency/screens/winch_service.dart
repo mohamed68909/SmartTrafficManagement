@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'dart:math' as math;
@@ -182,7 +182,7 @@ class _WinchServiceScreenState extends State<WinchServiceScreen> {
                               driverName: randomDriver,
                               winchType: services[selectedIndex].title,
                               rating: services[selectedIndex].rating,
-                              price: "${services[selectedIndex].price} USD",
+                              price: "${services[selectedIndex].price} EGP",
                               eta: services[selectedIndex].eta,
                               distanceText: "${services[selectedIndex].distance} km",
                               distanceKm: services[selectedIndex].distance,
@@ -269,7 +269,7 @@ class ServiceCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end, 
               children: [
-                Text("${service.price} USD", style: TextStyle(color: accentColor, fontWeight: FontWeight.bold, fontSize: 16)), 
+                Text("${service.price} EGP", style: TextStyle(color: accentColor, fontWeight: FontWeight.bold, fontSize: 16)), 
                 Text(service.eta, style: const TextStyle(color: Colors.white70, fontSize: 12))
               ]
             )
@@ -279,3 +279,5 @@ class ServiceCard extends StatelessWidget {
     );
   }
 }
+
+

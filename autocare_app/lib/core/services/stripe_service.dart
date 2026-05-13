@@ -67,4 +67,8 @@ class StripeService {
       rethrow;
     }
   }
+
 }
+// NOTE: processDirectPayment() was removed — TASK-01 security fix.
+// The backend (CheckoutCommand) must create the PaymentIntent and return
+// clientSecret. Use processBackendPayment(clientSecret: ...) on mobile.

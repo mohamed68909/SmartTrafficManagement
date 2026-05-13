@@ -1,4 +1,5 @@
 using Stripe;
+using SmartTrafficManagement.Core.Interfaces;
 
 namespace SmartTrafficManagement.Infrastructure.Services;
 
@@ -16,8 +17,17 @@ public sealed class PaymentService : IPaymentService
         string currency,
         CancellationToken cancellationToken = default)
     {
-        // Mock Stripe to bypass API calls completely
-        var mockIntentId = "pi_mock_" + Guid.NewGuid().ToString("N");
-        return await Task.FromResult((mockIntentId, mockIntentId + "_secret"));
+        var options = new PaymentIntentCreateOptions
+        {
+            Amount             = amount,
+            Currency           = currency.ToLowerInvariant(),
+            PaymentMethodTypes = ["card"],
+            // Capture automatically once the customer confirms via mobile sheet
+            CaptureMethod      = "automatic",
+        };
+
+        var intent = await _paymentIntentService.CreateAsync(options, cancellationToken: cancellationToken);
+
+        return (intent.Id, intent.ClientSecret);
     }
 }

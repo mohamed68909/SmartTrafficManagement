@@ -1,24 +1,12 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import '../network/api_client.dart';
 import '../network/api_constants.dart';
 
 class NotificationService {
+  /// GET /api/notifications
   static Future<List<dynamic>> getNotifications() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('jwt_token');
-      if (token == null) return [];
-
-      final response = await http.get(
-        Uri.parse(ApiConstants.notificationsUrl),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
+      final response = await ApiClient.get(ApiConstants.notificationsUrl);
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         return body['data'] ?? [];
@@ -29,28 +17,20 @@ class NotificationService {
     }
   }
 
+  /// PUT /api/notifications/{id}/read
   static Future<bool> markAsRead(String id) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('jwt_token');
-      if (token == null) return false;
-
-      final response = await http.put(
-        Uri.parse(ApiConstants.markNotificationReadUrl(id)),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
+      final response = await ApiClient.put(
+        ApiConstants.markNotificationReadUrl(id),
+        {},
       );
-
       return response.statusCode == 200;
     } catch (e) {
       return false;
     }
   }
 
-  /// Delete a notification permanently.
-  /// Maps to: DELETE /api/notifications/{id}
+  /// DELETE /api/notifications/{id}
   static Future<bool> deleteNotification(String id) async {
     try {
       final response = await ApiClient.delete(
@@ -62,3 +42,4 @@ class NotificationService {
     }
   }
 }
+

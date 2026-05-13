@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import '../network/api_client.dart';
 import '../network/api_constants.dart';
 
@@ -34,7 +34,14 @@ class EmergencyService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return {'success': true};
+        
+        final body = jsonDecode(response.body);
+        final data = body['data'];
+        return {
+          'success':   true,
+          'requestId': data?['id'],
+          'data':      data,
+        };
       } else {
         final errorData = jsonDecode(response.body);
         return {
@@ -100,3 +107,4 @@ class EmergencyService {
     }
   }
 }
+

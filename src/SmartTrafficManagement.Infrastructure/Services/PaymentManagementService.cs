@@ -1,4 +1,4 @@
-using Stripe;
+﻿using Stripe;
 
 namespace SmartTrafficManagement.Infrastructure.Services;
 
@@ -115,7 +115,7 @@ public sealed class PaymentManagementService : IPaymentManagementService
         long refundAmount = amount.HasValue ? Convert.ToInt64(amount.Value * 100m) : Convert.ToInt64(transaction.Amount * 100m);
         var mockRefundId = "re_mock_" + Guid.NewGuid().ToString("N");
         var mockStatus = "succeeded";
-        var mockCurrency = transaction.Currency ?? "usd";
+        var mockCurrency = transaction.Currency ?? "egp";
 
         transaction.Status = PaymentStatus.Refunded;
         transaction.UpdatedOnUtc = DateTime.UtcNow;
@@ -125,3 +125,4 @@ public sealed class PaymentManagementService : IPaymentManagementService
         return (mockRefundId, mockStatus, amountDecimal, mockCurrency);
     }
 }
+

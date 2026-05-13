@@ -1,4 +1,4 @@
-using SmartTrafficManagement.Core.Enums;
+﻿using SmartTrafficManagement.Core.Enums;
 
 namespace SmartTrafficManagement.Infrastructure.Persistence.Seeding;
 
@@ -674,7 +674,7 @@ internal sealed class ApplicationDataSeeder(
                     Type                  = TransactionType.ProductPurchase,
                     Status                = PaymentStatus.Paid,
                     Amount                = order1.TotalAmount,
-                    Currency              = "usd",
+                    Currency              = "egp",
                     StripePaymentIntentId = "pi_demo_tx_order_001"
                 },
                 new Transaction
@@ -684,7 +684,7 @@ internal sealed class ApplicationDataSeeder(
                     Type                  = TransactionType.ServicePayment,
                     Status                = PaymentStatus.Pending,
                     Amount                = 85.00m,
-                    Currency              = "usd",
+                    Currency              = "egp",
                     StripePaymentIntentId = "pi_demo_tx_service_001"
                 },
                 new Transaction
@@ -694,7 +694,7 @@ internal sealed class ApplicationDataSeeder(
                     Type                  = TransactionType.ProductPurchase,
                     Status                = PaymentStatus.Paid,
                     Amount                = order2.TotalAmount,
-                    Currency              = "usd",
+                    Currency              = "egp",
                     StripePaymentIntentId = "pi_demo_tx_order_hassan_001"
                 }
             }, ct);
@@ -1044,3 +1044,4 @@ internal sealed class ApplicationDataSeeder(
             .FirstAsync(v => v.OwnerId == ownerId, ct);
     }
 }
+

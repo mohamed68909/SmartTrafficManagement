@@ -7,7 +7,7 @@ class Product {
   final String brand;
   final String category;
   final double price;
-  final String imageUrl;
+  final String? imageUrl;
   final String? specs;
   final double? rating;
   int quantity;

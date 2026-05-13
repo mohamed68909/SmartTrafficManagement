@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import '../../../core/services/emergency_service.dart';
@@ -175,7 +175,7 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
             children: [
               Text(name, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 5),
-              Text("$price USD/L", style: const TextStyle(color: Colors.white38, fontSize: 14)),
+              Text("$price EGP/L", style: const TextStyle(color: Colors.white38, fontSize: 14)),
             ],
           ),
         ),
@@ -226,11 +226,11 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
       decoration: BoxDecoration(color: darkCard, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white10)),
       child: Column(
         children: [
-          _summaryRow("Fuel (${_fuelAmount.toInt()}L × $_selectedFuelPrice USD)", "$fuelTotal USD"),
+          _summaryRow("Fuel (${_fuelAmount.toInt()}L × $_selectedFuelPrice EGP)", "$fuelTotal EGP"),
           const SizedBox(height: 12),
-          _summaryRow("Delivery Fee", "$_deliveryFee USD"),
+          _summaryRow("Delivery Fee", "$_deliveryFee EGP"),
           const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Divider(color: Colors.white10)),
-          _summaryRow("Total", "$grandTotal USD", isTotal: true),
+          _summaryRow("Total", "$grandTotal EGP", isTotal: true),
         ],
       ),
     );
@@ -281,7 +281,7 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
                   builder: (context) => FuelTracking20(
                     fuelType: _selectedFuelName,
                     amount: _fuelAmount.toInt().toString(),
-                    totalPrice: "$total USD",
+                    totalPrice: "$total EGP",
                   ),
                 ),
               );
@@ -299,3 +299,5 @@ class _EmergencyFuelScreen19State extends State<EmergencyFuelScreen19> {
     );
   }
 }
+
+

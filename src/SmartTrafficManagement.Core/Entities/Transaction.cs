@@ -1,4 +1,4 @@
-using SmartTrafficManagement.Core.Enums;
+﻿using SmartTrafficManagement.Core.Enums;
 
 namespace SmartTrafficManagement.Core.Entities;
 
@@ -16,7 +16,7 @@ public sealed class Transaction : BaseEntity
 
     public decimal Amount { get; set; }
 
-    public string Currency { get; set; } = "usd";
+    public string Currency { get; set; } = "egp";
 
     public string? StripePaymentIntentId { get; set; }
 
@@ -26,3 +26,4 @@ public sealed class Transaction : BaseEntity
 
     public ServiceRequest? ServiceRequest { get; set; }
 }
+

@@ -1,4 +1,4 @@
-// lib/features/history/screens/history_screen.dart
+﻿// lib/features/history/screens/history_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -198,7 +198,7 @@ class _OrderHistoryTile extends StatelessWidget {
                 ],
               ),
               Text(
-                '${order.price.toStringAsFixed(0)} USD',
+                '${order.price.toStringAsFixed(0)} EGP',
                 style: const TextStyle(
                   color: AppColors.white,
                   fontSize: 15,
@@ -227,3 +227,5 @@ class _OrderHistoryTile extends StatelessWidget {
     );
   }
 }
+
+

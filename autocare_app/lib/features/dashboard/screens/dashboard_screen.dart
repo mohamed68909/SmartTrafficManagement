@@ -1,4 +1,4 @@
-// lib/features/dashboard/screens/dashboard_screen.dart
+﻿// lib/features/dashboard/screens/dashboard_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -339,7 +339,7 @@ class DashboardScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Text(
-                      '850 USD',
+                      '850 EGP',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -477,7 +477,7 @@ class _OrderTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${order.price.toStringAsFixed(0)} USD',
+                  '${order.price.toStringAsFixed(0)} EGP',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -499,3 +499,5 @@ class _OrderTile extends StatelessWidget {
     );
   }
 }
+
+

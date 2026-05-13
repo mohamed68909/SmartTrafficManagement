@@ -1,7 +1,7 @@
 // lib/shell.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'core/theme/app_theme.dart';
 import 'core/providers/app_providers.dart';
 import 'features/dashboard/screens/dashboard_screen.dart';
 import 'features/traffic/screens/traffic_screen.dart';

@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using SmartTrafficManagement.Application.DTOs;
 using SmartTrafficManagement.Core.Common;
@@ -10,8 +10,9 @@ namespace SmartTrafficManagement.Application.Features.Store.Checkout;
 
 public sealed class CheckoutCommand
 {
-    public string Currency { get; set; } = "usd";
+    public string Currency { get; set; } = "egp";
     public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Card;
+    // PaymentIntentId no longer accepted from mobile — backend creates it (TASK-03)
 }
 
 public sealed class CheckoutCommandValidator : AbstractValidator<CheckoutCommand>
@@ -73,12 +74,10 @@ public sealed class CheckoutCommandHandler
             return Result<CheckoutDto>.Failure(DomainErrors.Orders.InvalidTotal, 400);
         }
 
-        using var transaction = new System.Transactions.TransactionScope(System.Transactions.TransactionScopeAsyncFlowOption.Enabled);
-
         // ── Wallet Balance Check ──────────────────────────────────────────────
         if (command.PaymentMethod == PaymentMethod.Wallet)
         {
-            // Conversion: 100 points = 1 USD
+            // Conversion: 100 points = 1 EGP
             var requiredPoints = (int)Math.Ceiling(totalAmount * 100);
             if (user.Points < requiredPoints)
             {
@@ -92,31 +91,43 @@ public sealed class CheckoutCommandHandler
             await _userManager.UpdateAsync(user);
         }
 
+        // ── Payment Intent (Card only) ─────────────────────────────────────────
+        
         string paymentIntentId = string.Empty;
-        string clientSecret = string.Empty;
+        string clientSecret    = string.Empty;
+        var    paymentStatus   = PaymentStatus.Pending;
 
         if (command.PaymentMethod == PaymentMethod.Card)
         {
-            var stripeAmount = (long)Math.Round(totalAmount * 100, MidpointRounding.AwayFromZero);
-            var stripeResult = await _paymentService.CreatePaymentIntentAsync(
-                stripeAmount,
+            // Convert decimal EGP to piastres (smallest unit) (long)
+            var amountInCents = (long)Math.Ceiling(totalAmount * 100);
+            var intent = await _paymentService.CreatePaymentIntentAsync(
+                amountInCents,
                 command.Currency.ToLowerInvariant(),
                 cancellationToken);
-            paymentIntentId = stripeResult.PaymentIntentId;
-            clientSecret = stripeResult.ClientSecret;
+
+            paymentIntentId = intent.PaymentIntentId;
+            clientSecret    = intent.ClientSecret;
+            
         }
+        else if (command.PaymentMethod == PaymentMethod.Wallet)
+        {
+            
+            paymentStatus = PaymentStatus.Paid;
+        }
+        
 
         var order = new Order
         {
-            UserId = userId,
-            Status = OrderStatus.Pending,
-            PaymentStatus = command.PaymentMethod == PaymentMethod.Cash ? PaymentStatus.Pending : PaymentStatus.Paid,
+            UserId          = userId,
+            Status          = OrderStatus.Pending,
+            PaymentStatus   = paymentStatus,
             PaymentIntentId = paymentIntentId,
-            TotalAmount = totalAmount,
-            OrderItems = cartItems.Select(x => new OrderItem
+            TotalAmount     = totalAmount,
+            OrderItems      = cartItems.Select(x => new OrderItem
             {
                 ProductId = x.ProductId,
-                Quantity = x.Quantity,
+                Quantity  = x.Quantity,
                 UnitPrice = x.UnitPrice
             }).ToList()
         };
@@ -125,17 +136,17 @@ public sealed class CheckoutCommandHandler
         _storeRepository.RemoveCartItems(cartItems);
         await _storeRepository.SaveChangesAsync(cancellationToken);
 
-        transaction.Complete();
-
         var dto = new CheckoutDto
         {
-            OrderId = order.Id,
-            TotalAmount = totalAmount,
-            Currency = command.Currency.ToLowerInvariant(),
+            OrderId         = order.Id,
+            TotalAmount     = totalAmount,
+            Currency        = command.Currency.ToLowerInvariant(),
             PaymentIntentId = paymentIntentId,
-            ClientSecret = clientSecret
+            ClientSecret    = clientSecret   
         };
 
         return Result<CheckoutDto>.Success(dto, 200);
     }
 }
+
+

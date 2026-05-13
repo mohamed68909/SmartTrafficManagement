@@ -1,4 +1,4 @@
-// lib/features/store/screens/cart_screen.dart
+﻿// lib/features/store/screens/cart_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -92,7 +92,7 @@ class CartScreen extends ConsumerWidget {
                                           fontSize: 11)),
                                   const SizedBox(height: 6),
                                   Text(
-                                    '${item.product.price.toStringAsFixed(0)} USD × ${item.quantity}',
+                                    '${item.product.price.toStringAsFixed(0)} EGP × ${item.quantity}',
                                     style: const TextStyle(
                                       color: AppColors.accent,
                                       fontSize: 13,
@@ -131,7 +131,7 @@ class CartScreen extends ConsumerWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  '${item.total.toStringAsFixed(0)} USD',
+                                  '${item.total.toStringAsFixed(0)} EGP',
                                   style: const TextStyle(
                                     color: AppColors.white,
                                     fontSize: 14,
@@ -161,7 +161,7 @@ class CartScreen extends ConsumerWidget {
                               style: TextStyle(
                                   color: AppColors.textSecondary, fontSize: 13)),
                           Text(
-                            '${subtotal.toStringAsFixed(0)} USD',
+                            '${subtotal.toStringAsFixed(0)} EGP',
                             style: const TextStyle(
                               color: AppColors.white,
                               fontSize: 20,
@@ -212,3 +212,5 @@ class _QtyButton extends StatelessWidget {
     );
   }
 }
+
+

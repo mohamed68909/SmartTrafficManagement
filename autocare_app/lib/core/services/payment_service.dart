@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../network/api_client.dart';
 import '../network/api_constants.dart';
@@ -6,17 +6,21 @@ import '../models/models.dart';
 
 class PaymentService {
   /// Syncs local cart to the backend and initiates checkout.
-  /// Returns the clientSecret and orderId needed by Stripe.
-  static Future<Map<String, dynamic>> syncCartAndCheckout(List<CartItem> cartItems, String paymentMethod) async {
+  /// Backend creates the Stripe PaymentIntent and returns clientSecret + orderId.
+  /// TASK-03: paymentIntentId is no longer sent from mobile — backend creates it.
+  static Future<Map<String, dynamic>> syncCartAndCheckout(
+    List<CartItem> cartItems,
+    String paymentMethod,
+  ) async {
     try {
-      int methodInt = 1; // Default to Card
+      int methodInt = 1; // Card = 1
       if (paymentMethod == 'wallet') methodInt = 2;
-      if (paymentMethod == 'cash') methodInt = 3;
+      if (paymentMethod == 'cash')   methodInt = 3;
 
       final response = await ApiClient.post(
         ApiConstants.checkoutUrl,
         {
-          'currency': 'usd',
+          'currency':      'usd',
           'paymentMethod': methodInt,
         },
       );
@@ -25,13 +29,13 @@ class PaymentService {
         final json = jsonDecode(response.body);
         final data = json['data'];
         return {
-          'success': true,
-          'clientSecret': data['clientSecret'],
+          'success':         true,
+          'clientSecret':    data['clientSecret'],    
           'paymentIntentId': data['paymentIntentId'],
-          'orderId': data['orderId'],
+          'orderId':         data['orderId'],
         };
       } else {
-        final json = jsonDecode(response.body);
+        final json     = jsonDecode(response.body);
         final errorMsg = json['error']?['message'] ?? 'Checkout failed on backend';
         return {'success': false, 'message': errorMsg};
       }
@@ -40,6 +44,7 @@ class PaymentService {
       return {'success': false, 'message': e.toString()};
     }
   }
+
 
   /// Fetch the current user's full payment history.
   /// Maps to: GET /api/payments/history
@@ -73,3 +78,5 @@ class PaymentService {
     }
   }
 }
+
+
