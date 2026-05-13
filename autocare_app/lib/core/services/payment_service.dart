@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../network/api_client.dart';
 import '../network/api_constants.dart';
@@ -20,7 +20,7 @@ class PaymentService {
       final response = await ApiClient.post(
         ApiConstants.checkoutUrl,
         {
-          'currency':      'usd',
+          'currency':      'egp',
           'paymentMethod': methodInt,
         },
       );

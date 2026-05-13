@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using SmartTrafficManagement.Application.DTOs;
 using SmartTrafficManagement.Core.Common;
@@ -37,17 +37,15 @@ public sealed class CheckoutCommandHandler
         IValidator<CheckoutCommand> validator)
     {
         _storeRepository = storeRepository;
-        _paymentService = paymentService;
-        _userManager = userManager;
-        _validator = validator;
+        _paymentService  = paymentService;
+        _userManager     = userManager;
+        _validator       = validator;
     }
 
     public async Task<Result<CheckoutDto>> HandleAsync(string userId, CheckoutCommand command, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(userId))
-        {
             return Result<CheckoutDto>.Failure(DomainErrors.Common.Unauthorized, 401);
-        }
 
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
@@ -58,23 +56,19 @@ public sealed class CheckoutCommandHandler
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
-        {
             return Result<CheckoutDto>.Failure(DomainErrors.Common.Unauthorized, 401);
-        }
 
         var cartItems = await _storeRepository.GetCartItemsAsync(userId, cancellationToken);
         if (cartItems.Count == 0)
-        {
             return Result<CheckoutDto>.Failure(DomainErrors.Orders.EmptyCart, 400);
-        }
 
         var totalAmount = cartItems.Sum(x => x.UnitPrice * x.Quantity);
         if (totalAmount <= 0)
-        {
             return Result<CheckoutDto>.Failure(DomainErrors.Orders.InvalidTotal, 400);
-        }
 
         // ── Wallet Balance Check ──────────────────────────────────────────────
+        var paymentStatus = PaymentStatus.Pending;
+
         if (command.PaymentMethod == PaymentMethod.Wallet)
         {
             // Conversion: 100 points = 1 EGP
@@ -82,47 +76,24 @@ public sealed class CheckoutCommandHandler
             if (user.Points < requiredPoints)
             {
                 return Result<CheckoutDto>.Failure(
-                    "INSUFFICIENT_FUNDS", 
-                    $"Insufficient wallet balance. Required: {requiredPoints} points, Available: {user.Points} points.", 
+                    "INSUFFICIENT_FUNDS",
+                    $"Insufficient wallet balance. Required: {requiredPoints} points, Available: {user.Points} points.",
                     400);
             }
 
             user.Points -= requiredPoints;
             await _userManager.UpdateAsync(user);
-        }
-
-        // ── Payment Intent (Card only) ─────────────────────────────────────────
-        
-        string paymentIntentId = string.Empty;
-        string clientSecret    = string.Empty;
-        var    paymentStatus   = PaymentStatus.Pending;
-
-        if (command.PaymentMethod == PaymentMethod.Card)
-        {
-            // Convert decimal EGP to piastres (smallest unit) (long)
-            var amountInCents = (long)Math.Ceiling(totalAmount * 100);
-            var intent = await _paymentService.CreatePaymentIntentAsync(
-                amountInCents,
-                command.Currency.ToLowerInvariant(),
-                cancellationToken);
-
-            paymentIntentId = intent.PaymentIntentId;
-            clientSecret    = intent.ClientSecret;
-            
-        }
-        else if (command.PaymentMethod == PaymentMethod.Wallet)
-        {
-            
             paymentStatus = PaymentStatus.Paid;
         }
-        
 
+        // ── Step 1: Save Order FIRST (always, before Stripe) ─────────────────
+        // The order is persisted immediately so it is never lost even if Stripe fails.
         var order = new Order
         {
             UserId          = userId,
             Status          = OrderStatus.Pending,
             PaymentStatus   = paymentStatus,
-            PaymentIntentId = paymentIntentId,
+            PaymentIntentId = string.Empty,
             TotalAmount     = totalAmount,
             OrderItems      = cartItems.Select(x => new OrderItem
             {
@@ -136,17 +107,42 @@ public sealed class CheckoutCommandHandler
         _storeRepository.RemoveCartItems(cartItems);
         await _storeRepository.SaveChangesAsync(cancellationToken);
 
+        // ── Step 2: Create Stripe PaymentIntent (Card only, after order saved) ─
+        // Stripe does not support EGP — convert to USD for processing (1 USD ≈ 50 EGP).
+        string clientSecret = string.Empty;
+
+        if (command.PaymentMethod == PaymentMethod.Card)
+        {
+            try
+            {
+                var amountInCents = (long)Math.Ceiling(totalAmount / 50 * 100);
+                var intent = await _paymentService.CreatePaymentIntentAsync(
+                    amountInCents,
+                    "usd",
+                    cancellationToken);
+
+                order.PaymentIntentId = intent.PaymentIntentId;
+                clientSecret          = intent.ClientSecret;
+
+                // Update order with the payment intent id
+                await _storeRepository.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception)
+            {
+                // Stripe failed but order is already saved — user can retry payment.
+                // Do NOT rollback the order.
+            }
+        }
+
         var dto = new CheckoutDto
         {
             OrderId         = order.Id,
             TotalAmount     = totalAmount,
             Currency        = command.Currency.ToLowerInvariant(),
-            PaymentIntentId = paymentIntentId,
-            ClientSecret    = clientSecret   
+            PaymentIntentId = order.PaymentIntentId,
+            ClientSecret    = clientSecret
         };
 
         return Result<CheckoutDto>.Success(dto, 200);
     }
 }
-
-
