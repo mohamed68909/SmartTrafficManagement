@@ -8,16 +8,18 @@ import 'features/traffic/screens/traffic_screen.dart';
 import 'features/store/screens/store_screen.dart';
 import 'features/maintenance/screens/maintenance_screen.dart';
 import 'features/profile/screens/profile_screen.dart';
+import 'main.dart' show MainMenuScreen;
 
 class AppShell extends ConsumerWidget {
   const AppShell({super.key});
 
   static const List<Widget> _screens = [
-    DashboardScreen(),
-    TrafficScreen(),
-    StoreScreen(),
-    MaintenanceScreen(),
-    ProfileScreen(),
+    DashboardScreen(),   // 0
+    TrafficScreen(),     // 1
+    StoreScreen(),       // 2
+    MaintenanceScreen(), // 3
+    ProfileScreen(),     // 4
+    MainMenuScreen(),    // 5 ← Menu tab
   ];
 
   @override
@@ -74,6 +76,13 @@ class AppShell extends ConsumerWidget {
                   index: 4,
                   currentIndex: navIndex,
                   onTap: () => ref.read(navIndexProvider.notifier).state = 4,
+                ),
+                _NavItem(
+                  icon: Icons.grid_view_rounded,
+                  label: 'Menu',
+                  index: 5,
+                  currentIndex: navIndex,
+                  onTap: () => ref.read(navIndexProvider.notifier).state = 5,
                 ),
               ],
             ),
