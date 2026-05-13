@@ -1,4 +1,4 @@
-﻿// lib/features/maintenance/screens/maintenance_screen.dart
+// lib/features/maintenance/screens/maintenance_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -6,7 +6,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/providers/app_providers.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/models/models.dart';
-import '../../store/screens/checkout_address_screen.dart';
+import '../../store/screens/checkout_address_screen.dart' show CheckoutAddressScreen;
 import 'car_diagnostic_screen.dart';
 
 const _maintenanceCategories = [
@@ -161,13 +161,8 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
                       child: AccentButton(
                         label: 'CONFIRM BOOKING',
                         onTap: total > 0
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const CheckoutAddressScreen()),
-                                );
-                              }
+                            ? () => _confirmMaintenanceBooking(
+                                context, ref, selectedCategories, selectedDate, selectedTime, total)
                             : () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -522,3 +517,140 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
 }
 
 
+
+// ── Maintenance Booking Confirmation ─────────────────────────────────────────
+void _confirmMaintenanceBooking(
+  BuildContext context,
+  WidgetRef ref,
+  Set<String> selectedCategories,
+  DateTime selectedDate,
+  String selectedTime,
+  double total,
+) {
+  final selectedServices = _maintenanceCategories
+      .where((c) => selectedCategories.contains(c.id))
+      .toList();
+
+  final formattedDate = DateFormat('EEE, MMM d yyyy').format(selectedDate);
+
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: AppColors.surface,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (ctx) => Padding(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40, height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.calendar_today_rounded,
+                    color: AppColors.accent, size: 22),
+              ),
+              const SizedBox(width: 12),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Confirm Booking',
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800)),
+                  Text('Review your maintenance schedule',
+                      style: TextStyle(
+                          color: AppColors.textSecondary, fontSize: 12)),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          ...selectedServices.map((s) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: [
+                Text(s.icon, style: const TextStyle(fontSize: 18)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(s.name,
+                      style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500)),
+                ),
+                Text('${s.price.toStringAsFixed(0)} EGP',
+                    style: const TextStyle(
+                        color: AppColors.accent,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700)),
+              ],
+            ),
+          )),
+          const Divider(color: AppColors.border, height: 24),
+          Row(
+            children: [
+              const Icon(Icons.event_rounded,
+                  color: AppColors.textSecondary, size: 16),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text('$formattedDate · $selectedTime',
+                    style: const TextStyle(
+                        color: AppColors.textSecondary, fontSize: 13)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Total',
+                  style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700)),
+              Text('${total.toStringAsFixed(0)} EGP',
+                  style: const TextStyle(
+                      color: AppColors.accent,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800)),
+            ],
+          ),
+          const SizedBox(height: 24),
+          AccentButton(
+            label: 'Confirm & Book',
+            icon: Icons.check_circle_rounded,
+            onTap: () {
+              Navigator.pop(ctx);
+              ref.read(maintenanceSelectionProvider.notifier).clearAll();
+              showSuccessDialog(
+                context,
+                title: 'Booking Confirmed!',
+                message: 'Your maintenance is scheduled for $formattedDate at $selectedTime.',
+                onDone: () => Navigator.pop(context),
+              );
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+}

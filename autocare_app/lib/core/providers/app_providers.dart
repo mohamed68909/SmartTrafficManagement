@@ -276,6 +276,8 @@ class MaintenanceSelectionNotifier extends StateNotifier<Set<String>> {
     state = {};
   }
 
+  void clearAll() => clear();
+
   bool isSelected(String id) => state.contains(id);
 }
 
