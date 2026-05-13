@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'dart:math' as math;
@@ -260,8 +260,16 @@ class ServiceCard extends StatelessWidget {
                   Text(service.type, style: const TextStyle(color: Colors.grey, fontSize: 12)), 
                   const SizedBox(height: 4), 
                   Row(children: [
-                    Icon(Icons.star, color: Colors.amber, size: 14), 
-                    Text(" ${service.rating}  •  ${service.distance} km away", style: const TextStyle(color: Colors.grey, fontSize: 12))
+                    Icon(Icons.star, color: Colors.amber, size: 14),
+                    const SizedBox(width: 2),
+                    Flexible(
+                      child: Text(
+                        " ${service.rating}  •  ${service.distance} km away",
+                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ])
                 ]
               )

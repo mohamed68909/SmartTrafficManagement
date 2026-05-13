@@ -20,8 +20,16 @@ class SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: Theme.of(context).textTheme.headlineSmall),
-        if (actionLabel != null)
+        Flexible(
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.headlineSmall,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (actionLabel != null) ...[
+          const SizedBox(width: 8),
           GestureDetector(
             onTap: onAction,
             child: Text(
@@ -33,6 +41,7 @@ class SectionHeader extends StatelessWidget {
               ),
             ),
           ),
+        ],
       ],
     );
   }
@@ -193,13 +202,17 @@ class EmergencyBanner extends StatelessWidget {
                     const Icon(Icons.warning_amber_rounded,
                         color: AppColors.background, size: 18),
                     const SizedBox(width: 6),
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: AppColors.background,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
+                    Flexible(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          color: AppColors.background,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -211,6 +224,8 @@ class EmergencyBanner extends StatelessWidget {
                     color: AppColors.background.withValues(alpha:0.7),
                     fontSize: 12,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
