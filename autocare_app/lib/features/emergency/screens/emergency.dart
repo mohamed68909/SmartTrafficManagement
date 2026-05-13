@@ -305,20 +305,26 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
-            color: darkCard, borderRadius: BorderRadius.circular(20)),
+          color: darkCard,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white12),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                  color: neonGreen.withValues(alpha:0.1), shape: BoxShape.circle),
-              child: Icon(icon, color: neonGreen, size: 30),
+                color: neonGreen.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+                border: Border.all(color: neonGreen.withValues(alpha: 0.4), width: 1.5),
+              ),
+              child: Icon(icon, color: neonGreen, size: 32),
             ),
             const SizedBox(height: 10),
             Text(title,
                 style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
             Text(sub,
                 style: const TextStyle(color: Colors.white38, fontSize: 12)),
           ],
