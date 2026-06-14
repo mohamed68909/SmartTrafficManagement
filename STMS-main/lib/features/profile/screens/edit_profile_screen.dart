@@ -112,7 +112,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           try {
                             final photoUrl = await AuthService.uploadFile(image.path, folder: 'profiles');
                             if (photoUrl != null) {
-                              final result = await AuthService.updateProfile({'profilePicture': photoUrl});
+                              final result = await AuthService.updateProfile({
+                                'firstName': _firstNameCtrl.text.trim(),
+                                'lastName': _lastNameCtrl.text.trim(),
+                                'phoneNumber': _phoneCtrl.text.trim(),
+                                'profilePicture': photoUrl,
+                              });
                               if (result['success'] && mounted) {
                                 ref.invalidate(profileFutureProvider);
                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile picture updated successfully!')));

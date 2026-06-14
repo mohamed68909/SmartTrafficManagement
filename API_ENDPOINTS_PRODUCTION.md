@@ -1,8 +1,8 @@
 # SmartTraffic — Production API Endpoints (Full Reference)
 
-> **Base URL:** `https://smarttrafficmanagement.runasp.net`  
-> **Swagger UI:** `https://smarttrafficmanagement.runasp.net/swagger/index.html`  
-> **Realtime Hub:** `https://smarttrafficmanagement.runasp.net/hubs/traffic` (SignalR)  
+> **Base URL:** `https://smarttrafficmanagemet.runasp.net`  
+> **Swagger UI:** `https://smarttrafficmanagemet.runasp.net/swagger/index.html`  
+> **Realtime Hub:** `https://smarttrafficmanagemet.runasp.net/hubs/traffic` (SignalR)  
 > **Response Envelope:** كل الـ responses مغلفة في `Result<T>`  
 > **آخر تحديث:** مستخرج مباشرة من Swagger UI للبيئة الـ Production
 
@@ -12,19 +12,19 @@
 
 | Method | Full URL |
 |--------|----------|
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/register` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/login` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/refresh-token` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/logout` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/verify-otp` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/Auth/me` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/Auth/profile` |
-| `PUT`  | `https://smarttrafficmanagement.runasp.net/api/Auth/profile` |
-| `PUT`  | `https://smarttrafficmanagement.runasp.net/api/Auth/profile/update` |
-| `PATCH`| `https://smarttrafficmanagement.runasp.net/api/Auth/change-password` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/google-login` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/forgot-password` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/Auth/reset-password` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/register` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/login` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/refresh-token` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/logout` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/verify-otp` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/Auth/me` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/Auth/profile` |
+| `PUT`  | `https://smarttrafficmanagemet.runasp.net/api/Auth/profile` |
+| `PUT`  | `https://smarttrafficmanagemet.runasp.net/api/Auth/profile/update` |
+| `PATCH`| `https://smarttrafficmanagemet.runasp.net/api/Auth/change-password` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/google-login` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/forgot-password` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/Auth/reset-password` |
 
 ---
 
@@ -34,14 +34,14 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/garage` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/garage` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/garage/{id}` |
-| `PUT`    | `https://smarttrafficmanagement.runasp.net/api/garage/{id}` |
-| `DELETE` | `https://smarttrafficmanagement.runasp.net/api/garage/{id}` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/garage/add` |
-| `PUT`    | `https://smarttrafficmanagement.runasp.net/api/garage/update/{id}` |
-| `DELETE` | `https://smarttrafficmanagement.runasp.net/api/garage/delete/{id}` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/garage` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/garage` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/garage/{id}` |
+| `PUT`    | `https://smarttrafficmanagemet.runasp.net/api/garage/{id}` |
+| `DELETE` | `https://smarttrafficmanagemet.runasp.net/api/garage/{id}` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/garage/add` |
+| `PUT`    | `https://smarttrafficmanagemet.runasp.net/api/garage/update/{id}` |
+| `DELETE` | `https://smarttrafficmanagemet.runasp.net/api/garage/delete/{id}` |
 
 ---
 
@@ -49,10 +49,10 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/cart` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/cart/items` |
-| `PATCH`  | `https://smarttrafficmanagement.runasp.net/api/cart/items/{cartItemId}` |
-| `DELETE` | `https://smarttrafficmanagement.runasp.net/api/cart/items/{cartItemId}` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/cart` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/cart/items` |
+| `PATCH`  | `https://smarttrafficmanagemet.runasp.net/api/cart/items/{cartItemId}` |
+| `DELETE` | `https://smarttrafficmanagemet.runasp.net/api/cart/items/{cartItemId}` |
 
 ---
 
@@ -60,8 +60,8 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/store/products` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/store/checkout` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/store/products` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/store/checkout` |
 
 ---
 
@@ -69,8 +69,8 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET` | `https://smarttrafficmanagement.runasp.net/api/orders/my` |
-| `GET` | `https://smarttrafficmanagement.runasp.net/api/orders/{orderId}` |
+| `GET` | `https://smarttrafficmanagemet.runasp.net/api/orders/my` |
+| `GET` | `https://smarttrafficmanagemet.runasp.net/api/orders/{orderId}` |
 
 ---
 
@@ -78,14 +78,14 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/payments/stripe/config` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/payments/stripe/webhook` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/payments/cards` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/payments/cards` |
-| `DELETE` | `https://smarttrafficmanagement.runasp.net/api/payments/cards/{id}` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/payments/history` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/payments/{id}` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/payments/refund` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/payments/stripe/config` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/payments/stripe/webhook` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/payments/cards` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/payments/cards` |
+| `DELETE` | `https://smarttrafficmanagemet.runasp.net/api/payments/cards/{id}` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/payments/history` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/payments/{id}` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/payments/refund` |
 
 > ⚠️ `POST /api/payments/refund` موجود في الكود لكن قد لا يظهر في Swagger — راجع PaymentsController.
 
@@ -95,11 +95,11 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/sos/history` |
-| `POST`  | `https://smarttrafficmanagement.runasp.net/api/sos/request` |
-| `PATCH` | `https://smarttrafficmanagement.runasp.net/api/sos/cancel/{id}` |
-| `PATCH` | `https://smarttrafficmanagement.runasp.net/api/sos/accept/{id}` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/sos/status/{id}` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/sos/history` |
+| `POST`  | `https://smarttrafficmanagemet.runasp.net/api/sos/request` |
+| `PATCH` | `https://smarttrafficmanagemet.runasp.net/api/sos/cancel/{id}` |
+| `PATCH` | `https://smarttrafficmanagemet.runasp.net/api/sos/accept/{id}` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/sos/status/{id}` |
 
 > ⚠️ `PATCH /api/sos/cancel/{id}` موجود في الكود لكن تحقق من ظهوره في Swagger.
 
@@ -111,22 +111,22 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/dashboard` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/jobs/history` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/jobs/available` |
-| `PATCH` | `https://smarttrafficmanagement.runasp.net/api/provider/jobs/accept/{requestId}` |
-| `POST`  | `https://smarttrafficmanagement.runasp.net/api/provider/jobs/{requestId}/reject` |
-| `PATCH` | `https://smarttrafficmanagement.runasp.net/api/provider/jobs/status` |
-| `PATCH` | `https://smarttrafficmanagement.runasp.net/api/provider/jobs/location` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/earnings` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/earnings/weekly` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/active-mission` |
-| `POST`  | `https://smarttrafficmanagement.runasp.net/api/provider/active-mission/status` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/schedule` |
-| `PUT`   | `https://smarttrafficmanagement.runasp.net/api/provider/schedule` |
-| `POST`  | `https://smarttrafficmanagement.runasp.net/api/provider/status` |
-| `PATCH` | `https://smarttrafficmanagement.runasp.net/api/provider/status` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/provider/profile` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/dashboard` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/jobs/history` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/jobs/available` |
+| `PATCH` | `https://smarttrafficmanagemet.runasp.net/api/provider/jobs/accept/{requestId}` |
+| `POST`  | `https://smarttrafficmanagemet.runasp.net/api/provider/jobs/{requestId}/reject` |
+| `PATCH` | `https://smarttrafficmanagemet.runasp.net/api/provider/jobs/status` |
+| `PATCH` | `https://smarttrafficmanagemet.runasp.net/api/provider/jobs/location` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/earnings` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/earnings/weekly` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/active-mission` |
+| `POST`  | `https://smarttrafficmanagemet.runasp.net/api/provider/active-mission/status` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/schedule` |
+| `PUT`   | `https://smarttrafficmanagemet.runasp.net/api/provider/schedule` |
+| `POST`  | `https://smarttrafficmanagemet.runasp.net/api/provider/status` |
+| `PATCH` | `https://smarttrafficmanagemet.runasp.net/api/provider/status` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/provider/profile` |
 
 ---
 
@@ -134,11 +134,11 @@
 
 | Method | Full URL |
 |--------|----------|
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/traffic/report` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/TrafficIncidents` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/TrafficIncidents/by-location` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/map/search` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/sensors/vehicle-env` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/traffic/report` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/TrafficIncidents` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/TrafficIncidents/by-location` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/map/search` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/sensors/vehicle-env` |
 
 ---
 
@@ -146,8 +146,8 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET` | `https://smarttrafficmanagement.runasp.net/api/weather` |
-| `GET` | `https://smarttrafficmanagement.runasp.net/api/weather/city` |
+| `GET` | `https://smarttrafficmanagemet.runasp.net/api/weather` |
+| `GET` | `https://smarttrafficmanagemet.runasp.net/api/weather/city` |
 
 ---
 
@@ -155,8 +155,8 @@
 
 | Method | Full URL |
 |--------|----------|
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/ratings` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/ratings/my` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/ratings` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/ratings/my` |
 
 ---
 
@@ -164,12 +164,12 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/support/tickets/my` |
-| `POST`  | `https://smarttrafficmanagement.runasp.net/api/support/tickets/open` |
-| `PATCH` | `https://smarttrafficmanagement.runasp.net/api/support/close/{id}` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/support/tickets/stats` |
-| `GET`   | `https://smarttrafficmanagement.runasp.net/api/support/tickets/{id}` |
-| `POST`  | `https://smarttrafficmanagement.runasp.net/api/support/tickets/{id}/escalate` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/support/tickets/my` |
+| `POST`  | `https://smarttrafficmanagemet.runasp.net/api/support/tickets/open` |
+| `PATCH` | `https://smarttrafficmanagemet.runasp.net/api/support/close/{id}` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/support/tickets/stats` |
+| `GET`   | `https://smarttrafficmanagemet.runasp.net/api/support/tickets/{id}` |
+| `POST`  | `https://smarttrafficmanagemet.runasp.net/api/support/tickets/{id}/escalate` |
 
 ---
 
@@ -177,8 +177,8 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/chat/history/{ticketId}` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/chat/send` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/chat/history/{ticketId}` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/chat/send` |
 
 ---
 
@@ -186,9 +186,9 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/notifications` |
-| `PUT`    | `https://smarttrafficmanagement.runasp.net/api/notifications/{id}/read` |
-| `DELETE` | `https://smarttrafficmanagement.runasp.net/api/notifications/{id}` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/notifications` |
+| `PUT`    | `https://smarttrafficmanagemet.runasp.net/api/notifications/{id}/read` |
+| `DELETE` | `https://smarttrafficmanagemet.runasp.net/api/notifications/{id}` |
 
 ---
 
@@ -198,31 +198,31 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/dashboard/summary` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/analytics/orders/monthly` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/users` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/admin/users` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/users/{id}` |
-| `PUT`  | `https://smarttrafficmanagement.runasp.net/api/admin/users/{id}` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/tickets/recent` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/tickets/stats` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/tickets/{id}` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/sos/recent` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/providers` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/cs-agents` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/admin/cs-agents` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/admin/cs-agents/{id}/activate` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/ratings` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/system-status` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/activity` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/urgent` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/admin/urgent/{id}/assign` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/urgent/{id}/track` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/approvals` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/approvals/{id}/docs` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/admin/approvals/{id}/approve` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/admin/approvals/{id}/reject` |
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/admin/sensors` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/dashboard/summary` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/analytics/orders/monthly` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/users` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/admin/users` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/users/{id}` |
+| `PUT`  | `https://smarttrafficmanagemet.runasp.net/api/admin/users/{id}` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/tickets/recent` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/tickets/stats` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/tickets/{id}` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/sos/recent` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/providers` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/cs-agents` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/admin/cs-agents` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/admin/cs-agents/{id}/activate` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/ratings` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/system-status` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/activity` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/urgent` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/admin/urgent/{id}/assign` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/urgent/{id}/track` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/approvals` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/approvals/{id}/docs` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/admin/approvals/{id}/approve` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/admin/approvals/{id}/reject` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/admin/sensors` |
 
 ---
 
@@ -232,21 +232,21 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/dashboard` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/products` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/seller/products` |
-| `PUT`    | `https://smarttrafficmanagement.runasp.net/api/seller/products/{id}` |
-| `DELETE` | `https://smarttrafficmanagement.runasp.net/api/seller/products/{id}` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/seller/products/{id}/restock` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/orders` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/orders/stats` |
-| `POST`   | `https://smarttrafficmanagement.runasp.net/api/seller/orders/{id}/prepare` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/analytics` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/store` |
-| `PUT`    | `https://smarttrafficmanagement.runasp.net/api/seller/store` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/reviews` |
-| `GET`    | `https://smarttrafficmanagement.runasp.net/api/seller/settings` |
-| `PUT`    | `https://smarttrafficmanagement.runasp.net/api/seller/settings` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/dashboard` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/products` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/seller/products` |
+| `PUT`    | `https://smarttrafficmanagemet.runasp.net/api/seller/products/{id}` |
+| `DELETE` | `https://smarttrafficmanagemet.runasp.net/api/seller/products/{id}` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/seller/products/{id}/restock` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/orders` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/orders/stats` |
+| `POST`   | `https://smarttrafficmanagemet.runasp.net/api/seller/orders/{id}/prepare` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/analytics` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/store` |
+| `PUT`    | `https://smarttrafficmanagemet.runasp.net/api/seller/store` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/reviews` |
+| `GET`    | `https://smarttrafficmanagemet.runasp.net/api/seller/settings` |
+| `PUT`    | `https://smarttrafficmanagemet.runasp.net/api/seller/settings` |
 
 ---
 
@@ -256,9 +256,9 @@
 
 | Method | Full URL |
 |--------|----------|
-| `GET`  | `https://smarttrafficmanagement.runasp.net/api/cs/drivers/search` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/cs/drivers/{id}/block` |
-| `POST` | `https://smarttrafficmanagement.runasp.net/api/cs/agent/status` |
+| `GET`  | `https://smarttrafficmanagemet.runasp.net/api/cs/drivers/search` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/cs/drivers/{id}/block` |
+| `POST` | `https://smarttrafficmanagemet.runasp.net/api/cs/agent/status` |
 
 ---
 
@@ -291,7 +291,7 @@
 
 | Hub | URL |
 |-----|-----|
-| Traffic & Chat Hub | `https://smarttrafficmanagement.runasp.net/hubs/traffic` |
+| Traffic & Chat Hub | `https://smarttrafficmanagemet.runasp.net/hubs/traffic` |
 
 **Events المدعومة:**
 - `ReceiveMessage` — رسالة جديدة في chat

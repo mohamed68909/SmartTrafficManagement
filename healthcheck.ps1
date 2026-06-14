@@ -1,5 +1,5 @@
 try {
-    $r = Invoke-WebRequest -Uri 'https://smarttrafficmanagement.runasp.net/swagger/index.html' -UseBasicParsing -TimeoutSec 90
+    $r = Invoke-WebRequest -Uri 'http://smarttrafficmanagemet.runasp.net/swagger/index.html' -UseBasicParsing -TimeoutSec 90
     Write-Host "Swagger Status: $($r.StatusCode)"
 }
 catch {
