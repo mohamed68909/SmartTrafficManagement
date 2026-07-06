@@ -1,69 +1,67 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.buildlog/
-.history
-.idea/
-.project
-.settings/
-.vscode/
-.vscode-test/
-**/.idea/modules.xml
-**/.idea/workspace.xml
-**/.idea/tasks.xml
-**/.idea/play-configs.xml
-.directory
+## Flutter / Dart .gitignore
 
-# Tooling
+## Flutter build
 .dart_tool/
-.env
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
-/build/
+build/
 
-# Android
-.gradle/
-local.properties
-**/flutter_export_environment.sh
-**/gradlew
-**/gradlew.bat
-**/generated/
-/android/app/src/main/res/values/strings.xml
-/android/key.properties
+## Android
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
 
-# iOS
-**/Pods/
-**/DerivedData/
-.appledoc/
-/ios/.symlinks/
-/ios/Flutter/App.framework
-/ios/Flutter/Flutter.framework
-/ios/Flutter/Flutter.podspec
-/ios/Flutter/Generated.xcconfig
-/ios/Flutter/app.flx
-/ios/Flutter/app.zip
-/ios/Flutter/flutter_assets.zip
-/ios/Flutter/flutter_play_compound.zip
-/ios/Frameworks/
-/ios/Helper/
-/ios/Pods/
-/ios/build/
+## iOS
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/DerivedData/
+**/ios/**/Icon?
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/**/profile
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
 
-# macOS
-/macos/Flutter/ephemeral/
+## Exceptions
+!**/ios/**/default.mode1v3
+!**/ios/**/default.mode2v3
+!**/ios/**/default.pbxuser
+!**/ios/**/default.perspectivev3
 
-# Linux
-/linux/flutter/ephemeral/
+## Environment
+.env
+secrets.dart
+lib/config/secrets.dart
 
-# Windows
-/windows/flutter/ephemeral/
+## VS Code
+.vscode/
+!.vscode/settings.json
 
-# Web
-/web/assets/
+## OS
+.DS_Store
+Thumbs.db
