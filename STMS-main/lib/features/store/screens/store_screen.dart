@@ -1,4 +1,4 @@
-﻿// lib/features/store/screens/store_screen.dart
+// lib/features/store/screens/store_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -550,15 +550,6 @@ class _TireShopView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vehicles = [
-      'Toyota Corolla 2023',
-      'Hyundai Elantra 2022',
-      'Kia Sportage 2021',
-      'Mitsubishi Lancer 2019',
-      'Nissan Sunny 2022',
-      'Chevrolet Aveo 2020',
-    ];
-
     final productsAsync = ref.watch(productsFutureProvider);
 
     return SingleChildScrollView(

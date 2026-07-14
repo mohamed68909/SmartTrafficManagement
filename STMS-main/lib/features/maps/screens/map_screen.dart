@@ -73,7 +73,7 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _getRoute(LatLng destination) async {
     setState(() => _routePoints = []);
     final url =
-        'http://router.project-osrm.org/route/v1/driving/${_currentLocation.longitude},${_currentLocation.latitude};${destination.longitude},${destination.latitude}?overview=full&geometries=geojson';
+        'https://router.project-osrm.org/route/v1/driving/${_currentLocation.longitude},${_currentLocation.latitude};${destination.longitude},${destination.latitude}?overview=full&geometries=geojson';
 
     try {
       final response = await http.get(Uri.parse(url));

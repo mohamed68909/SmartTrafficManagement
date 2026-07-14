@@ -41,12 +41,13 @@ public sealed class UploadController : BaseController
     ///   req.files.add(await http.MultipartFile.fromPath('file', imagePath));
     /// </remarks>
     [HttpPost]
-    [AllowAnonymous]
+    [Consumes("multipart/form-data")]
     [RequestSizeLimit(15 * 1024 * 1024)]   // 15 MB raw — service compresses after upload
     [ProducesResponseType(typeof(Result<UploadResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<UploadResponseDto>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<UploadResponseDto>), StatusCodes.Status415UnsupportedMediaType)]
     public async Task<ActionResult> Upload(
-        IFormFile file,
+        IFormFile? file,
         [FromQuery] string folder = "misc",
         CancellationToken cancellationToken = default)
     {
@@ -82,7 +83,7 @@ public sealed class UploadController : BaseController
     /// Upload multiple files at once (max 5).
     /// </summary>
     [HttpPost("multiple")]
-    [AllowAnonymous]
+    [Consumes("multipart/form-data")]
     [RequestSizeLimit(50 * 1024 * 1024)]   // 5 files × 15 MB each at most
     [ProducesResponseType(typeof(Result<IReadOnlyList<UploadResponseDto>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<IReadOnlyList<UploadResponseDto>>), StatusCodes.Status400BadRequest)]

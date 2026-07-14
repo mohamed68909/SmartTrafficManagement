@@ -54,36 +54,79 @@ class OrderService {
     }
   }
 
-  static String _mapServiceType(int? type) {
-    switch (type) {
-      case 1: return 'Maintenance';
-      case 2: return 'Inspection';
-      case 3: return 'Emergency';
-      case 4: return 'Towing';
-      case 5: return 'Fuel Delivery';
-      case 6: return 'Video Support';
-      default: return 'Emergency Aid';
+  static String _mapServiceType(dynamic type) {
+    final typeStr = type?.toString();
+    switch (typeStr) {
+      case '1':
+      case 'Maintenance':
+        return 'Maintenance';
+      case '2':
+      case 'Inspection':
+        return 'Inspection';
+      case '3':
+      case 'Emergency':
+        return 'Emergency';
+      case '4':
+      case 'Towing':
+        return 'Towing';
+      case '5':
+      case 'FuelDelivery':
+      case 'Fuel Delivery':
+        return 'Fuel Delivery';
+      case '6':
+      case 'VideoSupport':
+      case 'Video Support':
+        return 'Video Support';
+      default:
+        return 'Emergency Aid';
     }
   }
 
-  static OrderStatus _mapStatus(int? status) {
-    switch (status) {
-      case 0: return OrderStatus.scheduled; // Pending
-      case 1: return OrderStatus.inProgress; // Processing
-      case 2: return OrderStatus.inProgress; // Shipped
-      case 3: return OrderStatus.completed; // Delivered
-      case 4: return OrderStatus.cancelled;
-      default: return OrderStatus.scheduled;
+  static OrderStatus _mapStatus(dynamic status) {
+    final statusStr = status?.toString();
+    switch (statusStr) {
+      case '0':
+      case '1':
+      case 'Pending':
+        return OrderStatus.scheduled; // Pending
+      case '2':
+      case 'Processing':
+      case '3':
+      case 'Shipped':
+        return OrderStatus.inProgress; // Processing / Shipped
+      case '4':
+      case 'Delivered':
+        return OrderStatus.completed; // Delivered
+      case '5':
+      case 'Cancelled':
+        return OrderStatus.cancelled;
+      default:
+        return OrderStatus.scheduled;
     }
   }
 
-  static OrderStatus _mapSosStatus(int? status) {
-    switch (status) {
-      case 0: return OrderStatus.scheduled; // Requested
-      case 1: return OrderStatus.inProgress; // Accepted
-      case 2: return OrderStatus.completed; // Completed
-      case 3: return OrderStatus.cancelled; // Cancelled
-      default: return OrderStatus.scheduled;
+  static OrderStatus _mapSosStatus(dynamic status) {
+    final statusStr = status?.toString();
+    switch (statusStr) {
+      case '0':
+      case '1':
+      case 'Pending':
+        return OrderStatus.scheduled; // Requested (Pending)
+      case '2':
+      case 'Accepted':
+      case '3':
+      case 'InProgress':
+        return OrderStatus.inProgress; // Accepted / InProgress
+      case '4':
+      case 'Completed':
+        return OrderStatus.completed; // Completed
+      case '5':
+      case 'Rejected':
+      case '6':
+      case 'Cancelled':
+        return OrderStatus.cancelled; // Cancelled
+      default:
+        return OrderStatus.scheduled;
     }
   }
 

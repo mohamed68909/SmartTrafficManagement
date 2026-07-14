@@ -19,5 +19,8 @@ public sealed class ChatMessageConfiguration : IEntityTypeConfiguration<ChatMess
             .WithMany(x => x.ChatMessages)
             .HasForeignKey(x => x.SenderId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => x.SupportTicketId);
+        builder.HasIndex(x => x.SenderId);
     }
 }

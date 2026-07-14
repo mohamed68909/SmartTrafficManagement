@@ -107,9 +107,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   margin: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: AppColors.accent.withOpacity(0.08),
+                    color: AppColors.accent.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.accent.withOpacity(0.25)),
+                    border: Border.all(color: AppColors.accent.withValues(alpha: 0.25)),
                   ),
                   child: Row(
                     children: [
@@ -161,12 +161,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                         decoration: BoxDecoration(
                           color: isRead
                               ? AppColors.surface
-                              : AppColors.accent.withOpacity(0.06),
+                              : AppColors.accent.withValues(alpha: 0.06),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: isRead
                                 ? AppColors.border
-                                : AppColors.accent.withOpacity(0.3),
+                                : AppColors.accent.withValues(alpha: 0.3),
                             width: isRead ? 1 : 1.5,
                           ),
                         ),
@@ -177,7 +177,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                               width: 44,
                               height: 44,
                               decoration: BoxDecoration(
-                                color: color.withOpacity(0.12),
+                                color: color.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Icon(icon, color: color, size: 20),

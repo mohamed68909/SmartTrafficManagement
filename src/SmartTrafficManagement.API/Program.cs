@@ -46,16 +46,14 @@ builder.Services.AddCors(options =>
     });
 
     // ── Mobile apps & REST clients (Flutter, Postman, native apps) ────────
-    // Flutter's http package does NOT send an Origin header (not a browser),
-    // so SetIsOriginAllowed is used instead of WithOrigins.
-    // AllowCredentials() is kept so JWT Bearer tokens are forwarded correctly.
+    // Since native clients do not enforce CORS, this policy is for general API access.
+    // AllowCredentials() is removed to prevent insecure configuration with wildcard origins.
     options.AddPolicy("AllowAll", policy =>
     {
         policy
-            .SetIsOriginAllowed(_ => true)   // accept any origin (incl. null / mobile)
+            .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
     });
 });
 builder.Services.AddEndpointsApiExplorer();

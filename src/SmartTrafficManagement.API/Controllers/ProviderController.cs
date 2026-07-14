@@ -157,7 +157,7 @@ public sealed class ProviderController : BaseController
         return ProcessResult(await handler.Handle(new UpdateProviderScheduleCommand(userId, request), cancellationToken));
     }
 
-    [HttpPost("status")]
+    [HttpPost("online")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult> ToggleOnline(
         [FromBody] ToggleProviderOnlineDto request,

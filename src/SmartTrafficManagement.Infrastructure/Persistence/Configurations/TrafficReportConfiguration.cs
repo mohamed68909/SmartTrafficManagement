@@ -21,5 +21,8 @@ public sealed class TrafficReportConfiguration : IEntityTypeConfiguration<Traffi
             .WithMany()
             .HasForeignKey(x => x.VehicleId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(x => x.ReporterId);
+        builder.HasIndex(x => x.VehicleId);
     }
 }

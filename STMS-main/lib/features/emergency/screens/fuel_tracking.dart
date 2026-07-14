@@ -85,7 +85,7 @@ class _FuelTracking20State extends State<FuelTracking20> {
 
   Future<void> _getRoute() async {
     if (_nearestVehicle == null) return;
-    final url = 'http://router.project-osrm.org/route/v1/driving/'
+    final url = 'https://router.project-osrm.org/route/v1/driving/'
         '${_nearestVehicle!.longitude},${_nearestVehicle!.latitude};'
         '${_userLocation!.longitude},${_userLocation!.latitude}'
         '?overview=full&geometries=geojson';

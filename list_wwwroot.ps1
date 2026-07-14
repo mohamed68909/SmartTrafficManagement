@@ -1,6 +1,6 @@
-$ftpHost = "site64208.siteasp.net"
-$user = "site64208"
-$pass = "8Jz@!k9Ys3P_"
+$ftpHost = "site68169.siteasp.net"
+$user = "site68169"
+$pass = "bX-9#3AxwY!7"
 
 $request = [System.Net.FtpWebRequest]::Create("ftp://$ftpHost/wwwroot")
 $request.Method = [System.Net.WebRequestMethods+Ftp]::ListDirectory
