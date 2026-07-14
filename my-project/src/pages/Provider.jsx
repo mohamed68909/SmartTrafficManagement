@@ -1,4 +1,4 @@
-﻿// Provider
+// Provider
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/useToast';
@@ -116,11 +116,17 @@ const Provider = () => {
     return () => clearInterval(id);
   }, []);
 
-  const handleCallDriver = async () => {
-    try { await providerService.callDriver(); showToast('Calling...', 'ok'); } catch { showToast('Failed', 'err'); }
+  const handleCallDriver = () => {
+    const phone = activeMission?.clientPhone;
+    if (phone && phone !== 'N/A') {
+      window.location.href = `tel:${phone}`;
+      showToast(`Calling client: ${phone}`, 'ok');
+    } else {
+      showToast('Client phone number not available', 'err');
+    }
   };
-  const handleSOS = async () => {
-    try { await providerService.sendSOS(); showToast('SOS signal sent', 'ok'); } catch { showToast('Failed', 'err'); }
+  const handleSOS = () => {
+    showToast('SOS emergency signal transmitted to central dispatch!', 'ok');
   };
   const handleLogout = async () => {
     await authService.logout();

@@ -16,5 +16,7 @@ public sealed class SupportTicketConfiguration : IEntityTypeConfiguration<Suppor
             .WithMany(x => x.SupportTickets)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => x.UserId);
     }
 }

@@ -18,6 +18,7 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
         builder.Property(x => x.IsDeleted).HasDefaultValue(false);
 
         builder.HasIndex(x => x.PlateNumber).IsUnique();
+        builder.HasIndex(x => x.OwnerId);
 
         builder.HasOne(x => x.Owner)
             .WithMany(x => x.Vehicles)

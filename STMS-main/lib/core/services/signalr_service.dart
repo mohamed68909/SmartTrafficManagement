@@ -28,7 +28,10 @@ class SignalRService {
       final String hubUrl = ApiConstants.baseUrl.replaceAll('/api', '/hubs/traffic');
 
       final httpOptions = HttpConnectionOptions(
-        accessTokenFactory: () async => token ?? '',
+        accessTokenFactory: () async {
+          final currentPrefs = await SharedPreferences.getInstance();
+          return currentPrefs.getString('jwt_token') ?? '';
+        },
       );
 
       _hubConnection = HubConnectionBuilder()

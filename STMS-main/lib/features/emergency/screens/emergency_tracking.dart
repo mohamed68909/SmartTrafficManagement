@@ -77,7 +77,7 @@ class _EmergencyTracking18State extends State<EmergencyTracking18> {
   }
 
   Future<void> _getRoute() async {
-    final url = 'http://router.project-osrm.org/route/v1/driving/'
+    final url = 'https://router.project-osrm.org/route/v1/driving/'
         '${_winchLocation.longitude},${_winchLocation.latitude};'
         '${_userLocation.longitude},${_userLocation.latitude}'
         '?overview=full&geometries=geojson';

@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# ── Production secrets (NEVER commit these) ──────────────────────────────────
+appsettings.production.json
+appsettings.Production.json
+**/appsettings.production.json
+**/appsettings.Production.json
+*.publishsettings
+# ─────────────────────────────────────────────────────────────────────────────
+
 # User-specific files
 *.rsuser
 *.suo

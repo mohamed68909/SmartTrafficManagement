@@ -16,5 +16,7 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithMany(x => x.Orders)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => x.UserId);
     }
 }

@@ -225,7 +225,7 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
           ),
           hintText: hint,
           hintStyle: TextStyle(
-            color: AppColors.textMuted.withOpacity(0.6),
+            color: AppColors.textMuted.withValues(alpha: 0.6),
             fontSize: 15,
           ),
           prefixIcon: Container(
@@ -273,7 +273,7 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.accent.withOpacity(0.15),
+                        color: AppColors.accent.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.credit_card_rounded, color: AppColors.accent, size: 28),
@@ -374,7 +374,7 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
                         child: IconButton(
                           icon: Icon(
                             Icons.help_outline_rounded,
-                            color: AppColors.textMuted.withOpacity(0.7),
+                            color: AppColors.textMuted.withValues(alpha: 0.7),
                             size: 20,
                           ),
                           onPressed: () {
@@ -412,9 +412,9 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.success.withOpacity(0.1),
+                  color: AppColors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.success.withOpacity(0.3)),
+                  border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
                 ),
                 child: const Row(
                   children: [

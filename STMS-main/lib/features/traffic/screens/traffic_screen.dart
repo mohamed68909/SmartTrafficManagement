@@ -255,7 +255,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
         decoration: BoxDecoration(
           color: const Color(0xFF0D1117),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.accent.withOpacity(0.3)),
+          border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
@@ -334,7 +334,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
                           width: 40 * _pulse.value,
                           height: 40 * _pulse.value,
                           decoration: BoxDecoration(
-                            color: AppColors.accent.withOpacity(0.3),
+                            color: AppColors.accent.withValues(alpha: 0.3),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -350,7 +350,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
                         border: Border.all(color: Colors.black, width: 2),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.accent.withOpacity(0.6),
+                            color: AppColors.accent.withValues(alpha: 0.6),
                             blurRadius: 8,
                           ),
                         ],
@@ -385,7 +385,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 2),
                               boxShadow: [
-                                BoxShadow(color: pinColor.withOpacity(0.5), blurRadius: 6),
+                                BoxShadow(color: pinColor.withValues(alpha: 0.5), blurRadius: 6),
                               ],
                             ),
                           ),
@@ -411,7 +411,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.85),
+              color: Colors.black.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: AppColors.border),
             ),
@@ -436,7 +436,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.85),
+              color: Colors.black.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: AppColors.border),
             ),
@@ -556,7 +556,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
         child: Center(
           child: Column(
             children: [
-              Icon(Icons.check_circle_outline_rounded, color: AppColors.success.withOpacity(0.5), size: 48),
+              Icon(Icons.check_circle_outline_rounded, color: AppColors.success.withValues(alpha: 0.5), size: 48),
               const SizedBox(height: 12),
               const Text('No incidents reported', style: TextStyle(color: AppColors.textSecondary)),
             ],
@@ -640,7 +640,7 @@ class _IncidentTile extends StatelessWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
+              color: color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 22),
@@ -681,10 +681,10 @@ class _IncidentTile extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(6),
                   border:
-                      Border.all(color: color.withOpacity(0.3)),
+                      Border.all(color: color.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   delay.length > 10 ? delay.substring(0, 7) + '...' : delay,
@@ -699,7 +699,7 @@ class _IncidentTile extends StatelessWidget {
               Text(
                 severity.toUpperCase(),
                 style: TextStyle(
-                  color: color.withOpacity(0.7),
+                  color: color.withValues(alpha: 0.7),
                   fontSize: 9,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.5,

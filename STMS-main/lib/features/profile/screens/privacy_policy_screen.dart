@@ -81,7 +81,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           Text(
             content,
             style: TextStyle(
-              color: AppColors.white.withOpacity(0.7),
+              color: AppColors.white.withValues(alpha: 0.7),
               fontSize: 14,
               height: 1.5,
             ),

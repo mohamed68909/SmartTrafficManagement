@@ -9,6 +9,10 @@ import useModal from '../hooks/useModal';
 import { useTranslation } from '../i18n/LanguageContext';
 import * as sellerService from '../api/services/sellerService';
 import * as authService from '../api/services/authService';
+import SellerProducts from './Seller/SellerProducts';
+import SellerDashboard from './Seller/SellerDashboard';
+import SellerOrders from './Seller/SellerOrders';
+import SellerSettings from './Seller/SellerSettings';
 
 const Seller = () => {
   const showToast = useToast();
@@ -657,259 +661,27 @@ const Seller = () => {
 
             {/*  DASHBOARD  */}
             {activeView === 'dashboard' && !tabError && (
-              <>
-                {/* Stats */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
-                  {dashboardStats.map(s => (
-                    <div key={s.label} style={{
-                      background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px',
-                      transition: 'all .18s', cursor: 'default',
-                    }}>
-                      <div style={{ fontSize: 22, marginBottom: 8 }}>{s.icon}</div>
-                      <div style={{ fontSize: 9.5, fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: 1.5, marginBottom: 4 }}>{s.label}</div>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                        <span style={{ fontFamily: 'var(--head)', fontSize: 30, letterSpacing: 1, lineHeight: 1, color: s.color }}>{s.val}</span>
-                        {s.unit && <span style={{ fontSize: 13, color: 'var(--text3)' }}>{s.unit}</span>}
-                      </div>
-                      <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 4 }}>{s.delta}</div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10 }}>
-                  <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--head)', fontSize: 16 }}>Recent Orders</span>
-                    <button className="btn btn-ghost btn-sm" onClick={() => handleTabChange('orders')}>View All</button>
-                  </div>
-                  <div style={{ overflowX: 'auto' }}>
-                    {(() => {
-                      const slice = orders.slice(0, 4);
-                      const hasItems   = slice.some(o => o.items !== '?' && o.items != null);
-                      const dashCols = [
-                        { key: 'id',       label: 'ID' },
-                        hasItems && { key: 'items', label: 'Items' },
-                        { key: 'total',    label: 'Total' },
-                        { key: 'status',   label: 'Status' },
-                      ].filter(Boolean);
-                      return (
-                        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--card)', fontSize: 'var(--font-size-sm)', lineHeight: 'var(--line-height-normal)' }}>
-                          <thead>
-                            <tr style={{ background: 'var(--bg2)', borderBottom: '1px solid var(--border)' }}>
-                              {dashCols.map(c => (
-                                <th key={c.key} style={{ padding: '10px 12px', textAlign: 'center', fontFamily: 'var(--head)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text)' }}>{c.label}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {slice.map(o => (
-                              <tr key={o.id} style={{ borderBottom: '1px solid var(--border2)', transition: 'background 0.15s ease' }}>
-                                {dashCols.map(c => {
-                                  if (c.key === 'id')       return <td key="id"       style={{ padding: '10px 12px', textAlign: 'center', fontFamily: 'var(--mono)', color: 'var(--text3)' }}>{o.id}</td>;
-                                  if (c.key === 'items')    return <td key="items"    style={{ padding: '10px 12px', textAlign: 'center', fontFamily: 'var(--mono)', color: 'var(--text2)' }}>{o.items}</td>;
-                                  if (c.key === 'total')    return <td key="total"    style={{ padding: '10px 12px', textAlign: 'center', color: 'var(--neon)', fontFamily: 'var(--mono)', fontWeight: 'var(--font-weight-medium)' }}>{o.total} EGP</td>;
-                                  if (c.key === 'status')   return <td key="status"   style={{ padding: '10px 12px', textAlign: 'center' }}><span className="badge" style={{ background: `${o.color}22`, color: o.color, border: `1px solid ${o.color}44` }}>{o.status}</span></td>;
-                                  return null;
-                                })}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      );
-                    })()}
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-                  <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                    <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--head)', fontSize: 16 }}>Best Sellers</div>
-                    {products.slice(0, 3).map((p, i) => (
-                      <div key={i} style={{ display: 'flex', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
-                        <div style={{ fontSize: 28, width: 40, textAlign: 'center' }}>{p.img}</div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2 }}>{p.name}</div>
-                          <div style={{ fontSize: 11, color: 'var(--text3)', fontFamily: 'var(--mono)' }}>{p.sold} sold · ★{p.rating}</div>
-                        </div>
-                        <div style={{ fontFamily: 'var(--head)', fontSize: 18, color: 'var(--neon)' }}>{p.price}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                    <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--head)', fontSize: 16 }}>Low Stock</div>
-                    {products.filter(p => p.stock < 15).map((p, i) => (
-                      <div key={i} style={{ display: 'flex', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
-                        <div style={{ fontSize: 28, width: 40, textAlign: 'center' }}>{p.img}</div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2 }}>{p.name}</div>
-                          <div style={{ fontSize: 11, color: 'var(--red)', fontFamily: 'var(--mono)' }}>Only {p.stock} left</div>
-                        </div>
-                        <button className="btn btn-amber btn-sm" onClick={() => openRestockModal(p)}>Restock</button>
-                      </div>
-                    ))}
-                    {products.filter(p => p.stock < 15).length === 0 && (
-                      <div style={{ padding: 20, textAlign: 'center', color: 'var(--text3)', fontSize: 13 }}>All products well stocked</div>
-                    )}
-                  </div>
-                </div>
-              </>
+              <SellerDashboard
+                dashboardStats={dashboardStats}
+                orders={orders}
+                handleTabChange={handleTabChange}
+                products={products}
+                openRestockModal={openRestockModal}
+              />
             )}
 
             {/*  PRODUCTS  */}
             {activeView === 'products' && !tabError && (
-              <>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ fontFamily: 'var(--head)', fontSize: 20 }}>Product Catalog ({products.length})</div>
-                  <button
-                    className="btn btn-neon"
-                    onClick={openAddProduct}
-                    style={{
-                      cursor:'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      padding: '7px 12px',
-                      borderRadius: 6,
-                      fontSize: 12,
-                      fontWeight: 700,
-                      boxShadow: 'none',
-                    }}
-                  >
-                    <span style={{ fontSize: 14, lineHeight: 1 }}>+</span>
-                    Add Product
-                  </button>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
-                  {products.map((p, i) => (
-                    <div key={p.id || i} style={{
-                      background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10,
-                      overflow: 'hidden', transition: 'all .2s', cursor: 'pointer',
-                    }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(170,255,0,.3)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                    >
-                      <div style={{
-                        height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: 'var(--bg3)', fontSize: 52, borderBottom: '1px solid var(--border)',
-                      }}>
-                        {}
-                        {p.img && p.img.startsWith('http')
-                          ? <img src={p.img} alt={p.name} style={{ maxHeight: 100, objectFit: 'contain' }} />
-                          : p.img}
-                      </div>
-                      <div style={{ padding: '12px 14px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                          <div style={{ fontSize: 10, fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: 1 }}>{getProductCategoryName(p)}</div>
-                          <div
-                            title={`Product ID: ${p.id}`}
-                            style={{
-                              maxWidth: 116,
-                              padding: '3px 7px',
-                              borderRadius: 999,
-                              background: 'rgba(170,255,0,.08)',
-                              border: '1px solid rgba(170,255,0,.2)',
-                              color: 'var(--neon)',
-                              fontSize: 9,
-                              fontFamily: 'var(--mono)',
-                              letterSpacing: .3,
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                            }}
-                          >
-                            #{String(p.id).replace(/^#/, '')}
-                          </div>
-                        </div>
-                        <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, lineHeight: 1.3 }}>{p.name}</div>
-                        <div
-                          title={p.description || 'No description'}
-                          style={{
-                            minHeight: 34,
-                            marginBottom: 8,
-                            color: 'var(--text3)',
-                            fontSize: 11,
-                            lineHeight: 1.45,
-                            overflow: 'hidden',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                          }}
-                        >
-                          {p.description || 'No description'}
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                          <div style={{ fontFamily: 'var(--head)', fontSize: 22, color: 'var(--neon)' }}>{p.price} <small style={{ fontSize: 12, color: 'var(--text3)' }}>EGP</small></div>
-                          <div style={{ fontSize: 11, color: 'var(--amber)' }}>? {p.rating}</div>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text3)', fontFamily: 'var(--mono)' }}>
-                          <span>Stock: {p.stock}</span>
-                          <span>Sold: {p.sold}</span>
-                        </div>
-                        {/* Status badge */}
-                        <div style={{ marginTop: 8 }}>
-                          <span style={{
-                            fontSize: 10, fontFamily: 'var(--mono)', padding: '2px 8px', borderRadius: 10,
-                            background: p.stock > 0 ? 'var(--emerald)22' : 'var(--red)22',
-                            color: p.stock > 0 ? 'var(--emerald)' : 'var(--red)',
-                            border: `1px solid ${p.stock > 0 ? 'var(--emerald)' : 'var(--red)'}44`,
-                          }}>{p.status}</span>
-                        </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 12 }}>
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); openEditProduct(p); }}
-                            style={{
-                              border: '1px solid var(--border)',
-                              background: 'transparent',
-                              color: 'var(--text2)',
-                              borderRadius: 6,
-                              padding: '6px 9px',
-                              fontSize: 11,
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); openRestockModal(p); }}
-                            style={{
-                              border: '1px solid rgba(170,255,0,.28)',
-                              background: 'rgba(170,255,0,.07)',
-                              color: 'var(--neon)',
-                              borderRadius: 6,
-                              padding: '6px 9px',
-                              fontSize: 11,
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            + Stock
-                          </button>
-                          <button
-                            type="button"
-                            disabled={removingProductId === p.id}
-                            onClick={(e) => { e.stopPropagation(); setDeleteProductTarget(p); }}
-                            style={{
-                              border: '1px solid rgba(255,77,109,.28)',
-                              background: 'transparent',
-                              color: 'var(--red)',
-                              borderRadius: 6,
-                              padding: '6px 9px',
-                              fontSize: 11,
-                              fontWeight: 600,
-                              cursor: removingProductId === p.id ? 'wait' : 'pointer',
-                              opacity: removingProductId === p.id ? .65 : 1,
-                            }}
-                          >
-                            {removingProductId === p.id ? 'Removing...' : 'Remove'}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {products.length === 0 && !tabLoading && (
-                    <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: 40, color: 'var(--text3)' }}>No products found</div>
-                  )}
-                </div>
-              </>
+              <SellerProducts
+                products={products}
+                tabLoading={tabLoading}
+                openAddProduct={openAddProduct}
+                getProductCategoryName={getProductCategoryName}
+                openEditProduct={openEditProduct}
+                openRestockModal={openRestockModal}
+                setDeleteProductTarget={setDeleteProductTarget}
+                removingProductId={removingProductId}
+              />
             )}
 
             {activeView === 'categories' && !tabError && (
@@ -957,72 +729,11 @@ const Seller = () => {
 
             {/*  ORDERS  */}
             {activeView === 'orders' && !tabError && (
-              <>
-                {/* Stats cards */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
-                  {orderTabStats.map(s => (
-                    <div key={s.label} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}>
-                      <div style={{ fontSize: 22, marginBottom: 8 }}>{s.icon}</div>
-                      <div style={{ fontSize: 9.5, fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: 1.5, marginBottom: 4 }}>{s.label}</div>
-                      <div style={{ fontFamily: 'var(--head)', fontSize: 30, lineHeight: 1, color: s.color }}>{s.val}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Orders table ? dynamic columns */}
-                {(() => {
-                  const hasItems   = orders.some(o => o.items !== '?' && o.items != null);
-                  const hasAddress = orders.some(o => o.address && o.address !== '?');
-                  const hasPhone   = orders.some(o => o.phone && o.phone !== '?');
-                  const hasNote    = orders.some(o => o.note && o.note !== '');
-
-                  const cols = [
-                    { key: 'id',       label: 'ID',        show: true },
-                    { key: 'items',    label: 'Items',    show: hasItems },
-                    { key: 'total',    label: 'Total',    show: true },
-                    { key: 'status',   label: 'Status',   show: true },
-                    { key: 'address',  label: 'Address',  show: hasAddress },
-                    { key: 'phone',    label: 'Phone',    show: hasPhone },
-                    { key: 'note',     label: 'Note',     show: hasNote },
-                  ].filter(c => c.show);
-
-                  return (
-                    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10}}>
-                      <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--head)', fontSize: 16 }}>All Orders</div>
-                      <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--card)', fontSize: 'var(--font-size-sm)', lineHeight: 'var(--line-height-normal)' }}>
-                          <thead>
-                            <tr style={{ background: 'var(--bg2)', borderBottom: '1px solid var(--border)' }}>
-                              {cols.map(c => (
-                                <th key={c.key} style={{ padding: '12px 14px', textAlign: 'center', fontFamily: 'var(--head)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text)' }}>{c.label}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {orders.map(o => (
-                              <tr key={o.id} style={{ borderBottom: '1px solid var(--border2)', transition: 'background 0.15s ease' }}>
-                                {cols.map(c => {
-                                  if (c.key === 'id')       return <td key="id"       style={{ padding: '12px 14px', textAlign: 'center', fontFamily: 'var(--mono)', color: 'var(--text3)' }}>{o.id}</td>;
-                                  if (c.key === 'items')    return <td key="items"    style={{ padding: '12px 14px', textAlign: 'center', fontFamily: 'var(--mono)', color: 'var(--text2)' }}>{o.items}</td>;
-                                  if (c.key === 'total')    return <td key="total"    style={{ padding: '12px 14px', textAlign: 'center', color: 'var(--neon)', fontFamily: 'var(--mono)', fontWeight: 'var(--font-weight-semibold)' }}>{o.total} EGP</td>;
-                                  if (c.key === 'status')   return <td key="status"   style={{ padding: '12px 14px', textAlign: 'center' }}><span className="badge" style={{ background: `${o.color}22`, color: o.color, border: `1px solid ${o.color}44`, padding: '4px 8px', borderRadius: 12, fontSize: 'var(--font-size-xs)' }}>{o.status}</span></td>;
-                                  if (c.key === 'address')  return <td key="address"  style={{ padding: '12px 14px', textAlign: 'center', fontSize: 12, color: 'var(--text2)', maxWidth: 140, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{o.address}</td>;
-                                  if (c.key === 'phone')    return <td key="phone"    style={{ padding: '12px 14px', textAlign: 'center', fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--text2)' }}>{o.phone}</td>;
-                                  if (c.key === 'note')     return <td key="note"     style={{ padding: '12px 14px', textAlign: 'center', fontSize: 12, color: 'var(--text3)', maxWidth: 120, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{o.note}</td>;
-                                  return null;
-                                })}
-                              </tr>
-                            ))}
-                            {orders.length === 0 && !tabLoading && (
-                              <tr><td colSpan={cols.length} style={{ padding: 32, textAlign: 'center', color: 'var(--text3)' }}>No orders found</td></tr>
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </>
+              <SellerOrders
+                orderTabStats={orderTabStats}
+                orders={orders}
+                tabLoading={tabLoading}
+              />
             )}
 
             {/*  ANALYTICS  */}
@@ -1329,47 +1040,14 @@ const Seller = () => {
 
             {/*  SETTINGS  */}
             {activeView === 'settings' && !tabError && (
-              <div style={{ maxWidth: 600 }}>
-                <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: 20 }}>
-                  <div style={{ fontFamily: 'var(--head)', fontSize: 18, marginBottom: 16 }}>Store Settings</div>
-                  {settings.map((s, i) => (
-                    <div key={s.key || i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{s.label}</div>
-                        {s.desc && <div style={{ fontSize: 12, color: 'var(--text3)' }}>{s.desc}</div>}
-                      </div>
-                      <div
-                        onClick={async () => {
-                          const updated = settings.map((x, idx) => idx === i ? { ...x, on: !x.on } : x);
-                          setSettings(updated);
-                          try {
-                            await sellerService.updateSettings(updated);
-                            showToast('Setting updated ✓', 'ok');
-                            await refreshTab('settings');
-                          } catch (err) {
-                            setSettings(settings);
-                            showToast(err?.message || 'Failed to update', 'err');
-                          }
-                        }}
-                        style={{
-                          width: 42, height: 22, borderRadius: 12, cursor: 'pointer',
-                          background: s.on ? 'var(--neon)' : 'var(--border2)',
-                          position: 'relative', transition: 'background .2s',
-                        }}>
-                        <div style={{
-                          width: 18, height: 18, borderRadius: '50%', background: '#fff',
-                          position: 'absolute', top: 2, transition: 'right .2s',
-                          right: s.on ? 2 : 22,
-                          boxShadow: '0 1px 3px rgba(0,0,0,.3)',
-                        }} />
-                      </div>
-                    </div>
-                  ))}
-                  {settings.length === 0 && !tabLoading && (
-                    <div style={{ textAlign: 'center', padding: 20, color: 'var(--text3)', fontSize: 13 }}>No settings available</div>
-                  )}
-                </div>
-              </div>
+              <SellerSettings
+                settings={settings}
+                setSettings={setSettings}
+                sellerService={sellerService}
+                showToast={showToast}
+                refreshTab={refreshTab}
+                tabLoading={tabLoading}
+              />
             )}
 
           </div>{}

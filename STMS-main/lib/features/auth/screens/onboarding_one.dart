@@ -14,12 +14,19 @@ class OnboardingScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black, 
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-            children: [
-              const Spacer(flex: 2), 
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 
+                  MediaQuery.of(context).padding.top - 
+                  MediaQuery.of(context).padding.bottom - 40,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+                children: [
+                  const Spacer(flex: 2), 
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -110,7 +117,9 @@ class OnboardingScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildGlowIconData(IconData iconData, double size) {

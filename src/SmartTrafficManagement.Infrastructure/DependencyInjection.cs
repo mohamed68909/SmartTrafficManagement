@@ -37,10 +37,12 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-        // Fallback constant ensures the JWT key is always available on production
-        // even if the environment config is not loaded correctly.
-        const string FallbackJwtKey = "SmTr@ff!c2026#Secure$Key^ForJWT&Auth*Production!SafeKey";
-        var jwtKey    = configuration["Jwt:Key"]      ?? FallbackJwtKey;
+        var jwtKey = configuration["Jwt:Key"];
+        if (string.IsNullOrWhiteSpace(jwtKey))
+        {
+            throw new InvalidOperationException("JWT Key configuration 'Jwt:Key' is missing or empty. A secure key must be provided in configuration.");
+        }
+
         var issuer    = configuration["Jwt:Issuer"]   ?? "SmartTrafficManagement";
         var audience  = configuration["Jwt:Audience"] ?? "SmartTrafficManagementClient";
 

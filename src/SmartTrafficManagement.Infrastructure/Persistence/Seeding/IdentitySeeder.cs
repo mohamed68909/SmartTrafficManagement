@@ -92,15 +92,7 @@ internal sealed class IdentitySeeder(
         // Only one CS Agent as requested by user
         await EnsureUserInRoleAsync("cs@test.com", "CSAgent@123", AppRoles.CSAgent, "Sarah", "Kamal", isActive: true);
 
-        // Ensure no other CS Agents exist in the database
-        var csAgents = await userManager.GetUsersInRoleAsync(AppRoles.CSAgent);
-        foreach (var agent in csAgents)
-        {
-            if (agent.Email != "cs@test.com")
-            {
-                await userManager.DeleteAsync(agent);
-            }
-        }
+        // CS Agents list cleanup removed to support bulk CS agents seeding.
     }
 
     // ── Helper ─────────────────────────────────────────────────────────────────

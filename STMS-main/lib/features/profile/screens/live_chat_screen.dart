@@ -2,10 +2,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/network/api_constants.dart';
+import '../../../../core/network/api_client.dart';
+import '../../../../core/services/signalr_service.dart';
 
 class LiveChatScreen extends StatefulWidget {
   const LiveChatScreen({super.key});
@@ -28,7 +29,6 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
   bool _isLoading = true;
   bool _isSending = false;
   String? _ticketId;
-  String? _token;
 
   @override
   void initState() {
@@ -38,8 +38,8 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
 
   Future<void> _init() async {
     final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('jwt_token');
-    if (_token == null) {
+    final token = prefs.getString('jwt_token');
+    if (token == null) {
       setState(() => _isLoading = false);
       return;
     }
@@ -50,10 +50,7 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
   Future<void> _openOrFetchTicket() async {
     try {
       // First try to get existing open ticket
-      final myTicketsResp = await http.get(
-        Uri.parse('${ApiConstants.baseUrl}/support/tickets/my'),
-        headers: {'Authorization': 'Bearer $_token'},
-      );
+      final myTicketsResp = await ApiClient.get('${ApiConstants.baseUrl}/support/tickets/my');
       if (myTicketsResp.statusCode == 200) {
         final body = jsonDecode(myTicketsResp.body);
         final tickets = body['data'] as List<dynamic>? ?? [];
@@ -64,19 +61,20 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
         if (openTicket != null) {
           _ticketId = openTicket['id'];
           await _loadHistory();
+          _connectSignalR();
           return;
         }
       }
 
       // Open a new ticket
-      final openResp = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/support/tickets/open'),
-        headers: {'Authorization': 'Bearer $_token', 'Content-Type': 'application/json'},
-        body: jsonEncode({'subject': 'Live Support Chat', 'message': 'Hello, I need help.'}),
+      final openResp = await ApiClient.post(
+        '${ApiConstants.baseUrl}/support/tickets/open',
+        {'subject': 'Live Support Chat', 'message': 'Hello, I need help.'},
       );
       if (openResp.statusCode == 200 || openResp.statusCode == 201) {
         final body = jsonDecode(openResp.body);
         _ticketId = body['data']?['id'];
+        _connectSignalR();
         // Seed welcome message
         setState(() {
           _messages.add(_ChatMessage(
@@ -91,13 +89,42 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
     }
   }
 
+  Future<void> _connectSignalR() async {
+    if (_ticketId == null) return;
+    try {
+      await SignalRService().initConnection();
+      await SignalRService().joinTicketRoom(_ticketId!);
+      
+      SignalRService().registerMessageListener((messageData) {
+        if (mounted && messageData != null) {
+          final senderId = messageData['senderId'] ?? messageData['SenderId'];
+          final messageText = messageData['message'] ?? messageData['Message'];
+          final sentOnStr = messageData['sentOnUtc'] ?? messageData['SentOnUtc'];
+          
+          SharedPreferences.getInstance().then((prefs) {
+            final myId = prefs.getString('user_id') ?? '';
+            if (senderId != myId) {
+              setState(() {
+                _messages.add(_ChatMessage(
+                  text: messageText ?? '',
+                  isMe: false,
+                  time: DateTime.tryParse(sentOnStr ?? '') ?? DateTime.now(),
+                ));
+              });
+              _scrollToBottom();
+            }
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('LiveChatScreen: SignalR connection error: $e');
+    }
+  }
+
   Future<void> _loadHistory() async {
     if (_ticketId == null) return;
     try {
-      final resp = await http.get(
-        Uri.parse('${ApiConstants.baseUrl}/chat/history/$_ticketId'),
-        headers: {'Authorization': 'Bearer $_token'},
-      );
+      final resp = await ApiClient.get('${ApiConstants.baseUrl}/chat/history/$_ticketId');
       if (resp.statusCode == 200) {
         final body = jsonDecode(resp.body);
         final msgs = body['data'] as List<dynamic>? ?? [];
@@ -134,13 +161,9 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
 
     if (_ticketId != null) {
       try {
-        await http.post(
-          Uri.parse('${ApiConstants.baseUrl}/chat/send'),
-          headers: {
-            'Authorization': 'Bearer $_token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode({'ticketId': _ticketId, 'message': text, 'type': 0}),
+        await ApiClient.post(
+          '${ApiConstants.baseUrl}/chat/send',
+          {'ticketId': _ticketId, 'message': text, 'type': 0},
         );
       } catch (_) {}
     } else {
@@ -175,6 +198,7 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
 
   @override
   void dispose() {
+    SignalRService().unregisterMessageListener();
     _controller.dispose();
     _scrollCtrl.dispose();
     super.dispose();
@@ -190,9 +214,9 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.success.withOpacity(0.15),
+              color: AppColors.success.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.success.withOpacity(0.4)),
+              border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
@@ -266,7 +290,7 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
             Text(
               '${msg.time.hour.toString().padLeft(2,'0')}:${msg.time.minute.toString().padLeft(2,'0')}',
               style: TextStyle(
-                color: msg.isMe ? AppColors.background.withOpacity(0.6) : AppColors.textMuted,
+                color: msg.isMe ? AppColors.background.withValues(alpha: 0.6) : AppColors.textMuted,
                 fontSize: 10,
               ),
             ),

@@ -1,4 +1,4 @@
-﻿// Admin
+// Admin
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/useToast';
@@ -10,18 +10,25 @@ import * as adminService from '../api/services/adminService';
 import * as authService from '../api/services/authService';
 import ThemeToggle from '../components/ThemeToggle';
 import LanguageToggle from '../components/LanguageToggle';
-
-const DashIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>;
-const BarIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>;
-const CheckIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><polyline points="20 6 9 17 4 12" /></svg>;
-const MapIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></svg>;
-const InfoIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>;
-const WarnIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>;
-const GearIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>;
-const UserIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></svg>;
-const TickIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></svg>;
-const PhoneIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .82h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91A16 16 0 0015.09 17.9l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 18.92z" /></svg>;
-const StarIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>;
+import LiveClock from '../components/ui/LiveClock';
+import {
+  DashIcon,
+  BarIcon,
+  CheckIcon,
+  MapIcon,
+  InfoIcon,
+  WarnIcon,
+  GearIcon,
+  UserIcon,
+  TickIcon,
+  PhoneIcon,
+  StarIcon
+} from '../components/ui/Icons';
+import AdminDashboard from './Admin/AdminDashboard';
+import UserManagement from './Admin/UserManagement';
+import TicketManagement from './Admin/TicketManagement';
+import ApprovalsList from './Admin/ApprovalsList';
+import SkeletonLoader from '../components/ui/SkeletonLoader';
 
 const Admin = () => {
   const showToast = useToast();
@@ -30,7 +37,6 @@ const Admin = () => {
   const [activeView, setActiveView] = useState(() =>
     sessionStorage.getItem('adminTab') || 'dashboard'
   );
-  const [clock, setClock] = useState('');
 
   /* -- UI STATE -- */
   const [activeUserTab, setActiveUserTab] = useState('user');
@@ -206,13 +212,6 @@ const Admin = () => {
   useEffect(() => {
     const saved = sessionStorage.getItem('adminTab') || 'dashboard';
     fetchTab(saved);
-  }, []);
-
-  useEffect(() => {
-    const tick = () => setClock(new Date().toLocaleTimeString('ar-EG'));
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
   }, []);
 
   /* -- ACTION HANDLERS -- */
@@ -549,7 +548,7 @@ const Admin = () => {
               flexShrink: 0,
             }}>{t('common.logout')}</button>
 
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)' }}>{clock}</span>
+            <LiveClock />
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 10px', background: 'var(--neon-dim)', border: '1px solid rgba(170,255,0,.2)', borderRadius: 20, fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--neon)' }}>
               <div style={{ width: 6, height: 6, background: 'var(--neon)', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
               All Systems Operational
@@ -627,23 +626,7 @@ const Admin = () => {
           {/* CONTENT */}
           <div style={{ flex: 1, padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}>
 
-            {/* -- TAB LOADING SPINNER -- */}
-            {tabLoading && (
-              <div style={{
-                position: 'absolute', inset: 0, zIndex: 50,
-                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(4,7,12,0.6)', backdropFilter: 'blur(4px)', borderRadius: 10,
-                gap: 14,
-              }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: '50%',
-                  border: '3px solid var(--border)',
-                  borderTop: '3px solid var(--neon)',
-                  animation: 'spin 0.8s linear infinite',
-                }} />
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)', letterSpacing: 2 }}>LOADING...</div>
-              </div>
-            )}
+            {/* -- TAB LOADING SPINNER -- REMOVED IN FAVOR OF SKELETONS */}
 
             {tabError && !tabLoading && (
               <div style={{
@@ -668,98 +651,21 @@ const Admin = () => {
 
 
 
-            {/* -- DASHBOARD -- */}
-            {activeView === 'dashboard' && (
+            {tabLoading ? (
+              <SkeletonLoader type={activeView === 'dashboard' ? 'dashboard' : 'table'} />
+            ) : (
               <>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
-                  {(dashboardData?.stats || []).map(s => (
-                    <div key={s.label} style={{
-                      background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px',
-                      transition: 'all .18s', cursor: 'default',
-                    }}>
-                      <div style={{ fontSize: 22, marginBottom: 8 }}>{s.icon}</div>
-                      <div style={{ fontSize: 9.5, fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: 1.5, marginBottom: 4 }}>{s.label}</div>
-                      <div style={{ fontFamily: 'var(--head)', fontSize: 28, letterSpacing: 1, lineHeight: 1, color: s.color, marginBottom: 4 }}>{s.val}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text3)' }}>{s.delta}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 14 }}>
-                  {/* Traffic Overview */}
-                  <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                    <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <h2 style={{ fontFamily: 'var(--head)', fontSize: 16, margin: 0 }}>Traffic Overview</h2>
-                      <div style={{ display: 'flex', gap: 6 }}>
-                        {['Cairo', 'Giza', 'Regional'].map(r => (
-                          <span key={r} style={{
-                            padding: '3px 10px', borderRadius: 4, fontSize: 10, fontFamily: 'var(--mono)',
-                            border: '1px solid var(--border)', color: 'var(--text3)', cursor: 'pointer',
-                          }}>{r}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <div style={{
-                      height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      position: 'relative', overflow: 'hidden', background: 'var(--bg3)',
-                      backgroundImage: 'linear-gradient(rgba(170,255,0,.02) 1px,transparent 1px), linear-gradient(90deg,rgba(170,255,0,.02) 1px,transparent 1px)',
-                      backgroundSize: '20px 20px',
-                    }}>
-                      {(dashboardData?.trafficMap || []).map((m, i) => (
-                        <div key={i} style={{
-                          position: 'absolute', top: m.top, left: m.left,
-                          display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer',
-                        }} title={`${m.label}: ${m.density}% Density`}>
-                          <div style={{
-                            width: 12, height: 12, borderRadius: '50%', background: m.color,
-                            boxShadow: `0 0 10px ${m.color}`, animation: 'pulse 2s infinite',
-                          }} />
-                          <span style={{ fontSize: 8, fontFamily: 'var(--mono)', color: m.color, marginTop: 3 }}>{m.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* System Status */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                      <h2 style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--head)', fontSize: 16, margin: 0 }}>System Status</h2>
-                      {(dashboardData?.systemStatus || []).map((s, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', borderBottom: '1px solid var(--border)' }}>
-                          <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
-                          <span style={{ flex: 1, fontSize: 13 }}>{s.name}</span>
-                          <span style={{ fontSize: 10, fontFamily: 'var(--mono)', color: s.color }}>{s.status}</span>
-                          <span style={{ fontSize: 10, fontFamily: 'var(--mono)', color: 'var(--text3)' }}>{s.uptime}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div style={{
-                      background: 'var(--neon-faint)', border: '1px solid rgba(170,255,0,.12)',
-                      borderRadius: 10, padding: '14px 16px',
-                    }}>
-                      <div style={{ fontSize: 9.5, fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: 1.5, marginBottom: 6 }}>Pending Approvals</div>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <span style={{ fontFamily: 'var(--head)', fontSize: 36, color: 'var(--amber)', lineHeight: 1 }}>{pendingApprovals.length}</span>
-                        <span style={{ fontSize: 12, color: 'var(--text2)' }}>apps need review</span>
-                      </div>
-                      <button className="btn btn-neon btn-sm" style={{ marginTop: 10, width: '100%', justifyContent: 'center' }} onClick={() => { setActiveView('approvals'); setSectionErrors({}); setTabError(tabErrorsByView.approvals || ''); loadTab('approvals'); }}>Review Now</button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recent Activity */}
-                <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                  <h2 style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', fontFamily: 'var(--head)', fontSize: 16, margin: 0 }}>Recent Activity</h2>
-                  {(dashboardData?.recentActivity || []).map((a, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background .12s' }}>
-                      <div style={{ width: 34, height: 34, borderRadius: 8, background: a.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>{a.icon}</div>
-                      <div style={{ flex: 1, fontSize: 13 }}>{a.text}</div>
-                      <div style={{ fontSize: 10, fontFamily: 'var(--mono)', color: 'var(--text3)', whiteSpace: 'nowrap' }}>{a.time}</div>
-                    </div>
-                  ))}
-                </div>
-              </>
+                {/* -- DASHBOARD -- */}
+                {activeView === 'dashboard' && (
+              <AdminDashboard
+                dashboardData={dashboardData}
+                pendingApprovals={pendingApprovals}
+                setActiveView={setActiveView}
+                setSectionErrors={setSectionErrors}
+                setTabError={setTabError}
+                tabErrorsByView={tabErrorsByView}
+                loadTab={loadTab}
+              />
             )}
 
             {/* -- ANALYTICS (5A) -- */}
@@ -823,64 +729,13 @@ const Admin = () => {
 
             {/* -- APPROVALS (existing) -- */}
             {activeView === 'approvals' && (
-              <>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                  {(approvalsStats || []).map((s) => (
-                    <div key={s.label} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}>
-                      <div style={{ fontSize: 22, marginBottom: 8 }}>{s.icon}</div>
-                      <div style={{ fontSize: 9.5, fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: 1.5, marginBottom: 4 }}>{s.label}</div>
-                      <div style={{ fontFamily: 'var(--head)', fontSize: 30, color: s.color, lineHeight: 1 }}>{s.val}</div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {pendingApprovals.map((a, i) => (
-                    <div key={`${a.id || 'approval'}-${i}`} style={{
-                      background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10,
-                      padding: '16px 18px', display: 'flex', gap: 16, alignItems: 'center',
-                    }}>
-                      <div style={{
-                        width: 56, height: 56, borderRadius: 12, background: 'var(--bg3)',
-                        border: '1px solid var(--border2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 28, flexShrink: 0,
-                      }}>{a.img}</div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', marginBottom: 3 }}>{a.id}</div>
-                        <div style={{ fontFamily: 'var(--head)', fontSize: 18, letterSpacing: .5, marginBottom: 4 }}>{a.name}</div>
-                        <div style={{ fontSize: 12, color: 'var(--text2)', display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                          <span>Type: {a.type}</span>
-                          <span>Service: {a.service}</span>
-                          <span>Docs: {a.docs}</span>
-                          <span>Date: {a.date}</span>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button
-                          className="btn btn-neon"
-                          onClick={() => handleApprove(a.id)}
-                          style={{ cursor: 'pointer', minWidth: 86, fontWeight: 700, transition: 'transform .15s ease, opacity .15s ease',backgroundColor:'green',padding:'5px',borderRadius:'5px' }}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="btn btn-ghost"
-                          onClick={() => handleReviewDocs(a)}
-                          style={{ cursor: 'pointer', minWidth: 86, fontWeight: 700, transition: 'transform .15s ease, opacity .15s ease',backgroundColor:'grey',padding:'5px',borderRadius:'5px' }}
-                        >
-                          Review
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => openRejectModal(a.id)}
-                          style={{ cursor: 'pointer', minWidth: 86, fontWeight: 700, transition: 'transform .15s ease, opacity .15s ease',backgroundColor:'red',padding:'5px',borderRadius:'5px' }}
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </>
+              <ApprovalsList
+                approvalsStats={approvalsStats}
+                pendingApprovals={pendingApprovals}
+                handleApprove={handleApprove}
+                handleReviewDocs={handleReviewDocs}
+                openRejectModal={openRejectModal}
+              />
             )}
 
             {/* -- TRAFFIC (existing) -- */}
@@ -1031,266 +886,23 @@ const Admin = () => {
 
             {/* -- USERS (5D — upgraded with 3 tabs) -- */}
             {activeView === 'users' && (
-              <>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <div>
-                    <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Manage <span style={{ color: 'var(--neon)' }}>Users</span></h2>
-                    <div style={{ fontSize: 11.5, color: 'var(--text3)', fontFamily: 'var(--mono)', marginTop: 3 }}>Users آ· Sellers آ· Providers</div>
-                  </div>
-                  <button onClick={() => setShowAddUserModal(true)} style={{
-                    padding: '8px 18px', borderRadius: 8, background: 'var(--neon)', color: '#000',
-                    border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'var(--font)',
-                  }}>+ Add User</button>
-                </div>
-
-                <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'scroll' }}>
-                  <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', padding: '0 16px' }}>
-                    {[
-                      { key: 'user', label: 'Normal Users', count: usersData.user.length },
-                      { key: 'seller', label: 'Sellers', count: usersData.seller.length },
-                      { key: 'provider', label: 'Providers', count: usersData.provider.length },
-                    ].map(tab => (
-                      <div key={tab.key} onClick={() => setActiveUserTab(tab.key)} style={{
-                        display: 'flex', alignItems: 'center', gap: 6,
-                        padding: '11px 14px', cursor: 'pointer',
-                        fontSize: 12.5, fontWeight: 600,
-                        color: activeUserTab === tab.key ? 'var(--neon)' : 'var(--text3)',
-                        borderBottom: activeUserTab === tab.key ? '2px solid var(--neon)' : '2px solid transparent',
-                        marginBottom: -1,
-                      }}>
-                        {tab.label}
-                        <span style={{ fontSize: 10, fontFamily: 'var(--mono)', background: 'var(--bg3)', border: '1px solid var(--border2)', padding: '1px 6px', borderRadius: 10, color: 'var(--text3)' }}>{tab.count}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {activeUserTab === 'user' && (
-                    <div style={{ maxHeight: 480 }}>
-                      <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
-                        <colgroup>
-                          <col style={{ width: 90 }} /><col style={{ width: 160 }} /><col style={{ width: 210 }} /><col style={{ width: 130 }} /><col style={{ width: 90 }} /><col style={{ width: 110 }} /><col style={{ width: 80 }} /><col style={{ width: 110 }} />
-                        </colgroup>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}><tr style={{ background: 'var(--bg3)' }}>
-                          {['ID', 'User', 'Email', 'Phone', 'Status', 'Joined', 'Points', 'Action'].map(h => (
-                            <th key={h} style={{ padding: '10px 14px', fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--text3)', textAlign: 'center', fontWeight: 500, borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap', background: 'var(--bg3)' }}>{h}</th>
-                          ))}
-                        </tr></thead>
-                        <tbody>
-                          {usersData.user.map((u, i) => (
-                            <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', wordBreak: 'break-all' }}>{u.id}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => openUserModal(u)}
-                                    onKeyDown={(e) => e.key === 'Enter' && openUserModal(u)}
-                                    aria-label={`View details for ${u.name}`}
-                                    title={`View details for ${u.name}`}
-                                    style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,var(--blue),var(--purple))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0, cursor: 'pointer' }}
-                                  >
-                                    {u.initials}
-                                  </div>
-                                  <span style={{ fontSize: 13 }}>{u.name}</span>
-                                </div>
-                              </td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)', whiteSpace: 'nowrap' }}>{u.phone}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontFamily: 'var(--mono)', background: u.status === 'Active' ? 'var(--neon-dim)' : u.status === 'Pending' ? 'var(--yellow-dim)' : 'var(--red-dim)', color: u.status === 'Active' ? 'var(--neon)' : u.status === 'Pending' ? 'var(--yellow)' : 'var(--red)' }}>{u.status}</span>
-                              </td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)' }}>{u.date || '—'}</td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--neon)' }}>{u.points ?? 0}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <div style={{ display: 'flex', gap: 5 }}>
-                                  <button onClick={() => openUserModal(u)} style={{ padding: '4px 10px', borderRadius: 5, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: 11, cursor: 'pointer' }}>View</button>
-                                  <button onClick={() => openEditUser(u)} style={{ padding: '4px 10px', borderRadius: 5, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: 11, cursor: 'pointer' }}>Edit</button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-
-                  {activeUserTab === 'seller' && (
-                    <div style={{ maxHeight: 480, }}>
-                      <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
-                        <colgroup>
-                          <col style={{ width: 90 }} /><col style={{ width: 160 }} /><col style={{ width: 210 }} /><col style={{ width: 130 }} /><col style={{ width: 90 }} /><col style={{ width: 110 }} /><col style={{ width: 80 }} /><col style={{ width: 110 }} />
-                        </colgroup>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}><tr style={{ background: 'var(--bg3)' }}>
-                          {['ID', 'Store', 'Email', 'Phone', 'Status', 'Joined', 'Points', 'Action'].map(h => (
-                            <th key={h} style={{ padding: '10px 14px', fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--text3)', textAlign: 'center', fontWeight: 500, borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap', background: 'var(--bg3)' }}>{h}</th>
-                          ))}
-                        </tr></thead>
-                        <tbody>
-                          {usersData.seller.map((u, i) => (
-                            <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', wordBreak: 'break-all' }}>{u.id}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => openUserModal(u)}
-                                    onKeyDown={(e) => e.key === 'Enter' && openUserModal(u)}
-                                    aria-label={`View details for ${u.name}`}
-                                    title={`View details for ${u.name}`}
-                                    style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,var(--purple),var(--pink))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0, cursor: 'pointer' }}
-                                  >
-                                    {u.initials}
-                                  </div>
-                                  <span style={{ fontSize: 13 }}>{u.name}</span>
-                                </div>
-                              </td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)', whiteSpace: 'nowrap' }}>{u.phone}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontFamily: 'var(--mono)', background: u.status === 'Active' ? 'var(--neon-dim)' : 'var(--yellow-dim)', color: u.status === 'Active' ? 'var(--neon)' : 'var(--yellow)' }}>{u.status}</span>
-                              </td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)' }}>{u.date || '—'}</td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--blue)' }}>{u.points ?? 0}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <div style={{ display: 'flex', gap: 5 }}>
-                                  <button onClick={() => openUserModal(u)} style={{ padding: '4px 10px', borderRadius: 5, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: 11, cursor: 'pointer' }}>View</button>
-                                  <button onClick={() => openEditUser(u)} style={{ padding: '4px 10px', borderRadius: 5, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: 11, cursor: 'pointer' }}>Edit</button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-
-                  {activeUserTab === 'provider' && (
-                    <div style={{ maxHeight: 480, }}>
-                      <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
-                        <colgroup>
-                          <col style={{ width: 90 }} /><col style={{ width: 160 }} /><col style={{ width: 210 }} /><col style={{ width: 130 }} /><col style={{ width: 90 }} /><col style={{ width: 80 }} /><col style={{ width: 110 }} />
-                        </colgroup>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}><tr style={{ background: 'var(--bg3)' }}>
-                          {['ID', 'Provider', 'Email', 'Phone', 'Status', 'Points', 'Action'].map(h => (
-                            <th key={h} style={{ padding: '10px 14px', fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--text3)', textAlign: 'center', fontWeight: 500, borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap', background: 'var(--bg3)' }}>{h}</th>
-                          ))}
-                        </tr></thead>
-                        <tbody>
-                          {usersData.provider.map((u, i) => (
-                            <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', wordBreak: 'break-all' }}>{u.id}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => openUserModal(u)}
-                                    onKeyDown={(e) => e.key === 'Enter' && openUserModal(u)}
-                                    aria-label={`View details for ${u.name}`}
-                                    title={`View details for ${u.name}`}
-                                    style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,var(--cyan),var(--blue))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0, cursor: 'pointer' }}
-                                  >
-                                    {u.initials}
-                                  </div>
-                                  <span style={{ fontSize: 13 }}>{u.name}</span>
-                                </div>
-                              </td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)', whiteSpace: 'nowrap' }}>{u.phone}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontFamily: 'var(--mono)', background: u.status === 'Active' ? 'var(--neon-dim)' : 'var(--yellow-dim)', color: u.status === 'Active' ? 'var(--neon)' : 'var(--yellow)' }}>{u.status}</span>
-                              </td>
-                              <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--neon)' }}>{u.points ?? 0}</td>
-                              <td style={{ padding: '11px 14px' }}>
-                                <div style={{ display: 'flex', gap: 5 }}>
-                                  <button onClick={() => openUserModal(u)} style={{ padding: '4px 10px', borderRadius: 5, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: 11, cursor: 'pointer' }}>View</button>
-                                  <button onClick={() => openEditUser(u)} style={{ padding: '4px 10px', borderRadius: 5, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: 11, cursor: 'pointer' }}>Edit</button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-              </>
+              <UserManagement
+                usersData={usersData}
+                activeUserTab={activeUserTab}
+                setActiveUserTab={setActiveUserTab}
+                openUserModal={openUserModal}
+                openEditUser={openEditUser}
+                setShowAddUserModal={setShowAddUserModal}
+              />
             )}
 
             {/* -- TICKETS (5F) -- */}
             {activeView === 'tickets' && (
-              <>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <div>
-                    <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Support <span style={{ color: 'var(--neon)' }}>Tickets</span></h2>
-                    <div style={{ fontSize: 11.5, color: 'var(--text3)', fontFamily: 'var(--mono)', marginTop: 3 }}>Support requests from users</div>
-                  </div>
-                </div>
-
-                {(() => {
-                  const stats = (ticketsStats?.length ? ticketsStats : [
-                    { label: 'TOTAL', val: tickets.length, color: 'var(--neon)' },
-                    { label: 'OPEN', val: tickets.filter(t => t.status === 'Open').length, color: 'var(--amber)' },
-                    { label: 'IN PROGRESS', val: tickets.filter(t => t.status === 'In Progress').length, color: 'var(--blue)' },
-                    { label: 'CLOSED', val: tickets.filter(t => t.status === 'Completed' || t.status === 'Closed').length, color: 'var(--emerald)' },
-                  ]);
-                  return (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
-                      {stats.map(s => (
-                        <div key={s.label} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}>
-                          <div style={{ fontSize: 9.5, fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: 1.5, marginBottom: 4 }}>{s.label}</div>
-                          <div style={{ fontFamily: 'var(--head)', fontSize: 30, color: s.color, lineHeight: 1 }}>{s.val}</div>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })()}
-
-                <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                  <div style={{ overflowX: 'auto', maxHeight: 480, overflowY: 'auto' }}>
-                    <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
-                      <colgroup>
-                        <col style={{ width: 90 }} /><col style={{ width: 200 }} /><col style={{ width: 140 }} /><col style={{ width: 130 }} /><col style={{ width: 110 }} /><col style={{ width: 110 }} /><col style={{ width: 100 }} />
-                      </colgroup>
-                      <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}><tr style={{ background: 'var(--bg3)' }}>
-                        {['#', 'Subject', 'User', 'Agent', 'Status', 'Date', 'Action'].map(h => (
-                          <th key={h} style={{ padding: '10px 14px', fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--text3)', textAlign: 'center', fontWeight: 500, borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap', background: 'var(--bg3)' }}>{h}</th>
-                        ))}
-                      </tr></thead>
-                      <tbody>
-                        {tickets.map((t, i) => (
-                          <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                            <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={t.id}>{t.id?.slice(0, 8)}...</td>
-                            <td style={{ padding: '11px 14px', fontSize: 12.5, maxWidth: 180 }}>{t.subject}</td>
-                            <td style={{ padding: '11px 14px' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                                <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'var(--bg3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{t.initials}</div>
-                                <span style={{ fontSize: 13 }}>{t.user}</span>
-                              </div>
-                            </td>
-                            <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)', textAlign: 'center' }}>
-                              {t.agent && t.agent !== '—' ? (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                                  <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'var(--bg3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{t.agent.substring(0, 2).toUpperCase()}</div>
-                                  <span style={{ fontSize: 12 }}>{t.agent}</span>
-                                </div>
-                              ) : <span style={{ color: 'var(--text3)' }}>—</span>}
-                            </td>
-                            <td style={{ padding: '11px 14px' }}>
-                              <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontFamily: 'var(--mono)', background: t.status === 'Done' ? 'var(--neon-dim)' : t.status === 'Open' ? 'var(--red-dim)' : 'var(--yellow-dim)', color: t.status === 'Done' ? 'var(--neon)' : t.status === 'Open' ? 'var(--red)' : 'var(--yellow)' }}>{t.status}</span>
-                            </td>
-                            <td style={{ padding: '11px 14px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)' }}>{t.date}</td>
-                            <td style={{ padding: '11px 14px' }}>
-                              <button onClick={() => handleViewTicket(t.id)} style={{ padding: '4px 10px', borderRadius: 5, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text2)', fontSize: 11, cursor: 'pointer' }}>View</button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </>
+              <TicketManagement
+                tickets={tickets}
+                ticketsStats={ticketsStats}
+                handleViewTicket={handleViewTicket}
+              />
             )}
 
             {/* -- CS / CUSTOMER SERVICE (5G) -- */}
@@ -1442,6 +1054,8 @@ const Admin = () => {
                 </div>
               </>
             )}
+              </>
+            )}
 
           </div>
         </div>
@@ -1451,10 +1065,10 @@ const Admin = () => {
 
       {/* 6A — Add User Modal */}
       {showAddUserModal && (
-        <div style={overlayStyle} onClick={() => setShowAddUserModal(false)}>
+        <div style={overlayStyle} onClick={() => setShowAddUserModal(false)} role="dialog" aria-modal="true" aria-labelledby="add-user-title">
           <div style={modalStyle} onClick={e => e.stopPropagation()}>
             <div style={mHeadStyle}>
-              <span style={{ fontSize: 15, fontWeight: 700 }}>Add New User</span>
+              <span id="add-user-title" style={{ fontSize: 15, fontWeight: 700 }}>Add New User</span>
               <button onClick={() => setShowAddUserModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text3)', fontSize: 18, cursor: 'pointer', padding: '2px 6px', borderRadius: 4 }}>✕</button>
             </div>
             <div style={mBodyStyle}>
@@ -1571,10 +1185,10 @@ const Admin = () => {
 
       {/* 6B — Edit User Modal */}
       {showEditUserModal && (
-        <div style={overlayStyle} onClick={() => { setShowEditUserModal(false); setEditUserErrors({}); }}>
+        <div style={overlayStyle} onClick={() => { setShowEditUserModal(false); setEditUserErrors({}); }} role="dialog" aria-modal="true" aria-labelledby="edit-user-title">
           <div style={modalStyle} onClick={e => e.stopPropagation()}>
             <div style={mHeadStyle}>
-              <span style={{ fontSize: 15, fontWeight: 700 }}>Edit User Data</span>
+              <span id="edit-user-title" style={{ fontSize: 15, fontWeight: 700 }}>Edit User Data</span>
               <button onClick={() => { setShowEditUserModal(false); setEditUserErrors({}); }} style={{ background: 'none', border: 'none', color: 'var(--text3)', fontSize: 18, cursor: 'pointer', padding: '2px 6px', borderRadius: 4 }}>✕</button>
             </div>
             <div style={mBodyStyle}>
@@ -1617,10 +1231,10 @@ const Admin = () => {
 
       {/* 6C — Urgent Assign Modal */}
       {showUrgentModal && (
-        <div style={overlayStyle} onClick={() => { setShowUrgentModal(false); setSelectedUrgent(null); setUrgentProvider(''); setUrgentNote(''); }}>
+        <div style={overlayStyle} onClick={() => { setShowUrgentModal(false); setSelectedUrgent(null); setUrgentProvider(''); setUrgentNote(''); }} role="dialog" aria-modal="true" aria-labelledby="urgent-assign-title">
           <div style={modalStyle} onClick={e => e.stopPropagation()}>
             <div style={mHeadStyle}>
-              <span style={{ fontSize: 15, fontWeight: 700 }}>Assign Provider — Request #{selectedUrgent?.id || '---'}</span>
+              <span id="urgent-assign-title" style={{ fontSize: 15, fontWeight: 700 }}>Assign Provider — Request #{selectedUrgent?.id || '---'}</span>
               <button onClick={() => { setShowUrgentModal(false); setSelectedUrgent(null); setUrgentProvider(''); setUrgentNote(''); }} style={{ background: 'none', border: 'none', color: 'var(--text3)', fontSize: 18, cursor: 'pointer', padding: '2px 6px', borderRadius: 4 }}>✕</button>
             </div>
             <div style={mBodyStyle}>
@@ -1646,10 +1260,10 @@ const Admin = () => {
 
       {/* 6D — Add Agent Modal */}
       {showAddAgentModal && (
-        <div style={overlayStyle} onClick={() => { setShowAddAgentModal(false); setAddAgentErrors({}); }}>
+        <div style={overlayStyle} onClick={() => { setShowAddAgentModal(false); setAddAgentErrors({}); }} role="dialog" aria-modal="true" aria-labelledby="add-agent-title">
           <div style={modalStyle} onClick={e => e.stopPropagation()}>
             <div style={mHeadStyle}>
-              <span style={{ fontSize: 15, fontWeight: 700 }}>Add CS Agent</span>
+              <span id="add-agent-title" style={{ fontSize: 15, fontWeight: 700 }}>Add CS Agent</span>
               <button onClick={() => { setShowAddAgentModal(false); setAddAgentErrors({}); }} style={{ background: 'none', border: 'none', color: 'var(--text3)', fontSize: 18, cursor: 'pointer', padding: '2px 6px', borderRadius: 4 }}>✕</button>
             </div>
             <div style={mBodyStyle}>
@@ -1685,10 +1299,10 @@ const Admin = () => {
 
       {/* 6E — Reject Application Modal */}
       {showApprovalReviewModal && selectedApprovalReview && (
-        <div style={overlayStyle} onClick={() => { setShowApprovalReviewModal(false); setSelectedApprovalReview(null); }}>
+        <div style={overlayStyle} onClick={() => { setShowApprovalReviewModal(false); setSelectedApprovalReview(null); }} role="dialog" aria-modal="true" aria-labelledby="approval-review-title">
           <div style={{ ...modalStyle, width: 460 }} onClick={e => e.stopPropagation()}>
             <div style={mHeadStyle}>
-              <span style={{ fontSize: 15, fontWeight: 700 }}>Approval Review</span>
+              <span id="approval-review-title" style={{ fontSize: 15, fontWeight: 700 }}>Approval Review</span>
               <button onClick={() => { setShowApprovalReviewModal(false); setSelectedApprovalReview(null); }} style={{ background: 'none', border: 'none', color: 'var(--text3)', fontSize: 18, cursor: 'pointer', padding: '2px 6px', borderRadius: 4 }}>X</button>
             </div>
             <div style={mBodyStyle}>
@@ -1718,10 +1332,10 @@ const Admin = () => {
 
       {/* 6E — Reject Application Modal */}
       {showRejectModal && (
-        <div style={overlayStyle} onClick={() => { setShowRejectModal(false); setRejectReason(''); setRejectReasonError(''); }}>
+        <div style={overlayStyle} onClick={() => { setShowRejectModal(false); setRejectReason(''); setRejectReasonError(''); }} role="dialog" aria-modal="true" aria-labelledby="reject-app-title">
           <div style={{ ...modalStyle, width: 420 }} onClick={e => e.stopPropagation()}>
             <div style={mHeadStyle}>
-              <span style={{ fontSize: 15, fontWeight: 700 }}>❌ Reject Application</span>
+              <span id="reject-app-title" style={{ fontSize: 15, fontWeight: 700 }}>❌ Reject Application</span>
               <button onClick={() => { setShowRejectModal(false); setRejectReason(''); setRejectReasonError(''); }} style={{ background: 'none', border: 'none', color: 'var(--text3)', fontSize: 18, cursor: 'pointer', padding: '2px 6px', borderRadius: 4 }}>✕</button>
             </div>
             <div style={mBodyStyle}>

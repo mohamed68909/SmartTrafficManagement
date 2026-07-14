@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartTrafficManagement.Application.DTOs.Notifications;
 using SmartTrafficManagement.Core.Common;
+using SmartTrafficManagement.Core.Constants;
 using SmartTrafficManagement.Core.Interfaces;
 using SmartTrafficManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -96,7 +97,7 @@ public sealed class NotificationsController : BaseController
         return ProcessResult(Result<bool>.Success(true, 200));
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = AppRoles.Admin)]
     [HttpPost("seed")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult> SeedNotifications(

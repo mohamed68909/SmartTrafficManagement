@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 using SmartTrafficManagement.Application.DTOs.Payments;
 using SmartTrafficManagement.Application.Features.Store.Webhook;
@@ -28,12 +30,20 @@ public sealed class PaymentsController : BaseController
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> StripeWebhook(
         [FromServices] IConfiguration configuration,
+        [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment,
         [FromServices] UpdateOrderPaymentStatusCommandHandler handler,
         CancellationToken cancellationToken)
     {
         var payload = await new StreamReader(Request.Body).ReadToEndAsync(cancellationToken);
         var signatureHeader = Request.Headers["Stripe-Signature"];
         var webhookSecret = configuration["Stripe:WebhookSecret"] ?? string.Empty;
+
+        // Enforce signature verification in production environment.
+        // If WebhookSecret is missing in production, reject the request to prevent forged events.
+        if (environment.IsProduction() && string.IsNullOrWhiteSpace(webhookSecret))
+        {
+            return ProcessResult(Result<bool>.Failure(DomainErrors.Payments.InvalidWebhook, 400));
+        }
 
         Event stripeEvent;
         try
@@ -51,9 +61,6 @@ public sealed class PaymentsController : BaseController
                 // ── Development path: no signature verification ───────────────────
                 // WebhookSecret is not configured in appsettings.json.
                 // Parse the raw JSON without HMAC verification so local testing works.
-                // ⚠️  NEVER leave the secret empty in production — set
-                //     Stripe:WebhookSecret in appsettings.production.json or as an
-                //     environment variable before going live.
                 stripeEvent = EventUtility.ParseEvent(payload, throwOnApiVersionMismatch: false);
             }
         }

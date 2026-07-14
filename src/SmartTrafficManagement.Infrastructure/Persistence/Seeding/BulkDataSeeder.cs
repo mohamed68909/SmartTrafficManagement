@@ -246,13 +246,13 @@ internal sealed class BulkDataSeeder(
 
     private async Task SeedUsersAsync(Random rng, CancellationToken ct)
     {
-        // ── 5 Drivers ────────────────────────────────────────────────────────
+        // ── 200 Drivers ──────────────────────────────────────────────────────
         var existingClientCount = (await userManager.GetUsersInRoleAsync(AppRoles.Client))
             .Count(u => u.Email != null && u.Email.EndsWith("@smarttraffic.dev"));
 
-        if (existingClientCount < 5)
+        if (existingClientCount < 200)
         {
-            for (var i = 1; i <= 5; i++)
+            for (var i = 1; i <= 200; i++)
             {
                 ct.ThrowIfCancellationRequested();
                 var email = $"driver{i:D3}@smarttraffic.dev";
@@ -278,16 +278,46 @@ internal sealed class BulkDataSeeder(
             }
         }
 
-        // ── 5 Additional Providers (provider02..provider06) ───────────────────
+        // ── 20 Admins (admin02..admin21) ──────────────────────────────────────
+        var existingAdminCount = (await userManager.GetUsersInRoleAsync(AppRoles.Admin))
+            .Count(u => u.Email != null && u.Email.EndsWith("@smarttraffic.dev"));
+
+        if (existingAdminCount < 20)
+        {
+            for (var i = 2; i <= 21; i++)
+            {
+                ct.ThrowIfCancellationRequested();
+                var email = $"admin{i:D2}@smarttraffic.dev";
+                if (await userManager.FindByEmailAsync(email) is not null) continue;
+
+                var user = new ApplicationUser
+                {
+                    UserName       = email,
+                    Email          = email,
+                    EmailConfirmed = true,
+                    FirstName      = FirstNames[rng.Next(FirstNames.Length)],
+                    LastName       = LastNames[rng.Next(LastNames.Length)],
+                    PhoneNumber    = $"015{rng.Next(10_000_000, 99_999_999)}",
+                    IsActive       = true,
+                    Address        = CairoLocations[rng.Next(CairoLocations.Length)]
+                };
+
+                var result = await userManager.CreateAsync(user, "Admin@12345");
+                if (result.Succeeded)
+                    await userManager.AddToRoleAsync(user, AppRoles.Admin);
+            }
+        }
+
+        // ── 100 Providers (provider02..provider101) ──────────────────────────
         var existingProviderCount = (await userManager.GetUsersInRoleAsync(AppRoles.Provider))
             .Count(u => u.Email != null && u.Email.EndsWith("@smarttraffic.dev"));
 
-        if (existingProviderCount < 5)
+        if (existingProviderCount < 100)
         {
-            for (var i = 2; i <= 6; i++)
+            for (var i = 2; i <= 101; i++)
             {
                 ct.ThrowIfCancellationRequested();
-                var email = $"provider{i:D2}@smarttraffic.dev";
+                var email = $"provider{i:D3}@smarttraffic.dev";
                 if (await userManager.FindByEmailAsync(email) is not null) continue;
 
                 var user = new ApplicationUser
@@ -310,13 +340,13 @@ internal sealed class BulkDataSeeder(
             }
         }
 
-        // ── 5 Additional Sellers (seller02..seller06) ─────────────────────────
+        // ── 50 Sellers (seller02..seller51) ───────────────────────────────────
         var existingSellerCount = (await userManager.GetUsersInRoleAsync(AppRoles.Seller))
             .Count(u => u.Email != null && u.Email.EndsWith("@smarttraffic.dev"));
 
-        if (existingSellerCount < 5)
+        if (existingSellerCount < 50)
         {
-            for (var i = 2; i <= 6; i++)
+            for (var i = 2; i <= 51; i++)
             {
                 ct.ThrowIfCancellationRequested();
                 var email = $"seller{i:D2}@smarttraffic.dev";
@@ -337,6 +367,36 @@ internal sealed class BulkDataSeeder(
                 var result = await userManager.CreateAsync(user, "Seller@12345");
                 if (result.Succeeded)
                     await userManager.AddToRoleAsync(user, AppRoles.Seller);
+            }
+        }
+
+        // ── 20 CS Agents (cs02..cs21) ─────────────────────────────────────────
+        var existingCSAgentCount = (await userManager.GetUsersInRoleAsync(AppRoles.CSAgent))
+            .Count(u => u.Email != null && u.Email.EndsWith("@smarttraffic.dev"));
+
+        if (existingCSAgentCount < 20)
+        {
+            for (var i = 2; i <= 21; i++)
+            {
+                ct.ThrowIfCancellationRequested();
+                var email = $"cs{i:D2}@smarttraffic.dev";
+                if (await userManager.FindByEmailAsync(email) is not null) continue;
+
+                var user = new ApplicationUser
+                {
+                    UserName       = email,
+                    Email          = email,
+                    EmailConfirmed = true,
+                    FirstName      = FirstNames[rng.Next(FirstNames.Length)],
+                    LastName       = LastNames[rng.Next(LastNames.Length)],
+                    PhoneNumber    = $"019{rng.Next(10_000_000, 99_999_999)}",
+                    IsActive       = true,
+                    Address        = CairoLocations[rng.Next(CairoLocations.Length)]
+                };
+
+                var result = await userManager.CreateAsync(user, "CSAgent@12345");
+                if (result.Succeeded)
+                    await userManager.AddToRoleAsync(user, AppRoles.CSAgent);
             }
         }
     }
@@ -382,7 +442,7 @@ internal sealed class BulkDataSeeder(
     private async Task<List<Guid>> SeedVehiclesAsync(
         Random rng, List<string> clientIds, CancellationToken ct)
     {
-        if (await dbContext.Vehicles.CountAsync(ct) >= 5)
+        if (await dbContext.Vehicles.CountAsync(ct) >= 250)
             return await dbContext.Vehicles.AsNoTracking().Select(v => v.Id).ToListAsync(ct);
 
         if (clientIds.Count == 0)
@@ -395,7 +455,7 @@ internal sealed class BulkDataSeeder(
         var vehicles = new List<Vehicle>();
         var baseYear = DateTime.UtcNow.Year;
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 250; i++)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -431,14 +491,14 @@ internal sealed class BulkDataSeeder(
     private async Task<List<Guid>> SeedProductsAsync(
         Random rng, List<string> sellerIds, List<Guid> categoryIds, CancellationToken ct)
     {
-        if (await dbContext.Products.CountAsync(ct) >= 5)
+        if (await dbContext.Products.CountAsync(ct) >= 150)
             return await dbContext.Products.AsNoTracking().Select(p => p.Id).ToListAsync(ct);
 
         if (sellerIds.Count == 0 || categoryIds.Count == 0)
             return await dbContext.Products.AsNoTracking().Select(p => p.Id).ToListAsync(ct);
 
         var added = 0;
-        for (var i = 0; added < 45; i++)
+        for (var i = 0; added < 150; i++)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -476,10 +536,10 @@ internal sealed class BulkDataSeeder(
     private async Task SeedOrdersAsync(
         Random rng, List<string> clientIds, List<Guid> productIds, CancellationToken ct)
     {
-        if (await dbContext.Orders.CountAsync(ct) >= 5) return;
+        if (await dbContext.Orders.CountAsync(ct) >= 100) return;
         if (clientIds.Count == 0 || productIds.Count == 0) return;
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 100; i++)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -542,7 +602,7 @@ internal sealed class BulkDataSeeder(
     private async Task SeedRatingsAsync(
         Random rng, List<string> clientIds, CancellationToken ct)
     {
-        if (await dbContext.Ratings.CountAsync(ct) >= 5) return;
+        if (await dbContext.Ratings.CountAsync(ct) >= 80) return;
         if (clientIds.Count == 0) return;
 
         // Collect completed service request IDs and delivered order IDs.
@@ -561,7 +621,7 @@ internal sealed class BulkDataSeeder(
         if (completedSrIds.Count == 0 && deliveredOrderIds.Count == 0) return;
 
         var ratings = new List<Rating>();
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 80; i++)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -618,12 +678,12 @@ internal sealed class BulkDataSeeder(
     private async Task SeedTrafficReportsAsync(
         Random rng, List<string> clientIds, List<Guid> vehicleIds, CancellationToken ct)
     {
-        if (await dbContext.TrafficReports.CountAsync(ct) >= 5) return;
+        if (await dbContext.TrafficReports.CountAsync(ct) >= 120) return;
         if (clientIds.Count == 0) return;
 
         var reports = new List<TrafficReport>();
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 120; i++)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -653,7 +713,7 @@ internal sealed class BulkDataSeeder(
 
     private async Task SeedTrafficIncidentsAsync(Random rng, CancellationToken ct)
     {
-        if (await dbContext.TrafficIncidents.CountAsync(ct) >= 5) return;
+        if (await dbContext.TrafficIncidents.CountAsync(ct) >= 80) return;
 
         // Pre-load existing title+location combos for dedup.
         var existing = new HashSet<string>(
@@ -664,7 +724,7 @@ internal sealed class BulkDataSeeder(
 
         var incidents = new List<TrafficIncident>();
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 80; i++)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -697,12 +757,12 @@ internal sealed class BulkDataSeeder(
     private async Task SeedSensorDataAsync(
         Random rng, List<Guid> vehicleIds, CancellationToken ct)
     {
-        if (await dbContext.SensorData.CountAsync(ct) >= 5) return;
+        if (await dbContext.SensorData.CountAsync(ct) >= 150) return;
         if (vehicleIds.Count == 0) return;
 
         var records = new List<SensorData>();
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 150; i++)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -730,12 +790,12 @@ internal sealed class BulkDataSeeder(
     private async Task SeedNotificationsAsync(
         Random rng, List<string> allUserIds, CancellationToken ct)
     {
-        if (await dbContext.Notifications.CountAsync(ct) >= 5) return;
+        if (await dbContext.Notifications.CountAsync(ct) >= 200) return;
         if (allUserIds.Count == 0) return;
 
         var notifications = new List<Notification>();
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 200; i++)
         {
             ct.ThrowIfCancellationRequested();
 
