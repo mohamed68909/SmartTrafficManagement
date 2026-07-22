@@ -1,102 +1,145 @@
-# Smart Traffic & Emergency Management System (STMS) 🚦🚑
+<div align="center">
 
-STMS is an end-to-end smart city platform designed to monitor urban traffic conditions, manage road incidents, and dispatch emergency roadside assistance (SOS jumps, towing, fuel delivery, flat tires) in real-time. Built as a comprehensive graduation project, the system features a robust micro-service architecture, a real-time React dashboard, and a feature-rich Flutter mobile app.
+# 🚦 🚑 Smart Traffic & Emergency Management System (STMS)
+
+**An End-to-End Smart City Platform for Real-Time Traffic Monitoring, Road Incident Management, and Automated Emergency Roadside Assistance.**
+
+![DotNet](https://img.shields.io/badge/.NET_8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL_Server-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
+![SignalR](https://img.shields.io/badge/SignalR-Real--Time-orange?style=for-the-badge)
+![Stripe](https://img.shields.io/badge/Stripe-008CDD?style=for-the-badge&logo=stripe&logoColor=white)
+
+</div>
 
 ---
 
-## 🏗️ System Architecture & Tech Stack
+## 📌 Overview
 
-The system is split into three main modules:
+**STMS** is a full-stack graduation project engineered to solve urban traffic congestion, enable rapid roadside assistance (towing, battery jumps, fuel delivery, flat tires), and provide unified operational dashboards for city administrators, emergency response teams, customer support agents, and automotive sellers.
 
-### 1. Backend API (`/src`)
-- **Framework**: .NET 8 (C#)
-- **Database**: Entity Framework Core with SQL Server (highly indexed for performance)
-- **Real-Time Communication**: SignalR Hubs for instant messaging & tracking
-- **Third-Party Integrations**: Stripe API (for secure card processing and product orders)
+---
 
-### 2. Web Admin & Operations Panel (`/my-project`)
-- **Framework**: React.js with Vite
-- **Styling**: Vanilla CSS with premium dark theme aesthetics
-- **Role-Based Interfaces**:
-  - **Admin**: System-wide user approvals, statistics charts, and system tickets.
-  - **Customer Service Agent**: Interactive workstation with real-time chat with clients.
-  - **Rescue Service Provider**: Active mission dispatch, location tracking, and status update panel.
-  - **Store Seller**: Manage automotive product inventories and process incoming shop orders.
+## 🏗️ System Architecture
 
-### 3. Client Mobile App (`/STMS-main`)
-- **Framework**: Flutter (Dart)
-- **Maps & Location**: Google Maps API for real-time tracking of tow trucks and fuel delivery vehicles.
-- **State Management**: Riverpod
-- **Features**: Live support chat, emergency SOS request triggers, store product checkout with Stripe.
+```mermaid
+graph TD
+    ClientApp[📱 Flutter Mobile App] -->|REST API / SignalR| Backend[.NET 8 Web API]
+    WebPortal[💻 React Web Portal] -->|REST API / SignalR| Backend
+    Backend -->|EF Core SQL| Database[(SQL Server)]
+    Backend -->|Payment Gateway| Stripe[💳 Stripe API]
+    ClientApp -->|Location Services| Maps[🗺️ Google Maps API]
+```
+
+---
+
+## ✨ Key Features Matrix
+
+| Module | Sub-System | Key Capabilities |
+| :--- | :--- | :--- |
+| **📱 Mobile App** | `STMS-main` | • Live Support Chat with Customer Service<br>• Emergency SOS trigger & Real-time provider tracking<br>• Interactive Traffic Map & Incident Reporting<br>• In-App Store & Stripe Payment Checkout |
+| **👑 Admin Portal** | `my-project` | • System-wide user approvals & role management<br>• System health, support ticket workspace, & analytics<br>• Incident history audit & live clock monitoring |
+| **🎧 CS Agent Panel** | `my-project` | • Real-time SignalR ticket chat workspace<br>• Driver & provider lookup with block/unblock tools<br>• Incident escalation & support reporting |
+| **🚜 Rescue Provider** | `my-project` | • Active mission dispatch & real-time route updates<br>• Mission arrival & completion tracking<br>• Earnings dashboard with weekly analytics |
+| **🛒 Store Seller** | `my-project` | • Product catalog management & inventory control<br>• Real-time order processing & status updates |
+| **⚙️ Backend API** | `src` | • Indexed EF Core SQL Server persistence<br>• Dynamic JWT Refresh Token authentication<br>• Secure Stripe Webhook HMAC signature validation |
+
+---
+
+## 📁 Repository Structure
+
+```
+SmartTrafficManagement/
+├── src/                                  # .NET 8 Backend API & Infrastructure
+│   ├── SmartTrafficManagement.API/       # Web API Controllers, Hubs, & Configurations
+│   ├── SmartTrafficManagement.Application/# CQRS, DTOs, & Business Logic Handlers
+│   ├── SmartTrafficManagement.Core/      # Entities, Constants, & Interfaces
+│   └── SmartTrafficManagement.Infrastructure/# EF Core, SignalR, & Database Migrations
+├── my-project/                           # React Web Operations Portal (Admin, CS, Provider, Seller)
+│   ├── src/
+│   │   ├── api/                          # API Client & SignalR Services
+│   │   ├── components/                   # UI Components & Navigation
+│   │   └── pages/                        # Role-based Dashboards (Admin, CsAgent, Provider, Seller)
+│   └── vite.config.js
+└── STMS-main/                            # Flutter Mobile Client Application
+    ├── lib/
+    │   ├── core/                         # Network ApiClient, SignalR, & Theme System
+    │   └── features/                     # Auth, Emergency Tracking, Traffic Maps, & Live Chat
+    └── pubspec.yaml
+```
 
 ---
 
 ## 🚀 Getting Started
 
 ### 📋 Prerequisites
-- [.NET SDK 8.0+](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+Ensure you have the following installed on your machine:
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js 18.0+](https://nodejs.org/)
-- [Flutter SDK 3.19.0+](https://docs.flutter.dev/get-started/install)
-- SQL Server LocalDB or Docker SQL Server container.
+- [Flutter SDK 3.19+](https://docs.flutter.dev/get-started/install)
+- [SQL Server](https://www.microsoft.com/sql-server/) (or SQL LocalDB / Docker container)
 
 ---
 
-### 1. Running the Backend API
-1. Open a terminal and navigate to the API project:
-   ```bash
-   cd src/SmartTrafficManagement.API
-   ```
-2. Restore dependencies and build the solution:
-   ```bash
-   dotnet restore
-   dotnet build
-   ```
-3. Update connection strings in `appsettings.json` if necessary, then run the database migrations:
-   ```bash
-   dotnet ef database update --project ../SmartTrafficManagement.Infrastructure --startup-project .
-   ```
-4. Start the server:
-   ```bash
-   dotnet run
-   ```
-   *The API will be available at `http://localhost:5066` or `https://localhost:7066`.*
+### 1️⃣ Run Backend API (.NET 8)
+
+```bash
+cd src/SmartTrafficManagement.API
+
+# Restore dependencies
+dotnet restore
+
+# Apply database migrations
+dotnet ef database update --project ../SmartTrafficManagement.Infrastructure --startup-project .
+
+# Run the API server
+dotnet run
+```
+> **Default Endpoints**: `http://localhost:5066` | Swagger UI at `http://localhost:5066/swagger`
 
 ---
 
-### 2. Running the React Web Portal
-1. Navigate to the web application directory:
-   ```bash
-   cd my-project
-   ```
-2. Install npm packages:
-   ```bash
-   npm install
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
-   *Open `http://localhost:5173` in your browser.*
+### 2️⃣ Run Web Portal (React + Vite)
+
+```bash
+cd my-project
+
+# Install dependencies
+npm install
+
+# Start Vite dev server
+npm run dev
+```
+> **Access Portal**: `http://localhost:5173`
 
 ---
 
-### 3. Running the Flutter Mobile App
-1. Open a terminal and navigate to the mobile app directory:
-   ```bash
-   cd STMS-main
-   ```
-2. Get packages:
-   ```bash
-   flutter pub get
-   ```
-3. Ensure your emulator or physical device is connected, then run:
-   ```bash
-   flutter run
-   ```
+### 3️⃣ Run Mobile App (Flutter)
+
+```bash
+cd STMS-main
+
+# Get packages
+flutter pub get
+
+# Run on target device / emulator
+flutter run
+```
 
 ---
 
-## 🔒 Security & Strict Verification
-- **JWT Authorization**: Automatic token refresh interceptors on both React and Flutter clients to maintain seamless sessions securely.
-- **Stripe Webhook Validation**: Strict HMAC signature verification enforced in production to prevent payload forgery.
-- **Data Indexing**: High-performance indexes configured for database foreign keys (`Vehicles`, `TrafficReports`, `Orders`, `OrderItems`) ensuring quick queries during traffic spikes.
+## 🔐 Security & Reliability Highlights
+
+- **Dynamic Token Refresh**: Both React and Flutter clients feature seamless 401 interceptors to auto-refresh JWT tokens without disturbing user sessions.
+- **Production Webhook Security**: Stripe Webhook HMAC signature validation enforced in production to prevent forged payment events.
+- **Database Optimization**: Custom SQL indexes on foreign keys (`Vehicles`, `TrafficReports`, `Orders`, `OrderItems`) ensuring sub-millisecond query execution.
+
+---
+
+## 👤 Author & Maintainer
+
+Developed with ❤️ as a Graduation Project by **[Mohamed Ashraf](https://github.com/mohamed68909)**.
