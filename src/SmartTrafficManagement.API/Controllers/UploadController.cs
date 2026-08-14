@@ -36,7 +36,7 @@ public sealed class UploadController : BaseController
     /// All images are converted to WebP (~30% smaller than JPEG at same quality).
     /// EXIF metadata is stripped automatically.
     ///
-    /// Flutter example:
+    /// Client usage example (e.g., Multipart Form Data):
     ///   var req = http.MultipartRequest('POST', Uri.parse('/api/upload?folder=products'));
     ///   req.files.add(await http.MultipartFile.fromPath('file', imagePath));
     /// </remarks>

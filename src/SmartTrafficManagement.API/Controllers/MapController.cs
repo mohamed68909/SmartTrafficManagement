@@ -55,7 +55,7 @@ public sealed class MapController : BaseController
     /// <remarks>
     /// Query params: originLat, originLng, destLat, destLng (all required, double).
     ///
-    /// Flutter usage:
+    /// Client usage example (e.g., Mobile/Flutter):
     ///   GET /api/map/route?originLat=30.0444&amp;originLng=31.2357&amp;destLat=30.0626&amp;destLng=31.2497
     ///
     /// Response includes:
