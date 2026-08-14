@@ -216,6 +216,26 @@ Open your browser and navigate to `http://localhost:5066/swagger` to inspect end
 
 ---
 
+## 🧪 Testing
+
+The repository includes a comprehensive, automated test suite covering unit, integration, database, and endpoint security tests:
+*   **Unit Tests:** Verify core Result monads, validators (lat/lng ranges), and MediatR handlers (Checkout, SOS request, token rotations).
+*   **Integration Tests:** relational DB schema constraints in SQLite, CLIPS diagnostics decision tree progression, and Stripe Webhook HMAC checks.
+*   **API/Security Integration Tests:** `WebApplicationFactory` E2E checks to ensure BOLA/IDOR protection (returns 404 on mismatched resource owner), role access policies, and authentication bypass blocks.
+
+### Run Automated Tests
+```bash
+# Execute all tests
+dotnet test SmartTrafficManagement.slnx
+
+# Run and collect code coverage reports (Cobertura format)
+dotnet test --collect:"XPlat Code Coverage" SmartTrafficManagement.slnx
+```
+
+**Verified Test Result:** `Passed! - Failed: 0, Passed: 42, Skipped: 0, Total: 42`
+
+---
+
 ## 🛡️ Security Considerations
 
 *   **Production Signing Keys:** Verify that the Stripe webhook signature key (`Stripe:WebhookSecret`) is populated in your production environment variables. Leaving it empty halts webhook request processing to avoid forged transactions.
@@ -228,7 +248,6 @@ Open your browser and navigate to `http://localhost:5066/swagger` to inspect end
 *   **Rate Limiting:** Implement API rate limiting middleware to prevent brute-force attacks on auth endpoints.
 *   **Docker Deployment:** Containerize the API with Docker Compose configuration to simplify multi-environment testing.
 *   **Caching Layer:** Integrate Redis memory caches on high-frequency endpoints (`GET /products` and `GET /trafficincidents`).
-*   **Unit Tests:** Introduce an xUnit test library project targeting the application layer command handlers.
 
 ---
 

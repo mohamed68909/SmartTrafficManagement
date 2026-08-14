@@ -5,4 +5,7 @@
     <Project Path="src/SmartTrafficManagement.Core/SmartTrafficManagement.Core.csproj" />
     <Project Path="src/SmartTrafficManagement.Infrastructure/SmartTrafficManagement.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SmartTrafficManagement.Tests/SmartTrafficManagement.Tests.csproj" />
+  </Folder>
 </Solution>

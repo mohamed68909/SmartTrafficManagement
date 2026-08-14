@@ -130,3 +130,5 @@ app.MapHub<TrafficHub>("/hubs/traffic")
    .RequireCors("AllowFrontend");
 
 app.Run();
+
+public partial class Program { }
